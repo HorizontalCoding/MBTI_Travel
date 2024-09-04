@@ -1,0 +1,12 @@
+# Project exclude paths
+/.dart_tool/
+/build/
+
+# Key properties 파일을 제외
+android/key.properties
+
+# Key store 파일을 제외
+android/app/key.jks
+
+# Gradle 빌드 파일 제외
+android/app/build.gradle
