@@ -438,7 +438,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     {
       // TOUR API 키를 사용하여 데이터를 초기화 시점에서 받아옴
       await markerPositionsModel.fetchAndUpdateData(tourApiKey);
-      print('받아온 데이터: ${markerPositions}');
+      // print('받아온 데이터: ${markerPositions}');
     }
     catch (error)
     {
