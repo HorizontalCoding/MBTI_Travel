@@ -2556,8 +2556,9 @@ Future<String> getThumbnailUrl(List<Map<String, dynamic>> markerPositions, Strin
 }
 
 /// CachedNetworkImage 위젯을 생성하는 함수
-Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String contentId) {
-  final imageUrl = getImageUrl(markerPositions, contentId, 'https://picsum.photos/seed/872/600');
+Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String contentId, int g_districtCode) {
+  final defaultImageUrl = subScriptsImages[g_districtCode] ?? 'https://picsum.photos/seed/872/600';
+  final imageUrl = getImageUrl(markerPositions, contentId, defaultImageUrl);
 
   return CachedNetworkImage(
     imageUrl: imageUrl,
@@ -2685,7 +2686,7 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid']),
+              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2738,7 +2739,7 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid']),
+              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2791,7 +2792,7 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid']),
+              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2844,7 +2845,7 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid']),
+              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2897,7 +2898,7 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid']),
+              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2950,7 +2951,7 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid']),
+              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -3003,7 +3004,7 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid']),
+              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
