@@ -18,6 +18,7 @@ import 'pages/courseselect/location_model.dart'; // LocationModel 클래스 파�
 import 'package:mbtitravel/data_frame/data_frame.dart';
 import 'pages/locationexplain_copy/map_model.dart'; // MapModel이 정의된 파일
 import 'package:kakaomap_webview/kakaomap_webview.dart'; // view_Size 정의된 파일
+import 'data_frame/fastival_frame.dart';
 
 void main() async {
 
@@ -93,9 +94,22 @@ class _MyAppState extends State<MyApp> {
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
 
-    Future.delayed(const Duration(milliseconds: 1000),
-            () => setState(() => _appStateNotifier.stopShowingSplashImage()));
+    // Splash 이미지를 1초 뒤에 숨기도록 처리
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      setState(() {
+        _appStateNotifier.stopShowingSplashImage();
+      });
+    });
+
+    // CSV 데이터를 비동기로 로드하고 UI를 업데이트
+    loadCSV().then((_) {
+      setState(() {
+        // 데이터를 로드한 후 추가 작업을 수행할 수 있습니다.
+        print('CSV loaded with ${g_markerPositions.length} entries.');
+      });
+    });
   }
+
 
   Future<void> _loadApiKeys() async {
     try {

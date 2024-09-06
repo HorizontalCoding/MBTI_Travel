@@ -66,6 +66,7 @@ dependencies:
   connectivity_plus: ^2.3.0
   fluttertoast: ^8.0.9
   flutter_html: ^3.0.0-beta.2
+  csv: ^5.0.0
 
   kakaomap_webview:
     path: package/kakaomap/
@@ -114,6 +115,7 @@ flutter:
     - assets/lottie_animations/
     - assets/rive_animations/
     - assets/pdfs/
+    - assets/csv/
 
   
   # An image asset can refer to one or more resolution-specific "variants", see
