@@ -741,7 +741,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                     borderRadius:
                                                     BorderRadius.circular(50.0),
                                                     /*1번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[0]['contentid'], markerPositionsModel),
+                                                    child: buildThumbnailLoader(context, markerPositions[0]['contentid']),
                                                   ),
                                                 ),
                                               ),
@@ -1006,7 +1006,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                     borderRadius:
                                                     BorderRadius.circular(50.0),
                                                     /*2번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[1]['contentid'], markerPositionsModel),
+                                                    child: buildThumbnailLoader(context, markerPositions[1]['contentid']),
                                                   ),
                                                 ),
                                               ),
@@ -1247,7 +1247,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                     borderRadius:
                                                     BorderRadius.circular(50.0),
                                                     /*3번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[2]['contentid'], markerPositionsModel),
+                                                    child: buildThumbnailLoader(context, markerPositions[2]['contentid']),
                                                   ),
                                                 ),
                                               ),
@@ -1494,7 +1494,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       BorderRadius.circular(
                                                           50.0),
                                                       /*4번 썸네일 이미지*/
-                                                      child: buildThumbnailLoader(context, markerPositions[3]['contentid'], markerPositionsModel),
+                                                      child: buildThumbnailLoader(context, markerPositions[3]['contentid']),
                                                     ),
                                                   ),
                                                 ),
@@ -1751,7 +1751,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                     borderRadius:
                                                     BorderRadius.circular(50.0),
                                                     /*5번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[4]['contentid'], markerPositionsModel),
+                                                    child: buildThumbnailLoader(context, markerPositions[4]['contentid']),
                                                   ),
                                                 ),
                                               ),
@@ -1993,7 +1993,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                     borderRadius:
                                                     BorderRadius.circular(50.0),
                                                     /*6번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[5]['contentid'], markerPositionsModel),
+                                                    child: buildThumbnailLoader(context, markerPositions[5]['contentid']),
                                                   ),
                                                 ),
                                               ),
@@ -2234,7 +2234,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                     borderRadius:
                                                     BorderRadius.circular(50.0),
                                                     /*7번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[6]['contentid'], markerPositionsModel),
+                                                    child: buildThumbnailLoader(context, markerPositions[6]['contentid']),
                                                   ),
                                                 ),
                                               ),
@@ -2418,14 +2418,14 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         }
                                       },
                                       child: PageView.builder(
-                                        controller: _model.pageController,
-                                        scrollDirection: Axis.vertical, // 스크롤 방향을 수직으로 변경
-                                        itemCount: markerPositions.length,
-                                        onPageChanged: (index) {
-                                          setState(() {
-                                            _model.currentIndex = index;
-                                          });
-                                        },
+                                          controller: _model.pageController,
+                                          scrollDirection: Axis.vertical, // 스크롤 방향을 수직으로 변경
+                                          itemCount: markerPositions.length,
+                                          onPageChanged: (index) {
+                                            setState(() {
+                                              _model.currentIndex = index;
+                                            });
+                                          },
                                           // PageView.builder에서 각 카드 함수 호출
                                           itemBuilder: (context, index)
                                           {
@@ -2500,6 +2500,7 @@ String getSelectedLocation(BuildContext context)
 }
 
 /// 이미지 URL을 가져오는 함수
+/// 이미지 URL을 가져오는 함수
 String _getImageUrlHelper(Map<String, dynamic> marker, List<String> imageKeys, String defaultUrl) {
   for (String key in imageKeys) {
     final imageUrl = marker[key] as String?;
@@ -2555,9 +2556,8 @@ Future<String> getThumbnailUrl(List<Map<String, dynamic>> markerPositions, Strin
 }
 
 /// CachedNetworkImage 위젯을 생성하는 함수
-Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String contentId, int g_districtCode) {
-  final defaultImageUrl = subScriptsImages[g_districtCode] ?? 'https://picsum.photos/seed/872/600';
-  final imageUrl = getImageUrl(markerPositions, contentId, defaultImageUrl);
+Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String contentId) {
+  final imageUrl = getImageUrl(markerPositions, contentId, 'https://picsum.photos/seed/872/600');
 
   return CachedNetworkImage(
     imageUrl: imageUrl,
@@ -2579,12 +2579,66 @@ String getNonCachedImageUrl(String imageUrl) {
   return '$imageUrl?timestamp=${DateTime.now().millisecondsSinceEpoch}';
 }
 
-/*2024-09-02 썸네일 이미지 로딩 개선(빠른 캐시 로딩)*/
-// 공통된 로딩 인디케이터 위젯
-Widget buildThumbnailLoader(BuildContext context, String contentId, MarkerPositionsModel markerPositionsModel) {
+Widget _buildNetworkImage(String? imageUrl) {
+  // 이미지 URL이 없을 경우 기본 이미지를 사용
+  if (imageUrl == null || imageUrl.isEmpty) {
+    return Image.network(
+      'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Thumb_images/%EB%94%94%ED%8F%B4%ED%8A%B8.jpg',
+      width: 40.0,
+      height: 40.0,
+      fit: BoxFit.cover,
+    );
+  }
+
+  return Image.network(
+    imageUrl,
+    loadingBuilder: (context, child, loadingProgress) {
+      if (loadingProgress == null) {
+        return child;  // 이미지를 성공적으로 로드한 경우
+      } else {
+        // 로딩 중일 때만 로딩 스피너를 표시
+        return Center(
+          child: SizedBox(
+            width: 24.0,
+            height: 24.0,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.0,
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                  (loadingProgress.expectedTotalBytes ?? 1)
+                  : null,
+            ),
+          ),
+        );
+      }
+    },
+    errorBuilder: (context, error, stackTrace) {
+      // 로드에 실패했을 때 기본 이미지를 표시
+      return Image.network(
+        'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Thumb_images/%EB%94%94%ED%8F%B4%ED%8A%B8.jpg',
+        width: 40.0,
+        height: 40.0,
+        fit: BoxFit.cover,
+      );
+    },
+    width: 40.0,
+    height: 40.0,
+    fit: BoxFit.cover,
+  );
+}
+
+Widget buildThumbnailLoader(BuildContext context, String contentId) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+
   if (!markerPositionsModel.isDataLoaded) {
-    // 데이터가 로드되지 않았을 때 공통 로딩 인디케이터 사용
-    return _buildLoadingIndicator();
+    // 데이터가 로드되지 않았을 때 로딩 스피너 표시
+    return Center(
+      child: SizedBox(
+        width: 24.0,
+        height: 24.0,
+        child: CircularProgressIndicator(strokeWidth: 2.0),
+      ),
+    );
   }
 
   // 데이터가 로드되었으면 이미지를 표시
@@ -2592,7 +2646,13 @@ Widget buildThumbnailLoader(BuildContext context, String contentId, MarkerPositi
     future: getThumbnailUrl(markerPositionsModel.markerPositions, contentId, ''),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return _buildLoadingIndicator();
+        return Center(
+          child: SizedBox(
+            width: 24.0,
+            height: 24.0,
+            child: CircularProgressIndicator(strokeWidth: 2.0),
+          ),
+        );
       } else if (snapshot.hasError) {
         return Icon(Icons.error);
       } else if (snapshot.connectionState == ConnectionState.done) {
@@ -2607,38 +2667,6 @@ Widget buildThumbnailLoader(BuildContext context, String contentId, MarkerPositi
         return Icon(Icons.image_not_supported, size: 40.0);
       }
     },
-  );
-}
-
-Widget _buildLoadingIndicator() {
-  return Center(
-    child: SizedBox(
-      width: 24.0,
-      height: 24.0,
-      child: CircularProgressIndicator(strokeWidth: 2.0),
-    ),
-  );
-}
-
-Widget _buildNetworkImage(String? imageUrl) {
-  if (imageUrl == null || imageUrl.isEmpty) {
-    return CachedNetworkImage(
-      imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Thumb_images/%EB%94%94%ED%8F%B4%ED%8A%B8.jpg',
-      width: 40.0,
-      height: 40.0,
-      fit: BoxFit.cover,
-      placeholder: (context, url) => _buildLoadingIndicator(),
-      errorWidget: (context, url, error) => Icon(Icons.error),
-    );
-  }
-
-  return CachedNetworkImage(
-    imageUrl: imageUrl,
-    width: 40.0,
-    height: 40.0,
-    fit: BoxFit.cover,
-    placeholder: (context, url) => _buildLoadingIndicator(),
-    errorWidget: (context, url, error) => Icon(Icons.error),
   );
 }
 
@@ -2657,7 +2685,7 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              child: buildImageLoader([markerPosition], markerPosition['contentid']),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2710,7 +2738,7 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              child: buildImageLoader([markerPosition], markerPosition['contentid']),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2763,7 +2791,7 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              child: buildImageLoader([markerPosition], markerPosition['contentid']),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2816,7 +2844,7 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              child: buildImageLoader([markerPosition], markerPosition['contentid']),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2869,7 +2897,7 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              child: buildImageLoader([markerPosition], markerPosition['contentid']),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2922,7 +2950,7 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              child: buildImageLoader([markerPosition], markerPosition['contentid']),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
@@ -2975,7 +3003,7 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              child: buildImageLoader([markerPosition], markerPosition['contentid']),
               // markerPosition을 List로 감싸서 전달
             ),
           ),
