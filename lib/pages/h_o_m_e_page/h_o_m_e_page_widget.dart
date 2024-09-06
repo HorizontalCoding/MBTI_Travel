@@ -1,3 +1,4 @@
+import 'package:url_launcher/url_launcher.dart'; // 추가
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -21,6 +22,7 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String festivalIntro = ''; // 필터링된 축제의 intro를 저장할 변수
+  String festivalUrl = ''; // 필터링된 축제의 website_url을 저장할 변수
 
   @override
   void initState() {
@@ -45,13 +47,23 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
       final randomFestival = matchingFestivals[Random().nextInt(matchingFestivals.length)];
 
       setState(() {
-        // 필터링된 축제의 intro 저장
+        // 필터링된 축제의 intro와 website_url 저장
         festivalIntro = randomFestival['intro'];
+        festivalUrl = randomFestival['website_url'];
       });
     } else {
       setState(() {
         festivalIntro = '이번 달에 해당하는 축제가 없습니다.';
+        festivalUrl = ''; // 해당하는 축제가 없으면 URL도 초기화
       });
+    }
+  }
+
+  // 외부 브라우저에서 웹사이트로 이동하는 함수
+  Future<void> _launchURL(String url) async {
+    final Uri _url = Uri.parse(url);
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) { // 외부 브라우저에서 열기
+      throw 'Could not launch $url';
     }
   }
 
@@ -128,14 +140,24 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
                 child: Align(
                   alignment: AlignmentDirectional.center, // 텍스트를 화면 중간에 위치
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0), // 하단 패딩을 줄여 텍스트를 조금 위로 올림
-                    child: Text(
-                      festivalIntro, // 필터링된 축제의 intro 출력
-                      textAlign: TextAlign.center,
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Readex Pro',
-                        color: Colors.white,
-                        fontSize: 20.0,
+                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (festivalUrl.isNotEmpty) {
+                          _launchURL(festivalUrl); // 외부 브라우저에서 website_url로 이동
+                        }
+                      },
+                      child: Text(
+                        festivalIntro, // 필터링된 축제의 intro 출력
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'Readex Pro',
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          decoration: festivalUrl.isNotEmpty
+                              ? TextDecoration.none
+                              : TextDecoration.none, // URL이 있으면 밑줄 표시
+                        ),
                       ),
                     ),
                   ),
