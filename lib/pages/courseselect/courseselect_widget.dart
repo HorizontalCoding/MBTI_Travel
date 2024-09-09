@@ -182,7 +182,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '춘천시',
-                            imageUrl: 'assets/images/course_select_images/춘천시_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%B6%98%EC%B2%9C%EC%8B%9C_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 13,
                             startLat: 37.88470677305922,
                             startLng: 127.71679141252581,
@@ -191,7 +191,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '원주시',
-                            imageUrl: 'assets/images/course_select_images/원주시_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%9B%90%EC%A3%BC%EC%8B%9C_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 9,
                             startLat: 37.3159015380525,
                             startLng: 127.92228268413562,
@@ -200,7 +200,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '강릉시',
-                            imageUrl: 'assets/images/course_select_images/강릉시_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EA%B0%95%EB%A6%89%EC%8B%9C_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 1,
                             startLat: 37.764520030046846,
                             startLng: 128.8996229241861,
@@ -209,7 +209,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '동해시',
-                            imageUrl: 'assets/images/course_select_images/동해시_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EB%8F%99%ED%95%B4%EC%8B%9C_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 3,
                             startLat: 37.498190615619805,
                             startLng: 129.12440454753516,
@@ -218,7 +218,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '태백시',
-                            imageUrl: 'assets/images/course_select_images/태백시_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%ED%83%9C%EB%B0%B1%EC%8B%9C_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 14,
                             startLat: 37.17610744592908,
                             startLng: 128.98470899267895,
@@ -227,7 +227,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '속초시',
-                            imageUrl: 'assets/images/course_select_images/속초시_로고.png',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%86%8D%EC%B4%88%EC%8B%9C_%EB%A1%9C%EA%B3%A0.png?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 5,
                             startLat: 38.190449858239184,
                             startLng: 128.59877121870406,
@@ -236,7 +236,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '삼척시',
-                            imageUrl: 'assets/images/course_select_images/삼척시_로고.png',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%82%BC%EC%B2%99%EC%8B%9C_%EB%A1%9C%EA%B3%A0.png?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 4,
                             startLat: 37.43030318159421,
                             startLng: 129.1778133554294,
@@ -245,7 +245,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '양양군',
-                            imageUrl: 'assets/images/course_select_images/양양군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%96%91%EC%96%91%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 7,
                             startLat: 38.077475,
                             startLng: 128.625875,
@@ -254,7 +254,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '홍천군',
-                            imageUrl: 'assets/images/course_select_images/홍천군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%ED%99%8D%EC%B2%9C%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 16,
                             startLat: 37.689032,
                             startLng: 127.878637,
@@ -263,7 +263,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '횡성군',
-                            imageUrl: 'assets/images/course_select_images/횡성군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%ED%9A%A1%EC%84%B1%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 18,
                             startLat: 37.4831961,
                             startLng: 128.0085071,
@@ -272,7 +272,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '영월군',
-                            imageUrl: 'assets/images/course_select_images/영월군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%98%81%EC%9B%94%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 8,
                             startLat: 37.182433,
                             startLng: 128.480746,
@@ -281,7 +281,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '평창군',
-                            imageUrl: 'assets/images/course_select_images/평창군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%ED%8F%89%EC%B0%BD%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 15,
                             startLat: 37.5620242,
                             startLng: 128.4292237,
@@ -290,7 +290,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '정선군',
-                            imageUrl: 'assets/images/course_select_images/정선군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%A0%95%EC%84%A0%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 11,
                             startLat: 37.378957,
                             startLng: 128.650469,
@@ -299,7 +299,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '철원군',
-                            imageUrl: 'assets/images/course_select_images/철원군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%B2%A0%EC%9B%90%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 12,
                             startLat: 38.2078046,
                             startLng: 127.2179496,
@@ -308,7 +308,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '화천군',
-                            imageUrl: 'assets/images/course_select_images/화천군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%ED%99%94%EC%B2%9C%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 17,
                             startLat: 38.104466,
                             startLng: 127.70385,
@@ -317,7 +317,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '양구군',
-                            imageUrl: 'assets/images/course_select_images/양구군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%96%91%EA%B5%AC%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 6,
                             startLat: 38.1076432,
                             startLng: 127.9893656,
@@ -326,7 +326,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '인제군',
-                            imageUrl: 'assets/images/course_select_images/인제군_로고.png',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EC%9D%B8%EC%A0%9C%EA%B5%B0_%EB%A1%9C%EA%B3%A0.png?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 10,
                             startLat: 38.065777,
                             startLng: 128.175128,
@@ -335,7 +335,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '고성군',
-                            imageUrl: 'assets/images/course_select_images/고성군_로고.jpg',
+                            imageUrl: 'https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Gangwon-do_logo/%EA%B3%A0%EC%84%B1%EA%B5%B0_%EB%A1%9C%EA%B3%A0.jpg?${DateTime.now().millisecondsSinceEpoch}',
                             selectedDistrictCode: 2,
                             startLat: 38.378973,
                             startLng: 128.47258,
@@ -357,7 +357,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
       BuildContext context, {
         required String title,
         required String location,
-        required String imageUrl, // 여전히 경로를 받아옵니다.
+        required String imageUrl,
         required int selectedDistrictCode,
         required double startLat,
         required double startLng,
@@ -397,19 +397,50 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                       borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
                     ),
                     title: Text(
-                      'AI 분석',
+                      'AI 분석\n',
                       textAlign: TextAlign.center,
                     ),
-                    content: Text(
-                      'AI 분석을 위한 확인 부탁드리겠습니다.\n\n지역 : $location\nMBTI : $mbtiValue',
-                      textAlign: TextAlign.center, // 텍스트 중앙 정렬
+                    content: RichText(
+                      textAlign: TextAlign.center, // 텍스트 가운데 정렬
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'AI 분석을 위한 확인 부탁드리겠습니다. \n\n\n',
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                          TextSpan(
+                            text: '선택한 지역   :     ',
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                          TextSpan(
+                            text: '$location\n\n', // 사용자가 선택한 지역
+                            style: TextStyle(
+                              color: Colors.lightBlue[300], // 텍스트 강조 색상 변경
+                              fontSize: 22, // 더 큰 폰트 사이즈
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'MBTI 유형   :     ',
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                          TextSpan(
+                            text: '$mbtiValue', // 사용자의 MBTI
+                            style: TextStyle(
+                              color: Colors.red[300], // 강조 색상
+                              fontSize: 22, // 더 큰 폰트 사이즈
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     actions: [
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            '(주의: AI 분석 시에는 뒤로가기 불가능합니다. \n한번 더 확인해주세요.)',
+                            '(주의: AI 분석 시에는 뒤로가기 불가능합니다. \n한번 더 확인해주세요.)\n\n',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.orange, // 강조를 위해 빨간색으로 설정
@@ -459,17 +490,38 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey,
-                            width: 1.5,
-                          ),
+                            bottom: BorderSide(
+                                color: Colors.grey,
+                                width: 1.5
+                            )
                         ),
                       ),
-                      child: Image.asset(
-                        imageUrl, // 로컬 이미지 경로
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
                         width: double.infinity,
                         height: 150.0,
                         fit: BoxFit.contain,
+                        placeholder: (context, url) => Container(
+                          width: double.infinity,
+                          height: 150.0,
+                          color: Colors.grey[300], // 로딩 중 배경색 설정
+                          child: Center(
+                            child: CircularProgressIndicator(), // 로딩 인디케이터
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          width: double.infinity,
+                          height: 150.0,
+                          color: Colors.grey[300], // 이미지 로드 실패 시 배경색 설정
+                          child: Center(
+                            child: IconButton(
+                              icon: Icon(Icons.refresh, color: Colors.white), // 새로고침 버튼 추가
+                              onPressed: () => refreshImage(imageUrl), // 새로고침 버튼 클릭 시 URL 변경
+                            ),
+                          ),
+                        ),
+                        maxHeightDiskCache: 150,  // 이미지의 캐시 최대 높이 설정
+                        maxWidthDiskCache: 370,   // 이미지의 캐시 최대 너비 설정
                       ),
                     ),
                   ),
