@@ -11,6 +11,7 @@ import 'package:flutter_html/flutter_html.dart';
 // 전역 변수
 // 카카오 시작 좌표, 지역 번호
 int? g_districtCode = 0;
+int g_currentPageIndex = 0; // 전역 변수로 현재 페이지 인덱스를 유지
 double g_kakaoMapStartLat = 0.0;
 double g_kakaoMapStartLng = 0.0;
 

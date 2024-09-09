@@ -47,16 +47,14 @@ class LocationexplainCopyWidget extends StatefulWidget
   const LocationexplainCopyWidget({super.key});
 
   @override
-  State<LocationexplainCopyWidget> createState() =>
-      _LocationexplainCopyWidgetState();
+  State<LocationexplainCopyWidget> createState() => _LocationexplainCopyWidgetState();
+
 }
 
 class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     with TickerProviderStateMixin
 {
   late LocationexplainCopyModel _model;
-
-
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -68,20 +66,9 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     super.initState(); // 부모 클래스의 initState를 먼저 호출
 
     // _model을 먼저 초기화한 후에 pageController를 초기화
-    _model = createModel(context, () => LocationexplainCopyModel());
+    _model = LocationexplainCopyModel();
 
-    // PageController 초기화
-    _model.pageController = PageController();
-
-    // 여기 수정함 2024-08-29 오후4:22
-    // 다른 초기화 작업들f
-    // _model.tabBarController = TabController(
-    //   vsync: this,
-    //   length: 3,
-    //   initialIndex: 0,
-    // )..addListener(() {
-    //   setState(() {});
-    // });
+    _model.pageController;
 
     //  여기 수정함 2024-08-31 오전11:00
     _model.tabBarController = TabController(
@@ -90,13 +77,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
       initialIndex: 0,
     )..addListener(()
     {
-      if (_model.tabBarController?.index != 0)
-      {
-        // 코스 탭이 아닌 경우에만 업데이트
-        setState(() {});
-      }
-    });
 
+    });
 
     // 초기 좌표 정해줌.
     initializeKakaoMapPosition();
@@ -115,7 +97,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
       // 업데이트 될 떄마다.
       if (_model.tabBarController?.index == 2)
       {
-        // print("지도 실행");
         // 지도로 스와이핑되었을 때 좌표 변경
         if (markerPositions.isNotEmpty)
         {
@@ -413,15 +394,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
       int newZoomLevel = 9;
 
       mapModel.updateCoordinates(newLat, newLng, newZoomLevel);
-      /*print('지도 초기화 완료!');
-
-      print("tourkey 키[0] 값 : ${markerPositions[0]['tourkey']}");
-      print("tourkey 키[1] 값 : ${markerPositions[1]['tourkey']}");
-      print("tourkey 키[2] 값 : ${markerPositions[2]['tourkey']}");
-      print("tourkey 키[3] 값 : ${markerPositions[3]['tourkey']}");
-      print("tourkey 키[4] 값 : ${markerPositions[4]['tourkey']}");
-      print("tourkey 키[5] 값 : ${markerPositions[5]['tourkey']}");
-      print("tourkey 키[5] 값 : ${markerPositions[6]['tourkey']}");*/
 
     }
     else
@@ -433,12 +405,10 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
   Future<void> _initializeMarkersAndImages() async
   {
     final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
-    final markerPositions = markerPositionsModel.markerPositions;
     try
     {
       // TOUR API 키를 사용하여 데이터를 초기화 시점에서 받아옴
       await markerPositionsModel.fetchAndUpdateData(tourApiKey);
-      // print('받아온 데이터: ${markerPositions}');
     }
     catch (error)
     {
@@ -536,10 +506,12 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                       );
                     },
                   );
-                  if (shouldPop == true) {
+                  if (shouldPop == true)
+                  {
                     // 사용자가 "예"를 선택했을 때 두 번 pop 수행
                     markerPositions.clear();
-                    for (int popIndex = 0; popIndex < 2; popIndex++) {
+                    for (int popIndex = 0; popIndex < 2; popIndex++)
+                    {
                       Navigator.pop(context);
                     }
                   }
@@ -2423,31 +2395,48 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         itemCount: markerPositions.length,
                                         onPageChanged: (index) {
                                           setState(() {
-                                            _model.currentIndex = index;
+                                            _model.updatePageControllerWithNewIndex(index);
                                           });
                                         },
-                                          // PageView.builder에서 각 카드 함수 호출
-                                          itemBuilder: (context, index)
-                                          {
-                                            if (index == 0) {
-                                              return buildCard0(context, markerPositions[index]);
-                                            } else if (index == 1) {
-                                              return buildCard1(context, markerPositions[index]);
-                                            } else if (index == 2) {
-                                              return buildCard2(context, markerPositions[index]);
-                                            } else if (index == 3) {
-                                              return buildCard3(context, markerPositions[index]);
-                                            } else if (index == 4) {
-                                              return buildCard4(context, markerPositions[index]);
-                                            } else if (index == 5) {
-                                              return buildCard5(context, markerPositions[index]);
-                                            } else if (index == 6) {
-                                              return buildCard6(context, markerPositions[index]);
-                                            } else {
-                                              // 이 경로에 도달할 가능성이 없지만, Dart의 null safety 요구사항을 만족시키기 위해 반환값 추가
-                                              throw Exception('Invalid index: $index');
-                                            }
-                                          }
+                                        // PageView.builder에서 각 카드 함수 호출
+                                        itemBuilder: (context, index) {
+                                          return Column(
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  child: Builder(
+                                                    builder: (context) {
+                                                      if (index == 0) {
+                                                        return buildCard0(context, markerPositions[index]);
+                                                      } else if (index == 1) {
+                                                        return buildCard1(context, markerPositions[index]);
+                                                      } else if (index == 2) {
+                                                        return buildCard2(context, markerPositions[index]);
+                                                      } else if (index == 3) {
+                                                        return buildCard3(context, markerPositions[index]);
+                                                      } else if (index == 4) {
+                                                        return buildCard4(context, markerPositions[index]);
+                                                      } else if (index == 5) {
+                                                        return buildCard5(context, markerPositions[index]);
+                                                      } else if (index == 6) {
+                                                        return buildCard6(context, markerPositions[index]);
+                                                      } else {
+                                                        throw Exception('Invalid index: $index');
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              // 각 카드 아래에 경계선 추가
+                                              if (index != markerPositions.length - 1) // 마지막 카드 제외
+                                                Divider(
+                                                  color: Colors.white, // 선 색상 설정
+                                                  thickness: 3.0, // 선 두께 설정
+                                                  height: 3.0, // 선 높이 설정
+                                                ),
+                                            ],
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),
@@ -2499,7 +2488,6 @@ String getSelectedLocation(BuildContext context)
   return Provider.of<LocationModel>(context, listen: false).selectedLocation;
 }
 
-/// 이미지 URL을 가져오는 함수
 /// 이미지 URL을 가져오는 함수
 String _getImageUrlHelper(Map<String, dynamic> marker, List<String> imageKeys, String defaultUrl) {
   for (String key in imageKeys) {
@@ -2672,7 +2660,8 @@ Widget buildThumbnailLoader(BuildContext context, String contentId) {
 }
 
 // 각각의 카드 빌더 함수들 정의
-Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
   return Padding(
     padding: const EdgeInsets.all(12.0),
@@ -2725,7 +2714,8 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
   );
 }
 
-Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
   return Padding(
     padding: const EdgeInsets.all(12.0),

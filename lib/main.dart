@@ -18,6 +18,8 @@ import 'pages/courseselect/location_model.dart'; // LocationModel 클래스 파�
 import 'package:mbtitravel/data_frame/data_frame.dart';
 import 'pages/locationexplain_copy/map_model.dart'; // MapModel이 정의된 파일
 import 'package:kakaomap_webview/kakaomap_webview.dart'; // view_Size 정의된 파일
+import 'pages/locationexplain_copy/locationexplain_copy_model.dart';
+
 
 void main() async {
 
@@ -58,6 +60,7 @@ void main() async {
               zoomLevel: 0, // 초기 줌 레벨 값
             ),
           ),
+
         ],
         child: const MyApp(),
       ),
