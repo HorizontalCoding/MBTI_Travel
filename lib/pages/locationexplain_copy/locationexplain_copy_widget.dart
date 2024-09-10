@@ -60,6 +60,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
   final animationsMap = <String, AnimationInfo>{};
 
+  // 초기화 코드: 스와이핑, 탭, 등의 컨트롤러 등을 초기화하는 코드
+  // model.dart하고 연결되어있음.
   @override
   void initState()
   {
@@ -80,14 +82,14 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
     });
 
-    // 초기 좌표 정해줌.
+    // 초기 좌표 정해줌.(좌표 초기화 코드)
     initializeKakaoMapPosition();
 
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
 
     // 지도 스와이핑 코드
-    // TabController에 리스너 추가
+    // TabController에 리스너 추가(업데이트 코드)
     _model.tabBarController?.addListener(()
     {
       final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
@@ -114,9 +116,11 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
       }
     });
 
+    // 마커 && 이미지 이니셜라이즈(초기화) 코드
     _initializeMarkersAndImages();
 
 
+    // 전환 될때마다 나오는 애니메이션 세트
     animationsMap.addAll({
       'containerOnPageLoadAnimation1': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
@@ -303,6 +307,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     });
   }
 
+  // 안드로이드 인터페이스(뒤로가기) 세팅
+
   Future<bool> _onWillPop() async
   {
     if (_model.tabBarController?.index == 1 || _model.tabBarController?.index == 2)
@@ -378,7 +384,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     return true;
   }
 
-  // 모델 초기화 함수
+  // 카카오 포지션 초기화 함수
   void initializeKakaoMapPosition()
   {
     // print("지도 실행 초기화");
@@ -402,6 +408,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     }
   }
 
+  // dataframe 이미지 로딩 비동기로 되어있음
   Future<void> _initializeMarkersAndImages() async
   {
     final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
@@ -541,7 +548,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                       padding: const EdgeInsetsDirectional.fromSTEB(
                           16.0, 16.0, 0.0, 0.0),
                       child: Text(
-                        /*여기 여행지 이름 들어갈 곳*/
+
                         getSelectedLocation(context),
                         style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily: 'Readex Pro',
@@ -691,6 +698,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                   ],
                                                 ),
                                               ),
+                                              // ========================================================인덱스 시작========================================================
                                               Padding(
                                                 padding: const EdgeInsetsDirectional
                                                     .fromSTEB(4.0, 30.0, 0.0, 0.0),
@@ -2359,6 +2367,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   ],
                                 ),
                               ),
+                              // ========================================================인덱스 시작========================================================
                               /*설명 카드 시작*/
                               Column(
                                 mainAxisSize: MainAxisSize.max,

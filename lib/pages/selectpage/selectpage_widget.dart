@@ -25,11 +25,12 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
     'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ',
   ];
 
-  final List<String> mbtiImages = [
+  final List<String> mbtiImages =
+  [
     'assets/mbti/istj.png', 'assets/mbti/isfj.png', 'assets/mbti/infj.png', 'assets/mbti/intj.png',
     'assets/mbti/istp.png', 'assets/mbti/isfp.png', 'assets/mbti/infp.png', 'assets/mbti/intp.png',
     'assets/mbti/estp.png', 'assets/mbti/esfp.png', 'assets/mbti/enfp.png', 'assets/mbti/entp.png',
-    'assets/mbti/estj.png', 'assets/mbti/esfj.png', 'assets/mbti/enfj.png', 'assets/mbti/entj.png',
+    'assets/mbti/estj.png', 'assets/images/Mbti_Tile_Images/Group1.png', 'assets/mbti/enfj.png', 'assets/mbti/entj.png',
   ];
 
   String? selectedMbti; // 선택된 MBTI 값을 저장
@@ -170,7 +171,9 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                       : null, // 선택된 MBTI 없으면 비활성화
                   text: 'NEXT',
                   options: FFButtonOptions(
+                    // 버튼 높이
                     height: 40.0,
+                    // 버튼 쪽 사이즈
                     padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                     color: selectedMbti != null ? Colors.blue : Colors.grey,
                     textStyle: const TextStyle(
