@@ -168,33 +168,77 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
           key: scaffoldKey,
           backgroundColor: Colors.black,
           appBar: AppBar(
-            backgroundColor: Colors.black,
+            backgroundColor: const Color(0xFF0C0202),
             automaticallyImplyLeading: false,
-            actions: [],
-            centerTitle: false,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: const Text(
+              'AI 분석',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                color: Colors.white,
+                fontSize: 22.0,
+              ),
+            ),
             elevation: 2.0,
           ),
           body: SafeArea(
             top: true,
             child: Column(
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(height: 100.0),
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Lottie.network(
-                    'https://lottie.host/4ca2d950-a7c3-48da-be6e-0d235802291c/s4mgELo7Tx.json',
-                    width: 400.0,
+                  child: Container(
+                    width: 250.0,
                     height: 250.0,
-                    fit: BoxFit.contain,
-                    animate: true,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // 그라데이션 효과를 가진 컨테이너
+                        Container(
+                          width: 150.0,
+                          height: 150.0,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.8), // 하얀색 그림자
+                                blurRadius: 80.0, // 그림자의 퍼짐 정도
+                                spreadRadius: 20.0, // 그림자의 확산 범위
+                              ),
+                            ],
+                          ),
+                        ),
+                        // 실제 Lottie 애니메이션을 담고 있는 컨테이너
+                        Container(
+                          width: 250.0, // Lottie 크기를 줄여서 그라데이션이 보이게 함
+                          height: 250.0,
+                          child: Lottie.network(
+                            'https://lottie.host/9c880513-ce22-4092-83a1-fb2163431bcb/X5eYZ8iT6u.json',
+                            fit: BoxFit.contain,
+                            animate: true,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Align(
                   alignment: AlignmentDirectional(0.0, 30.0),
                   child: Text(
-                    '추천 여행지를 불러오는 중입니다...',
+                    '\n\n\n\n추천 여행지를 불러오는 중입니다...',
                     style: FlutterFlowTheme.of(context).titleMedium.override(
                       fontFamily: 'Readex Pro',
+                      fontSize: 20,
                       letterSpacing: 0.0,
                     ),
                   ),
