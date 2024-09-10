@@ -181,12 +181,15 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
               children: [
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Lottie.network(
-                    'https://lottie.host/9c880513-ce22-4092-83a1-fb2163431bcb/X5eYZ8iT6u.json',
-                    width: 400.0,
-                    height: 250.0,
-                    fit: BoxFit.contain,
-                    animate: true,
+                  child: Container(
+                    width: 200.0, // Lottie 애니메이션 크기와 맞춤
+                    height: 200.0, // Lottie 애니메이션 크기와 맞춤
+                    color: Colors.white, // 하얀색 배경
+                    child: Lottie.network(
+                      'https://lottie.host/4ca2d950-a7c3-48da-be6e-0d235802291c/s4mgELo7Tx.json',
+                      fit: BoxFit.contain,
+                      animate: true,
+                    ),
                   ),
                 ),
                 Align(
