@@ -25,8 +25,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
     'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ',
   ];
 
-  final List<String> mbtiImages =
-  [
+  final List<String> mbtiImages = [
     'assets/images/Mbti_Tile_Images/ISTJ.png',
     'assets/images/Mbti_Tile_Images/ISFJ.png',
     'assets/images/Mbti_Tile_Images/INFJ.png',
@@ -107,9 +106,9 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                   padding: const EdgeInsets.all(15.0),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4, // 4열로 이미지 배치
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 0.0,
-                    childAspectRatio: 0.6, // 추가: 이미지와 텍스트가 함께 표시되도록 비율 조정
+                    crossAxisSpacing: 5.0, // 이미지 간의 가로 간격
+                    mainAxisSpacing: 40.0, // 이미지 간의 세로 간격 (행 간격)
+                    childAspectRatio: 1.0, // 이미지 비율을 1:1로 설정
                   ),
                   itemCount: mbtiTypes.length,
                   itemBuilder: (context, index) {
@@ -125,6 +124,8 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                         mbtiModel.setMBTI(mbti); // 전역 상태 업데이트
                       },
                       child: Container(
+                        width: 100, // 이미지 크기와 동일하게 설정
+                        height: 100, // 이미지 크기와 동일하게 설정
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: isSelected ? Colors.blue : Colors.transparent,
@@ -132,26 +133,16 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(image, width: 100.0, height: 100.0),
-                            const SizedBox(height: 5.0),
-                            Text(
-                              mbti,
-                              style: TextStyle(
-                                color: isSelected ? Colors.blue : Colors.white,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ],
+                        child: ClipRRect( // 이미지의 모서리도 둥글게 설정
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.asset(image, width: 100.0, height: 100.0, fit: BoxFit.cover), // 이미지를 꽉 채워 표시
                         ),
                       ),
                     );
                   },
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 15.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 15.0),
                   child: Text(
                     selectedMbti != null
                         ? 'MBTI는 $selectedMbti가 선택되었습니다'
@@ -163,7 +154,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: selectedMbti != null
                         ? () {

@@ -634,15 +634,14 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                                       child: InkWell(  // 카드 클릭 시 이벤트 추가
                                         onTap: () {
-                                          if (_model.tabBarController != null)
-                                          {
-                                          setState(() {
-                                            _model.updatePageControllerWithNewIndexForTap(0); // 탭 클릭 시 0번 카드로 이동
-                                          });
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndex(0); // 탭 클릭 시 0번 카드로 이동
+                                            });
 
-                                            // UI 갱신 후 탭 전환
-                                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            // 페이지 전환 후 탭 전환
+                                            Future.microtask(() {
+                                              _model.tabBarController!.animateTo(1, duration: Duration(milliseconds: 300), curve: Curves.easeInOut); // '코스설명' 탭으로 이동
                                             });
                                           }
                                         },
@@ -769,7 +768,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndexForTap(1); // 탭 클릭 시 1번 카드로 이동
+                                              _model.updatePageControllerWithNewIndex(1); // 탭 클릭 시 1번 카드로 이동
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -900,7 +899,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndexForTap(2); // 탭 클릭 시 2번 카드로 이동
+                                              _model.updatePageControllerWithNewIndex(2); // 탭 클릭 시 2번 카드로 이동
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1031,7 +1030,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndexForTap(3); // 탭 클릭 시 3번 카드로 이동
+                                              _model.updatePageControllerWithNewIndex(3); // 탭 클릭 시 3번 카드로 이동
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1162,7 +1161,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndexForTap(4); // 탭 클릭 시 4번 카드로 이동
+                                              _model.updatePageControllerWithNewIndex(4); // 탭 클릭 시 4번 카드로 이동
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1293,7 +1292,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndexForTap(5); // 탭 클릭 시 5번 카드로 이동
+                                              _model.updatePageControllerWithNewIndex(5); // 탭 클릭 시 5번 카드로 이동
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1424,7 +1423,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndexForTap(6); // 탭 클릭 시 6번 카드로 이동
+                                              _model.updatePageControllerWithNewIndex(6); // 탭 클릭 시 6번 카드로 이동
                                             });
 
                                             // UI 갱신 후 탭 전환

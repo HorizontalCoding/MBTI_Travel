@@ -170,15 +170,6 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
           appBar: AppBar(
             backgroundColor: const Color(0xFF0C0202),
             automaticallyImplyLeading: false,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
             title: const Text(
               'AI 분석',
               style: TextStyle(
