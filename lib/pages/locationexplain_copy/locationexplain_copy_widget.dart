@@ -618,133 +618,83 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                           child: TabBarView(
                             controller: _model.tabBarController,
                             children: [
+                              // 첫 번째 탭 (카드형 리스트)
                               Container(
                                 width: 100.0,
                                 height: 100.0,
                                 decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
+                                  color: FlutterFlowTheme.of(context).secondaryBackground,
                                 ),
                                 child: ListView(
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.vertical,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 1.0),
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 148.0,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 0.0,
-                                              color: Color(0xFFE0E3E7),
-                                              offset: Offset(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              4.0, 0.0, 0.0, 0.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 24.0,
-                                                child: Stack(
-                                                  alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      const AlignmentDirectional(
-                                                          0.0, -0.7),
-                                                      child: Container(
-                                                        width: 12.0,
-                                                        height: 12.0,
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                          shape: BoxShape.circle,
+                                    // 첫 번째 카드형 리스트 아이템
+                                    Padding( // 0번 카드
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                        onTap: () {
+                                          if (_model.tabBarController != null)
+                                          {
+                                          setState(() {
+                                            _model.updatePageControllerWithNewIndexForTap(0); // 탭 클릭 시 0번 카드로 이동
+                                          });
+
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0, // 그림자 효과
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 148.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // 썸네일 이미지
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
+                                                    child: Container(
+                                                      width: 77.0,
+                                                      height: 77.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme.of(context).accent1,
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          width: 2.0,
                                                         ),
                                                       ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                      children: [
-                                                        VerticalDivider(
-                                                          thickness: 2.0,
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ========================================================인덱스 시작========================================================
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: 77.0,
-                                                  height: 77.0,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .accent1,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
-                                                          .primary,
-                                                      width: 2.0,
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(50.0),
+                                                        child: buildThumbnailLoader(context, markerPositions[0]['contentid']),
+                                                      ),
                                                     ),
                                                   ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                    /*1번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[0]['contentid']),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      16.0, 16.0, 16.0, 12.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
+
+                                                  // 텍스트 및 설명 부분
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
+                                                          // 장소 이름
                                                           Text(
-                                                            /*첫 번째 장소 이름*/
-                                                            '${markerPositions[0]['name']}'
-                                                                .replaceAll(RegExp(r',\s*'), ',\n')
-                                                                .trim(),
+                                                            '${markerPositions[0]['name']}',
                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
                                                               fontFamily: 'Outfit',
                                                               color: Colors.white,
@@ -753,1008 +703,523 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 30.0,
-                                                            0.0, 0.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                          MainAxisSize.max,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    15.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // '코스설명' 탭으로 이동
-                                                                      _model.tabBarController!.animateTo(1);
 
-                                                                      Future.delayed(Duration(milliseconds: 100), () {
-                                                                        if (_model.pageController.hasClients && _model.pageController.page != 0) {
-                                                                          // 현재 페이지가 0번이 아닌 경우에만 이동
-                                                                          _model.pageController.animateToPage(
-                                                                            0, // 0번 카드로 이동
-                                                                            duration: Duration(milliseconds: 300), // 애니메이션 지속 시간
-                                                                            curve: Curves.easeInOut, // 애니메이션 커브
-                                                                          );
-                                                                        } else {
-                                                                          print("이미 0번째 카드에 있습니다.");
-                                                                        }
-                                                                      });
+                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                            child: Row(
+                                                              children: [
+                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
                                                                     }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      markerPositions[0]['lat'],  // 새 lat 값
+                                                                      markerPositions[0]['lng'],  // 새 lng 값
+                                                                      3,                         // 새 zoomLevel 값
+                                                                    );
                                                                   },
                                                                   child: Text(
-                                                                    '장소설명',
-                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                    'Kakao Map',
+                                                                    style: TextStyle(
                                                                       fontFamily: 'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(context).primary,
+                                                                      fontSize: 16.0,
                                                                       letterSpacing: 0.0,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(12.0),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                focusColor: Colors
-                                                                    .transparent,
-                                                                hoverColor: Colors
-                                                                    .transparent,
-                                                                highlightColor:
-                                                                Colors
-                                                                    .transparent,
-                                                                onTap: () async
-                                                                {
-                                                                  // 카카오맵 호출 코드
-                                                                  // openKakaoMapAtCoordinates(1, markerPositions);
-                                                                  if (_model.tabBarController != null)
-                                                                  {
-                                                                    _model.tabBarController!.animateTo(2); // "지도" 탭의 인덱스가 2
-                                                                  }
-
-                                                                  Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                    markerPositions[0]['lat'],  // 새 lat 값
-                                                                    markerPositions[0]['lng'],  // 새 lng 값
-                                                                    3,                         // 새 zoomLevel 값
-                                                                  );
-
-                                                                  debugPrint("첫번쨰 카카오 클릭");
-                                                                },
-                                                                child: Text(
-                                                                  'kakao map',
-                                                                  style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                      .labelMedium
-                                                                      .override(
-                                                                    fontFamily:
-                                                                    'Readex Pro',
-                                                                    letterSpacing:
-                                                                    0.0,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                focusColor: Colors
-                                                                    .transparent,
-                                                                hoverColor: Colors
-                                                                    .transparent,
-                                                                highlightColor:
-                                                                Colors
-                                                                    .transparent,
-                                                                onTap: () async {},
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .chevron_right_rounded,
-                                                                  color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                      .secondaryText,
-                                                                  size: 24.0,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation1']!),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 1.0),
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 148.0,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 0.0,
-                                              color: Color(0xFFE0E3E7),
-                                              offset: Offset(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              4.0, 0.0, 0.0, 0.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 24.0,
-                                                child: Stack(
-                                                  alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      const AlignmentDirectional(
-                                                          0.0, -0.7),
-                                                      child: Container(
-                                                        width: 12.0,
-                                                        height: 12.0,
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                          shape: BoxShape.circle,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                      children: [
-                                                        VerticalDivider(
-                                                          thickness: 2.0,
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: 77.0,
-                                                  height: 77.0,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .accent1,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
-                                                          .primary,
-                                                      width: 2.0,
-                                                    ),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                    /*2번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[1]['contentid']),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      16.0, 16.0, 16.0, 12.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
-                                                        children: [
-                                                          Text(
-                                                            /*두 번째 장소 이름*/
-                                                            '${markerPositions[1]['name']}'
-                                                                .replaceAll(RegExp(r',\s*'), ',\n')
-                                                                .trim(),
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 30.0,
-                                                            0.0, 0.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                          MainAxisSize.max,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    15.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // '코스설명' 탭으로 이동
-                                                                      _model.tabBarController!.animateTo(1);
-
-                                                                      Future.delayed(Duration(milliseconds: 100), () {
-                                                                        if (_model.pageController.hasClients && _model.pageController.page != 1) {
-                                                                          // 현재 페이지가 1번이 아닌 경우에만 이동
-                                                                          _model.pageController.animateToPage(
-                                                                            1, // 1번 카드로 이동
-                                                                            duration: Duration(milliseconds: 300), // 애니메이션 지속 시간
-                                                                            curve: Curves.easeInOut, // 애니메이션 커브
-                                                                          );
-                                                                        } else {
-                                                                          print("이미 1번째 카드에 있습니다.");
-                                                                        }
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소설명',
-                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(context).primary,
-                                                                      letterSpacing: 0.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors.transparent,
-                                                                focusColor: Colors.transparent,
-                                                                hoverColor: Colors.transparent,
-                                                                highlightColor: Colors.transparent,
-                                                                onTap: ()
-                                                                {
-                                                                  // 여기에 원하는 동작을 추가합니다. 예시로 콘솔 출력:
-                                                                  //openKakaoMapAtCoordinates(2, markerPositions);
-
-                                                                  if (_model.tabBarController != null)
-                                                                  {
-                                                                    _model.tabBarController!.animateTo(2); // "지도" 탭의 인덱스가 2
-                                                                  }
-
-                                                                  Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                    markerPositions[1]['lat'],  // 새 lat 값
-                                                                    markerPositions[1]['lng'],  // 새 lng 값
-                                                                    3,                         // 새 zoomLevel 값
-                                                                  );
-
-                                                                  debugPrint("두 번쨰 카카오 클릭");
-                                                                },
-                                                                child: Text(
-                                                                  'kakao map',
-                                                                  style: FlutterFlowTheme.
-                                                                  of(context).
-                                                                  labelMedium.
-                                                                  override(
-                                                                    fontFamily: 'Readex Pro',
-                                                                    letterSpacing: 0.0,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .chevron_right_rounded,
-                                                                color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                    .secondaryText,
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation2']!),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 1.0),
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 148.0,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 0.0,
-                                              color: Color(0xFFE0E3E7),
-                                              offset: Offset(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              4.0, 0.0, 0.0, 0.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 24.0,
-                                                child: Stack(
-                                                  alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      const AlignmentDirectional(
-                                                          0.0, -0.7),
-                                                      child: Container(
-                                                        width: 12.0,
-                                                        height: 12.0,
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                          shape: BoxShape.circle,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                      children: [
-                                                        VerticalDivider(
-                                                          thickness: 2.0,
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: 77.0,
-                                                  height: 77.0,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .accent1,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
-                                                          .primary,
-                                                      width: 2.0,
-                                                    ),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                    /*3번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[2]['contentid']),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      16.0, 16.0, 16.0, 12.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
-                                                        children: [
-                                                          Text(
-                                                            /*세번째 장소 이름*/
-                                                            '${markerPositions[2]['name']}'
-                                                                .replaceAll(RegExp(r',\s*'), ',\n')
-                                                                .trim(),
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 30.0,
-                                                            0.0, 0.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                          MainAxisSize.max,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    15.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // '코스설명' 탭으로 이동
-                                                                      _model.tabBarController!.animateTo(1);
-
-                                                                      Future.delayed(Duration(milliseconds: 100), () {
-                                                                        if (_model.pageController.hasClients && _model.pageController.page != 2) {
-                                                                          // 현재 페이지가 2번이 아닌 경우에만 이동
-                                                                          _model.pageController.animateToPage(
-                                                                            2, // 2번 카드로 이동
-                                                                            duration: Duration(milliseconds: 300), // 애니메이션 지속 시간
-                                                                            curve: Curves.easeInOut, // 애니메이션 커브
-                                                                          );
-                                                                        } else {
-                                                                          print("이미 2번째 카드에 있습니다.");
-                                                                        }
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소설명',
-                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(context).primary,
-                                                                      letterSpacing: 0.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors.transparent,
-                                                                focusColor: Colors.transparent,
-                                                                hoverColor: Colors.transparent,
-                                                                highlightColor: Colors.transparent,
-                                                                onTap: ()
-                                                                {
-                                                                  // 여기에 원하는 동작을 추가합니다. 예시로 콘솔 출력:
-                                                                  // openKakaoMapAtCoordinates(3, markerPositions);
-
-                                                                  if (_model.tabBarController != null)
-                                                                  {
-                                                                    _model.tabBarController!.animateTo(2); // "지도" 탭의 인덱스가 2
-                                                                  }
-
-                                                                  Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                    markerPositions[2]['lat'],  // 새 lat 값
-                                                                    markerPositions[2]['lng'],  // 새 lng 값
-                                                                    3,                         // 새 zoomLevel 값
-                                                                  );
-
-                                                                  debugPrint("세 번쨰 카카오 클릭");
-                                                                },
-                                                                child: Text(
-                                                                  'kakao map',
-                                                                  style: FlutterFlowTheme.
-                                                                  of(context).
-                                                                  labelMedium.
-                                                                  override(
-                                                                    fontFamily: 'Readex Pro',
-                                                                    letterSpacing: 0.0,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .chevron_right_rounded,
-                                                                color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                    .secondaryText,
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation3']!),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 1.0),
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 148.0,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 0.0,
-                                              color: Color(0xFFE0E3E7),
-                                              offset: Offset(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                          const AlignmentDirectional(0.0, 0.0),
-                                          child: Padding(
-                                            padding: const EdgeInsetsDirectional
-                                                .fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  width: 24.0,
-                                                  child: Stack(
-                                                    alignment:
-                                                    const AlignmentDirectional(
-                                                        0.0, 0.0),
-                                                    children: [
-                                                      Align(
-                                                        alignment:
-                                                        const AlignmentDirectional(
-                                                            0.0, -0.7),
-                                                        child: Container(
-                                                          width: 12.0,
-                                                          height: 12.0,
-                                                          decoration: BoxDecoration(
-                                                            color:
-                                                            FlutterFlowTheme.of(
-                                                                context)
-                                                                .primary,
-                                                            shape: BoxShape.circle,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          VerticalDivider(
-                                                            thickness: 2.0,
-                                                            color:
-                                                            FlutterFlowTheme.of(
-                                                                context)
-                                                                .primary,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      4.0, 30.0, 0.0, 0.0),
-                                                  child: Container(
-                                                    width: 77.0,
-                                                    height: 77.0,
-                                                    decoration: BoxDecoration(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
-                                                          .accent1,
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: FlutterFlowTheme.of(
-                                                            context)
-                                                            .primary,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          50.0),
-                                                      /*4번 썸네일 이미지*/
-                                                      child: buildThumbnailLoader(context, markerPositions[3]['contentid']),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                    const EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                        16.0, 16.0, 16.0, 12.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisSize:
-                                                          MainAxisSize.max,
-                                                          children: [
-                                                            Text(
-                                                              /*네번째 장소 이름*/
-                                                              '${markerPositions[3]['name']}'
-                                                                  .replaceAll(RegExp(r',\s*'), ',\n')
-                                                                  .trim(),
-                                                              style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                fontFamily: 'Outfit',
-                                                                color: Colors.white,
-                                                                fontSize: 16.0,
-                                                                letterSpacing: 0.0,
-                                                                fontWeight: FontWeight.w500,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(0.0,
-                                                              30.0, 0.0, 0.0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                            MainAxisSize.max,
-                                                            children: [
-                                                              Expanded(
-                                                                child: Padding(
-                                                                  padding:
-                                                                  const EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                      0.0,
-                                                                      15.0,
-                                                                      0.0,
-                                                                      0.0),
+                                                                // 화살표 아이콘
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
                                                                   child: InkWell(
-                                                                    onTap: () {
-                                                                      if (_model.tabBarController != null) {
-                                                                        // '코스설명' 탭으로 이동
-                                                                        _model.tabBarController!.animateTo(1);
-
-                                                                        Future.delayed(Duration(milliseconds: 100), () {
-                                                                          if (_model.pageController.hasClients && _model.pageController.page != 3) {
-                                                                            // 현재 페이지가 3번이 아닌 경우에만 이동
-                                                                            _model.pageController.animateToPage(
-                                                                              3, // 3번 카드로 이동
-                                                                              duration: Duration(milliseconds: 300), // 애니메이션 지속 시간
-                                                                              curve: Curves.easeInOut, // 애니메이션 커브
-                                                                            );
-                                                                          } else {
-                                                                            print("이미 3번째 카드에 있습니다.");
-                                                                          }
-                                                                        });
-                                                                      }
-                                                                    },
-                                                                    child: Text(
-                                                                      '장소설명',
-                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                        fontFamily: 'Readex Pro',
-                                                                        color: FlutterFlowTheme.of(context).primary,
-                                                                        letterSpacing: 0.0,
-                                                                      ),
+                                                                    onTap: () {},
+                                                                    child: Icon(
+                                                                      Icons.chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                      size: 24.0,
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              Padding(
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    // 다른 카드형 리스트 아이템들 추가 가능...
+                                    Padding( // 1번카드
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndexForTap(1); // 탭 클릭 시 1번 카드로 이동
+                                            });
 
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                child: InkWell(
-                                                                  splashColor: Colors.transparent,
-                                                                  focusColor: Colors.transparent,
-                                                                  hoverColor: Colors.transparent,
-                                                                  highlightColor: Colors.transparent,
-                                                                  onTap: ()
-                                                                  {
-                                                                    // 여기에 원하는 동작을 추가합니다. 예시로 콘솔 출력:
-                                                                    // openKakaoMapAtCoordinates(4, markerPositions);
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0, // 그림자 효과
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 148.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // 썸네일 이미지
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
+                                                    child: Container(
+                                                      width: 77.0,
+                                                      height: 77.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme.of(context).accent1,
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          width: 2.0,
+                                                        ),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(50.0),
+                                                        child: buildThumbnailLoader(context, markerPositions[1]['contentid']),
+                                                      ),
+                                                    ),
+                                                  ),
 
-                                                                    if (_model.tabBarController != null)
-                                                                    {
-                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭의 인덱스가 2
+                                                  // 텍스트 및 설명 부분
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          // 장소 이름
+                                                          Text(
+                                                            '${markerPositions[1]['name']}',
+                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                              fontFamily: 'Outfit',
+                                                              color: Colors.white,
+                                                              fontSize: 16.0,
+                                                              letterSpacing: 0.0,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+
+                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                            child: Row(
+                                                              children: [
+                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
                                                                     }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      markerPositions[1]['lat'],  // 새 lat 값
+                                                                      markerPositions[1]['lng'],  // 새 lng 값
+                                                                      3,                         // 새 zoomLevel 값
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    'Kakao Map',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Readex Pro',
+                                                                      fontSize: 16.0,
+                                                                      letterSpacing: 0.0,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(12.0),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                // 화살표 아이콘
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                                                                  child: InkWell(
+                                                                    onTap: () {},
+                                                                    child: Icon(
+                                                                      Icons.chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                      size: 24.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding( // 2번 카드
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndexForTap(2); // 탭 클릭 시 2번 카드로 이동
+                                            });
 
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0, // 그림자 효과
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 148.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // 썸네일 이미지
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
+                                                    child: Container(
+                                                      width: 77.0,
+                                                      height: 77.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme.of(context).accent1,
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          width: 2.0,
+                                                        ),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(50.0),
+                                                        child: buildThumbnailLoader(context, markerPositions[2]['contentid']),
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                  // 텍스트 및 설명 부분
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          // 장소 이름
+                                                          Text(
+                                                            '${markerPositions[2]['name']}',
+                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                              fontFamily: 'Outfit',
+                                                              color: Colors.white,
+                                                              fontSize: 16.0,
+                                                              letterSpacing: 0.0,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+
+                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                            child: Row(
+                                                              children: [
+                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                                    }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      markerPositions[2]['lat'],  // 새 lat 값
+                                                                      markerPositions[2]['lng'],  // 새 lng 값
+                                                                      3,                         // 새 zoomLevel 값
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    'Kakao Map',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Readex Pro',
+                                                                      fontSize: 16.0,
+                                                                      letterSpacing: 0.0,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(12.0),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                // 화살표 아이콘
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                                                                  child: InkWell(
+                                                                    onTap: () {},
+                                                                    child: Icon(
+                                                                      Icons.chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                      size: 24.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding( // 3번 카드
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndexForTap(3); // 탭 클릭 시 3번 카드로 이동
+                                            });
+
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0, // 그림자 효과
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 148.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // 썸네일 이미지
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
+                                                    child: Container(
+                                                      width: 77.0,
+                                                      height: 77.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme.of(context).accent1,
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          width: 2.0,
+                                                        ),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(50.0),
+                                                        child: buildThumbnailLoader(context, markerPositions[3]['contentid']),
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                  // 텍스트 및 설명 부분
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          // 장소 이름
+                                                          Text(
+                                                            '${markerPositions[3]['name']}',
+                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                              fontFamily: 'Outfit',
+                                                              color: Colors.white,
+                                                              fontSize: 16.0,
+                                                              letterSpacing: 0.0,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+
+                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                            child: Row(
+                                                              children: [
+                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                                    }
                                                                     Provider.of<MapModel>(context, listen: false).updateCoordinates(
                                                                       markerPositions[3]['lat'],  // 새 lat 값
                                                                       markerPositions[3]['lng'],  // 새 lng 값
                                                                       3,                         // 새 zoomLevel 값
                                                                     );
-
-                                                                    debugPrint("네 번쨰 카카오 클릭");
                                                                   },
                                                                   child: Text(
-                                                                    'kakao map',
-                                                                    style: FlutterFlowTheme.
-                                                                    of(context).
-                                                                    labelMedium.
-                                                                    override(
+                                                                    'Kakao Map',
+                                                                    style: TextStyle(
                                                                       fontFamily: 'Readex Pro',
+                                                                      fontSize: 16.0,
                                                                       letterSpacing: 0.0,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(12.0),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    15.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: InkWell(
-                                                                  splashColor: Colors
-                                                                      .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                                  onTap:
-                                                                      () async {},
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .chevron_right_rounded,
-                                                                    color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                        .secondaryText,
-                                                                    size: 24.0,
+                                                                // 화살표 아이콘
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                                                                  child: InkWell(
+                                                                    onTap: () {},
+                                                                    child: Icon(
+                                                                      Icons.chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                      size: 24.0,
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ],
+                                                              ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation4']!),
+                                      ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 1.0),
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 148.0,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 0.0,
-                                              color: Color(0xFFE0E3E7),
-                                              offset: Offset(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              4.0, 0.0, 0.0, 0.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 24.0,
-                                                child: Stack(
-                                                  alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      const AlignmentDirectional(
-                                                          0.0, -0.7),
-                                                      child: Container(
-                                                        width: 12.0,
-                                                        height: 12.0,
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                          shape: BoxShape.circle,
+                                    Padding( // 4번 카드
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndexForTap(4); // 탭 클릭 시 4번 카드로 이동
+                                            });
+
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0, // 그림자 효과
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 148.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // 썸네일 이미지
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
+                                                    child: Container(
+                                                      width: 77.0,
+                                                      height: 77.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme.of(context).accent1,
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          width: 2.0,
                                                         ),
                                                       ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                      children: [
-                                                        VerticalDivider(
-                                                          thickness: 2.0,
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: 77.0,
-                                                  height: 77.0,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .accent1,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
-                                                          .primary,
-                                                      width: 2.0,
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(50.0),
+                                                        child: buildThumbnailLoader(context, markerPositions[4]['contentid']),
+                                                      ),
                                                     ),
                                                   ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                    /*5번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[4]['contentid']),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      16.0, 16.0, 16.0, 12.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
+
+                                                  // 텍스트 및 설명 부분
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
+                                                          // 장소 이름
                                                           Text(
-                                                            /*다섯번째 장소 이름*/
-                                                            '${markerPositions[4]['name']}'
-                                                                .replaceAll(RegExp(r',\s*'), ',\n')
-                                                                .trim(),
+                                                            '${markerPositions[4]['name']}',
                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
                                                               fontFamily: 'Outfit',
                                                               color: Colors.white,
@@ -1763,240 +1228,129 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 30.0,
-                                                            0.0, 0.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                          MainAxisSize.max,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    15.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // '코스설명' 탭으로 이동
-                                                                      _model.tabBarController!.animateTo(1);
 
-                                                                      Future.delayed(Duration(milliseconds: 100), () {
-                                                                        if (_model.pageController.hasClients && _model.pageController.page != 4) {
-                                                                          // 현재 페이지가 4번이 아닌 경우에만 이동
-                                                                          _model.pageController.animateToPage(
-                                                                            4, // 4번 카드로 이동
-                                                                            duration: Duration(milliseconds: 300), // 애니메이션 지속 시간
-                                                                            curve: Curves.easeInOut, // 애니메이션 커브
-                                                                          );
-                                                                        } else {
-                                                                          print("이미 4번째 카드에 있습니다.");
-                                                                        }
-                                                                      });
+                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                            child: Row(
+                                                              children: [
+                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
                                                                     }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      markerPositions[4]['lat'],  // 새 lat 값
+                                                                      markerPositions[4]['lng'],  // 새 lng 값
+                                                                      3,                         // 새 zoomLevel 값
+                                                                    );
                                                                   },
                                                                   child: Text(
-                                                                    '장소설명',
-                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                    'Kakao Map',
+                                                                    style: TextStyle(
                                                                       fontFamily: 'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(context).primary,
+                                                                      fontSize: 16.0,
                                                                       letterSpacing: 0.0,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(12.0),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-
-                                                              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors.transparent,
-                                                                focusColor: Colors.transparent,
-                                                                hoverColor: Colors.transparent,
-                                                                highlightColor: Colors.transparent,
-                                                                onTap: ()
-                                                                {
-                                                                  // 여기에 원하는 동작을 추가합니다. 예시로 콘솔 출력:
-                                                                  // openKakaoMapAtCoordinates(5, markerPositions);
-
-                                                                  if (_model.tabBarController != null)
-                                                                  {
-                                                                    _model.tabBarController!.animateTo(2); // "지도" 탭의 인덱스가 2
-                                                                  }
-
-                                                                  Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                    markerPositions[4]['lat'],  // 새 lat 값
-                                                                    markerPositions[4]['lng'],  // 새 lng 값
-                                                                    3,                         // 새 zoomLevel 값
-                                                                  );
-
-                                                                  debugPrint("다섯 번쨰 카카오 클릭");
-                                                                },
-                                                                child: Text(
-                                                                  'kakao map',
-                                                                  style: FlutterFlowTheme.
-                                                                  of(context).
-                                                                  labelMedium.
-                                                                  override(
-                                                                    fontFamily: 'Readex Pro',
-                                                                    letterSpacing: 0.0,
+                                                                // 화살표 아이콘
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                                                                  child: InkWell(
+                                                                    onTap: () {},
+                                                                    child: Icon(
+                                                                      Icons.chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                      size: 24.0,
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
+                                                              ],
                                                             ),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .chevron_right_rounded,
-                                                                color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                    .secondaryText,
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation5']!),
+                                      ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 1.0),
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 148.0,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 0.0,
-                                              color: Color(0xFFE0E3E7),
-                                              offset: Offset(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              4.0, 0.0, 0.0, 0.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 24.0,
-                                                child: Stack(
-                                                  alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      const AlignmentDirectional(
-                                                          0.0, -0.7),
-                                                      child: Container(
-                                                        width: 12.0,
-                                                        height: 12.0,
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                          shape: BoxShape.circle,
+                                    Padding( // 5번 카드
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndexForTap(5); // 탭 클릭 시 5번 카드로 이동
+                                            });
+
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0, // 그림자 효과
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 148.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // 썸네일 이미지
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
+                                                    child: Container(
+                                                      width: 77.0,
+                                                      height: 77.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme.of(context).accent1,
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          width: 2.0,
                                                         ),
                                                       ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                      children: [
-                                                        VerticalDivider(
-                                                          thickness: 2.0,
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: 77.0,
-                                                  height: 77.0,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .accent1,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
-                                                          .primary,
-                                                      width: 2.0,
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(50.0),
+                                                        child: buildThumbnailLoader(context, markerPositions[5]['contentid']),
+                                                      ),
                                                     ),
                                                   ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                    /*6번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[5]['contentid']),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      16.0, 16.0, 16.0, 12.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
+
+                                                  // 텍스트 및 설명 부분
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
+                                                          // 장소 이름
                                                           Text(
-                                                            /*여섯번째 장소 이름*/
-                                                            '${markerPositions[5]['name']}'
-                                                                .replaceAll(RegExp(r',\s*'), ',\n')
-                                                                .trim(),
+                                                            '${markerPositions[5]['name']}',
                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
                                                               fontFamily: 'Outfit',
                                                               color: Colors.white,
@@ -2005,239 +1359,129 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 30.0,
-                                                            0.0, 0.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                          MainAxisSize.max,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    15.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // '코스설명' 탭으로 이동
-                                                                      _model.tabBarController!.animateTo(1);
 
-                                                                      Future.delayed(Duration(milliseconds: 100), () {
-                                                                        if (_model.pageController.hasClients && _model.pageController.page != 5) {
-                                                                          // 현재 페이지가 5번이 아닌 경우에만 이동
-                                                                          _model.pageController.animateToPage(
-                                                                            5, // 5번 카드로 이동
-                                                                            duration: Duration(milliseconds: 300), // 애니메이션 지속 시간
-                                                                            curve: Curves.easeInOut, // 애니메이션 커브
-                                                                          );
-                                                                        } else {
-                                                                          print("이미 5번째 카드에 있습니다.");
-                                                                        }
-                                                                      });
+                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                            child: Row(
+                                                              children: [
+                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
                                                                     }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      markerPositions[5]['lat'],  // 새 lat 값
+                                                                      markerPositions[5]['lng'],  // 새 lng 값
+                                                                      3,                         // 새 zoomLevel 값
+                                                                    );
                                                                   },
                                                                   child: Text(
-                                                                    '장소설명',
-                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                    'Kakao Map',
+                                                                    style: TextStyle(
                                                                       fontFamily: 'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(context).primary,
+                                                                      fontSize: 16.0,
                                                                       letterSpacing: 0.0,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(12.0),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors.transparent,
-                                                                focusColor: Colors.transparent,
-                                                                hoverColor: Colors.transparent,
-                                                                highlightColor: Colors.transparent,
-                                                                onTap: ()
-                                                                {
-                                                                  // 여기에 원하는 동작을 추가합니다. 예시로 콘솔 출력:
-                                                                  // openKakaoMapAtCoordinates(6, markerPositions);
-
-                                                                  if (_model.tabBarController != null)
-                                                                  {
-                                                                    _model.tabBarController!.animateTo(2); // "지도" 탭의 인덱스가 2
-                                                                  }
-
-                                                                  Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                    markerPositions[5]['lat'],  // 새 lat 값
-                                                                    markerPositions[5]['lng'],  // 새 lng 값
-                                                                    3,                         // 새 zoomLevel 값
-                                                                  );
-
-                                                                  debugPrint("여섯 번쨰 카카오 클릭");
-                                                                },
-                                                                child: Text(
-                                                                  'kakao map',
-                                                                  style: FlutterFlowTheme.
-                                                                  of(context).
-                                                                  labelMedium.
-                                                                  override(
-                                                                    fontFamily: 'Readex Pro',
-                                                                    letterSpacing: 0.0,
+                                                                // 화살표 아이콘
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                                                                  child: InkWell(
+                                                                    onTap: () {},
+                                                                    child: Icon(
+                                                                      Icons.chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                      size: 24.0,
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
+                                                              ],
                                                             ),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .chevron_right_rounded,
-                                                                color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                    .secondaryText,
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation6']!),
+                                      ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 1.0),
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 148.0,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 0.0,
-                                              color: Color(0xFFE0E3E7),
-                                              offset: Offset(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              4.0, 0.0, 0.0, 0.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 24.0,
-                                                child: Stack(
-                                                  alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      const AlignmentDirectional(
-                                                          0.0, -0.7),
-                                                      child: Container(
-                                                        width: 12.0,
-                                                        height: 12.0,
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                          shape: BoxShape.circle,
+                                    Padding( // 6번 카드
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndexForTap(6); // 탭 클릭 시 6번 카드로 이동
+                                            });
+
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0, // 그림자 효과
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 148.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // 썸네일 이미지
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
+                                                    child: Container(
+                                                      width: 77.0,
+                                                      height: 77.0,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme.of(context).accent1,
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme.of(context).primary,
+                                                          width: 2.0,
                                                         ),
                                                       ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                      children: [
-                                                        VerticalDivider(
-                                                          thickness: 2.0,
-                                                          color:
-                                                          FlutterFlowTheme.of(
-                                                              context)
-                                                              .primary,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: 77.0,
-                                                  height: 77.0,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .accent1,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
-                                                          .primary,
-                                                      width: 2.0,
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(50.0),
+                                                        child: buildThumbnailLoader(context, markerPositions[6]['contentid']),
+                                                      ),
                                                     ),
                                                   ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                    /*7번 썸네일 이미지*/
-                                                    child: buildThumbnailLoader(context, markerPositions[6]['contentid']),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      16.0, 16.0, 16.0, 12.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
+
+                                                  // 텍스트 및 설명 부분
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
+                                                          // 장소 이름
                                                           Text(
-                                                            /*일곱번째 장소 이름*/
-                                                            '${markerPositions[6]['name']}'
-                                                                .replaceAll(RegExp(r',\s*'), ',\n')
-                                                                .trim(),
+                                                            '${markerPositions[6]['name']}',
                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
                                                               fontFamily: 'Outfit',
                                                               color: Colors.white,
@@ -2246,123 +1490,64 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 30.0,
-                                                            0.0, 0.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                          MainAxisSize.max,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    15.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // '코스설명' 탭으로 이동
-                                                                      _model.tabBarController!.animateTo(1);
 
-                                                                      Future.delayed(Duration(milliseconds: 100), () {
-                                                                        if (_model.pageController.hasClients && _model.pageController.page != 6) {
-                                                                          // 현재 페이지가 6번이 아닌 경우에만 이동
-                                                                          _model.pageController.animateToPage(
-                                                                            6, // 6번 카드로 이동
-                                                                            duration: Duration(milliseconds: 300), // 애니메이션 지속 시간
-                                                                            curve: Curves.easeInOut, // 애니메이션 커브
-                                                                          );
-                                                                        } else {
-                                                                          print("이미 6번째 카드에 있습니다.");
-                                                                        }
-                                                                      });
+                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                            child: Row(
+                                                              children: [
+                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
                                                                     }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      markerPositions[6]['lat'],  // 새 lat 값
+                                                                      markerPositions[6]['lng'],  // 새 lng 값
+                                                                      3,                         // 새 zoomLevel 값
+                                                                    );
                                                                   },
                                                                   child: Text(
-                                                                    '장소설명',
-                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                    'Kakao Map',
+                                                                    style: TextStyle(
                                                                       fontFamily: 'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(context).primary,
+                                                                      fontSize: 16.0,
                                                                       letterSpacing: 0.0,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(12.0),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-
-                                                              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors.transparent,
-                                                                focusColor: Colors.transparent,
-                                                                hoverColor: Colors.transparent,
-                                                                highlightColor: Colors.transparent,
-                                                                onTap: () {
-                                                                  // 여기에 원하는 동작을 추가합니다. 예시로 콘솔 출력:
-                                                                  // openKakaoMapAtCoordinates(7, markerPositions);
-
-                                                                  if (_model.tabBarController != null)
-                                                                  {
-                                                                    _model.tabBarController!.animateTo(2); // "지도" 탭의 인덱스가 2
-                                                                  }
-
-                                                                  Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                    markerPositions[6]['lat'],  // 새 lat 값
-                                                                    markerPositions[6]['lng'],  // 새 lng 값
-                                                                    3,                         // 새 zoomLevel 값
-                                                                  );
-
-                                                                  debugPrint("일곱 번쨰 카카오 클릭");
-                                                                },
-                                                                child: Text(
-                                                                  'kakao map',
-                                                                  style: FlutterFlowTheme.
-                                                                  of(context).
-                                                                  labelMedium.
-                                                                  override(
-                                                                    fontFamily: 'Readex Pro',
-                                                                    letterSpacing: 0.0,
+                                                                // 화살표 아이콘
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                                                                  child: InkWell(
+                                                                    onTap: () {},
+                                                                    child: Icon(
+                                                                      Icons.chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                      size: 24.0,
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
+                                                              ],
                                                             ),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .chevron_right_rounded,
-                                                                color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                    .secondaryText,
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation7']!),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -2669,37 +1854,49 @@ Widget buildThumbnailLoader(BuildContext context, String contentId) {
 }
 
 // 각각의 카드 빌더 함수들 정의
-Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+        SizedBox(height: 20.0),
+        // 제목을 이미지 위쪽에 배치
+        Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                markerPosition['name'],
+                style: FlutterFlowTheme.of(context).headlineLarge.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  letterSpacing: 0.0,
+                ),
+                maxLines: 1, // 한 줄로 제한
+                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              ),
+            )
+        ),
+
+        SizedBox(height: 50.0),
+
+        // 이미지
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+          child: AspectRatio(
+            aspectRatio: 16/9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
-              // markerPosition을 List로 감싸서 전달
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Text(
-            markerPosition['name'],
-            style: FlutterFlowTheme.of(context).headlineLarge.override(
-              fontFamily: 'Outfit',
-              color: Colors.white,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ),
+        // 설명 텍스트
+
+        SizedBox(height: 50.0),
+
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
           child: Html(
@@ -2723,39 +1920,51 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
   );
 }
 
-Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+        SizedBox(height: 20.0),
+        // 제목을 이미지 위쪽에 배치
+        Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                markerPosition['name'],
+                style: FlutterFlowTheme.of(context).headlineLarge.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  letterSpacing: 0.0,
+                ),
+                maxLines: 1, // 한 줄로 제한
+                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              ),
+            )
+        ),
+
+        SizedBox(height: 50.0),
+
+        // 이미지
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+          child: AspectRatio(
+            aspectRatio: 16/9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
-              // markerPosition을 List로 감싸서 전달
             ),
           ),
         ),
+        // 설명 텍스트
+
+        SizedBox(height: 50.0),
+
         Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Text(
-            markerPosition['name'],
-            style: FlutterFlowTheme.of(context).headlineLarge.override(
-              fontFamily: 'Outfit',
-              color: Colors.white,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
           child: Html(
             data: """
               <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
@@ -2782,31 +1991,44 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+        SizedBox(height: 20.0),
+        // 제목을 이미지 위쪽에 배치
+        Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                markerPosition['name'],
+                style: FlutterFlowTheme.of(context).headlineLarge.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  letterSpacing: 0.0,
+                ),
+                maxLines: 1, // 한 줄로 제한
+                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              ),
+            )
+        ),
+
+        SizedBox(height: 50.0),
+
+        // 이미지
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+          child: AspectRatio(
+            aspectRatio: 16/9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
-              // markerPosition을 List로 감싸서 전달
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Text(
-            markerPosition['name'],
-            style: FlutterFlowTheme.of(context).headlineLarge.override(
-              fontFamily: 'Outfit',
-              color: Colors.white,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ),
+        // 설명 텍스트
+
+        SizedBox(height: 50.0),
+
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
           child: Html(
@@ -2835,31 +2057,44 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+        SizedBox(height: 20.0),
+        // 제목을 이미지 위쪽에 배치
+        Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                markerPosition['name'],
+                style: FlutterFlowTheme.of(context).headlineLarge.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  letterSpacing: 0.0,
+                ),
+                maxLines: 1, // 한 줄로 제한
+                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              ),
+            )
+        ),
+
+        SizedBox(height: 50.0),
+
+        // 이미지
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+          child: AspectRatio(
+            aspectRatio: 16/9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
-              // markerPosition을 List로 감싸서 전달
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Text(
-            markerPosition['name'],
-            style: FlutterFlowTheme.of(context).headlineLarge.override(
-              fontFamily: 'Outfit',
-              color: Colors.white,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ),
+        // 설명 텍스트
+
+        SizedBox(height: 50.0),
+
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
           child: Html(
@@ -2888,31 +2123,44 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+        SizedBox(height: 20.0),
+        // 제목을 이미지 위쪽에 배치
+        Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                markerPosition['name'],
+                style: FlutterFlowTheme.of(context).headlineLarge.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  letterSpacing: 0.0,
+                ),
+                maxLines: 1, // 한 줄로 제한
+                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              ),
+            )
+        ),
+
+        SizedBox(height: 50.0),
+
+        // 이미지
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+          child: AspectRatio(
+            aspectRatio: 16/9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
-              // markerPosition을 List로 감싸서 전달
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Text(
-            markerPosition['name'],
-            style: FlutterFlowTheme.of(context).headlineLarge.override(
-              fontFamily: 'Outfit',
-              color: Colors.white,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ),
+        // 설명 텍스트
+
+        SizedBox(height: 50.0),
+
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
           child: Html(
@@ -2941,31 +2189,44 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+        SizedBox(height: 20.0),
+        // 제목을 이미지 위쪽에 배치
+        Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                markerPosition['name'],
+                style: FlutterFlowTheme.of(context).headlineLarge.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  letterSpacing: 0.0,
+                ),
+                maxLines: 1, // 한 줄로 제한
+                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              ),
+            )
+        ),
+
+        SizedBox(height: 50.0),
+
+        // 이미지
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+          child: AspectRatio(
+            aspectRatio: 16/9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
-              // markerPosition을 List로 감싸서 전달
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Text(
-            markerPosition['name'],
-            style: FlutterFlowTheme.of(context).headlineLarge.override(
-              fontFamily: 'Outfit',
-              color: Colors.white,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ),
+        // 설명 텍스트
+
+        SizedBox(height: 50.0),
+
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
           child: Html(
@@ -2994,31 +2255,44 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+        SizedBox(height: 20.0),
+        // 제목을 이미지 위쪽에 배치
+        Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                markerPosition['name'],
+                style: FlutterFlowTheme.of(context).headlineLarge.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  letterSpacing: 0.0,
+                ),
+                maxLines: 1, // 한 줄로 제한
+                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              ),
+            )
+        ),
+
+        SizedBox(height: 50.0),
+
+        // 이미지
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+          child: AspectRatio(
+            aspectRatio: 16/9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
-              // markerPosition을 List로 감싸서 전달
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Text(
-            markerPosition['name'],
-            style: FlutterFlowTheme.of(context).headlineLarge.override(
-              fontFamily: 'Outfit',
-              color: Colors.white,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ),
+        // 설명 텍스트
+
+        SizedBox(height: 50.0),
+
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
           child: Html(

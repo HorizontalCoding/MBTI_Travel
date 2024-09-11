@@ -27,10 +27,22 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
 
   final List<String> mbtiImages =
   [
-    'assets/mbti/istj.png', 'assets/mbti/isfj.png', 'assets/mbti/infj.png', 'assets/mbti/intj.png',
-    'assets/mbti/istp.png', 'assets/mbti/isfp.png', 'assets/mbti/infp.png', 'assets/mbti/intp.png',
-    'assets/mbti/estp.png', 'assets/mbti/esfp.png', 'assets/mbti/enfp.png', 'assets/mbti/entp.png',
-    'assets/mbti/estj.png', 'assets/images/Mbti_Tile_Images/Group1.png', 'assets/mbti/enfj.png', 'assets/mbti/entj.png',
+    'assets/images/Mbti_Tile_Images/ISTJ.png',
+    'assets/images/Mbti_Tile_Images/ISFJ.png',
+    'assets/images/Mbti_Tile_Images/INFJ.png',
+    'assets/images/Mbti_Tile_Images/INTJ.png',
+    'assets/images/Mbti_Tile_Images/ISTP.png',
+    'assets/images/Mbti_Tile_Images/ISFP.png',
+    'assets/images/Mbti_Tile_Images/INFP.png',
+    'assets/images/Mbti_Tile_Images/INTP.png',
+    'assets/images/Mbti_Tile_Images/ESTP.png',
+    'assets/images/Mbti_Tile_Images/ESFP.png',
+    'assets/images/Mbti_Tile_Images/ENFP.png',
+    'assets/images/Mbti_Tile_Images/ENTP.png',
+    'assets/images/Mbti_Tile_Images/ESTJ.png',
+    'assets/images/Mbti_Tile_Images/ESFJ.png',
+    'assets/images/Mbti_Tile_Images/ENFJ.png',
+    'assets/images/Mbti_Tile_Images/ENTJ.png',
   ];
 
   String? selectedMbti; // 선택된 MBTI 값을 저장
@@ -71,7 +83,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
             },
           ),
           title: const Text(
-            'MBTI TRAVEL',
+            'MBTI 선택',
             style: TextStyle(
               fontFamily: 'Outfit',
               color: Colors.white,
@@ -82,27 +94,22 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 20.0),
-                child: Text(
-                  'MBTI 선택',
-                  style: TextStyle(
-                    fontFamily: 'Readex Pro',
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
+          child: SingleChildScrollView( // 추가: 스크롤 가능하게 처리
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0), // 상단/하단 패딩을 10으로 줄임
                 ),
-              ),
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(20.0),
+                GridView.builder(
+                  shrinkWrap: true, // 추가: GridView 크기 조절
+                  physics: const NeverScrollableScrollPhysics(), // GridView 자체 스크롤을 비활성화
+                  padding: const EdgeInsets.all(15.0),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4, // 4열로 이미지 배치
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 5.0,
+                    mainAxisSpacing: 0.0,
+                    childAspectRatio: 0.6, // 추가: 이미지와 텍스트가 함께 표시되도록 비율 조정
                   ),
                   itemCount: mbtiTypes.length,
                   itemBuilder: (context, index) {
@@ -128,8 +135,8 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(image, width: 50.0, height: 50.0),
-                            const SizedBox(height: 10.0),
+                            Image.asset(image, width: 100.0, height: 100.0),
+                            const SizedBox(height: 5.0),
                             Text(
                               mbti,
                               style: TextStyle(
@@ -143,48 +150,48 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                     );
                   },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 80.0),
-                child: Text(
-                  selectedMbti != null
-                      ? 'MBTI는 $selectedMbti가 선택되었습니다'
-                      : '당신의 MBTI를 선택해주세요.',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 80.0),
-                child: FFButtonWidget(
-                  onPressed: selectedMbti != null
-                      ? () {
-                    context.pushNamed(
-                      'courseselect',
-                      extra: <String, dynamic>{
-                        'mbti': selectedMbti,
-                      },
-                    );
-                  }
-                      : null, // 선택된 MBTI 없으면 비활성화
-                  text: 'NEXT',
-                  options: FFButtonOptions(
-                    // 버튼 높이
-                    height: 40.0,
-                    // 버튼 쪽 사이즈
-                    padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    color: selectedMbti != null ? Colors.blue : Colors.grey,
-                    textStyle: const TextStyle(
-                      fontFamily: 'Readex Pro',
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 15.0),
+                  child: Text(
+                    selectedMbti != null
+                        ? 'MBTI는 $selectedMbti가 선택되었습니다'
+                        : '당신의 MBTI를 선택해주세요.',
+                    style: const TextStyle(
                       color: Colors.white,
+                      fontSize: 18,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                  child: FFButtonWidget(
+                    onPressed: selectedMbti != null
+                        ? () {
+                      context.pushNamed(
+                        'courseselect',
+                        extra: <String, dynamic>{
+                          'mbti': selectedMbti,
+                        },
+                      );
+                    }
+                        : null, // 선택된 MBTI 없으면 비활성화
+                    text: '다음',
+                    options: FFButtonOptions(
+                      // 버튼 높이
+                      height: 40.0,
+                      // 버튼 쪽 사이즈
+                      padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      color: selectedMbti != null ? Colors.blue : Colors.grey,
+                      textStyle: const TextStyle(
+                        fontFamily: 'Readex Pro',
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

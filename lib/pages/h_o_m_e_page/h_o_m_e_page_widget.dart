@@ -76,7 +76,7 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
                   onPressed: () async {
                     context.pushNamed('Selectpage');
                   },
-                  text: 'start',
+                  text: '시작',
                   options: FFButtonOptions(
                     height: 40.0,
                     padding:

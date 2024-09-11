@@ -58,6 +58,36 @@ class LocationexplainCopyModel extends ChangeNotifier {
 
     // UI 갱신 알림
     notifyListeners();
+    print("갱신완료!");
+    }
+
+  void updatePageControllerForImmediateJump(int newIndex) {
+    // PageController가 이미 초기화된 경우 바로 jumpToPage 호출
+    if (pageController.hasClients) {
+      pageController.jumpToPage(newIndex); // 애니메이션 없이 페이지로 즉시 이동
+    }
+
+    // UI 갱신 알림
+    currentIndex = newIndex;
+    notifyListeners();
+    print("PageController 즉시 이동 완료! (onTap)");
+  }
+
+  void updatePageControllerWithNewIndexForTap(int newIndex) {
+    // 기존 PageController 해제
+    if (pageController.hasClients) {
+      pageController.dispose();
+    }
+
+    // 새로운 PageController로 초기화 (newIndex로 설정)
+    pageController = PageController(initialPage: newIndex);
+
+    // 현재 인덱스를 업데이트
+    currentIndex = newIndex;
+
+    // UI 갱신 알림
+    notifyListeners();
+    print("PageController 갱신 완료! (Tab Tap)");
   }
 
   @override
