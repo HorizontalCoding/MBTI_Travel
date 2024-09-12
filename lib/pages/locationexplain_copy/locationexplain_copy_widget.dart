@@ -62,7 +62,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
   final PageStorageKey _scrollKey = PageStorageKey('my_list_view_key');
 
-
   // 초기화 코드: 스와이핑, 탭, 등의 컨트롤러 등을 초기화하는 코드
   // model.dart하고 연결되어있음.
   @override
@@ -72,8 +71,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
     // _model을 먼저 초기화한 후에 pageController를 초기화
     _model = LocationexplainCopyModel();
-    _model.pageController;
 
+    _model.pageController;
 
     //  여기 수정함 2024-08-31 오전11:00
     _model.tabBarController = TabController(
@@ -84,8 +83,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     {
 
     });
-
-
 
     // 초기 좌표 정해줌.(좌표 초기화 코드)
     initializeKakaoMapPosition();
@@ -631,7 +628,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   color: FlutterFlowTheme.of(context).secondaryBackground,
                                 ),
                                 child: ListView(
-                                  key: _scrollKey, // PageStorageKey를 ListView에 설정
+                                  key: _scrollKey,
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.vertical,
                                   children: [
@@ -640,14 +637,15 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                                       child: InkWell(  // 카드 클릭 시 이벤트 추가
                                         onTap: () {
-                                          if (_model.tabBarController != null) {
+                                          if (_model.tabBarController != null)
+                                          {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(0); // 탭 클릭 시 0번 카드로 이동
                                             });
 
-                                            // 페이지 전환 후 탭 전환
-                                            Future.microtask(() {
-                                              _model.tabBarController!.animateTo(1, duration: Duration(milliseconds: 300), curve: Curves.easeInOut); // '코스설명' 탭으로 이동
+                                            // UI 갱신 후 탭 전환
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
                                             });
                                           }
                                         },
@@ -1161,9 +1159,9 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         ),
                                       ),
                                     ),
-                                    Padding( // 4번 카드
+                                    Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                      child: InkWell(
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
@@ -1217,7 +1215,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                   // 텍스트 및 설명 부분
                                                   Expanded(
                                                     child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
                                                       child: Column(
                                                         mainAxisSize: MainAxisSize.max,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1234,24 +1232,27 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                             ),
                                                           ),
 
-                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
+                                                          // Kakao Map 버튼
                                                           Padding(
                                                             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
                                                             child: Row(
                                                               children: [
-                                                                ElevatedButton(  // kakao map을 버튼으로 변경
+                                                                ElevatedButton(
                                                                   onPressed: () {
                                                                     if (_model.tabBarController != null) {
-                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                                      // 페이지를 4번 카드로 전환
+                                                                      setState(() {
+                                                                        _model.updatePageControllerWithNewIndex(4);
+                                                                      });
+
+                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
+                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                                                      });
                                                                     }
-                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                      markerPositions[4]['lat'],  // 새 lat 값
-                                                                      markerPositions[4]['lng'],  // 새 lng 값
-                                                                      3,                         // 새 zoomLevel 값
-                                                                    );
                                                                   },
                                                                   child: Text(
-                                                                    'Kakao Map',
+                                                                    '장소 설명',
                                                                     style: TextStyle(
                                                                       fontFamily: 'Readex Pro',
                                                                       fontSize: 16.0,
@@ -1260,7 +1261,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                     ),
                                                                   ),
                                                                   style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
+                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
                                                                     shape: RoundedRectangleBorder(
                                                                       borderRadius: BorderRadius.circular(12.0),
                                                                     ),
@@ -1285,6 +1286,33 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       ),
                                                     ),
                                                   ),
+
+                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        if (_model.tabBarController != null) {
+                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                        }
+                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                          markerPositions[4]['lat'],  // 새 lat 값
+                                                          markerPositions[4]['lng'],  // 새 lng 값
+                                                          3,                          // 새 zoomLevel 값
+                                                        );
+                                                      },
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/images/number-5.png',  // 이미지 경로
+                                                            width: 64.0,  // 이미지 크기 조정
+                                                            height: 64.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -1292,9 +1320,14 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         ),
                                       ),
                                     ),
-                                    Padding( // 5번 카드
+
+
+
+
+
+                                    Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                      child: InkWell(
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
@@ -1351,6 +1384,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
                                                       child: Column(
                                                         mainAxisSize: MainAxisSize.max,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           // 장소 이름
@@ -1359,59 +1393,48 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
                                                               fontFamily: 'Outfit',
                                                               color: Colors.white,
-                                                              fontSize: 16.0,
+                                                              fontSize: 25.0,
                                                               letterSpacing: 0.0,
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
 
-                                                          // Kakao map 버튼 (텍스트 대신 버튼으로)
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(  // kakao map을 버튼으로 변경
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                                    }
-                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                                      markerPositions[5]['lat'],  // 새 lat 값
-                                                                      markerPositions[5]['lng'],  // 새 lng 값
-                                                                      3,                         // 새 zoomLevel 값
-                                                                    );
-                                                                  },
-                                                                  child: Text(
-                                                                    'Kakao Map',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary, // 버튼 색상
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
+                                                  // Kakao Map 이미지 버튼을 오른쪽에 배치
+                                                  Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        if (_model.tabBarController != null) {
+                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                        }
+                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                          markerPositions[5]['lat'],  // 새 lat 값
+                                                          markerPositions[5]['lng'],  // 새 lng 값
+                                                          3,                          // 새 zoomLevel 값
+                                                        );
+                                                      },
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/images/number-6.png',  // 이미지 경로
+                                                            width: 64.0,  // 이미지 크기 조정
+                                                            height: 64.0,
                                                           ),
+                                                          // 추가적인 텍스트가 필요하면 주석을 해제하여 사용하세요.
+                                                          // const SizedBox(height: 8.0),
+                                                          // Text(
+                                                          //   '지도',
+                                                          //   style: TextStyle(
+                                                          //     fontFamily: 'Readex Pro',
+                                                          //     fontSize: 16.0,
+                                                          //     color: Colors.white,
+                                                          //   ),
+                                                          // ),
                                                         ],
                                                       ),
                                                     ),
@@ -1423,6 +1446,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         ),
                                       ),
                                     ),
+
+
                                     Padding( // 6번 카드
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                                       child: InkWell(  // 카드 클릭 시 이벤트 추가
