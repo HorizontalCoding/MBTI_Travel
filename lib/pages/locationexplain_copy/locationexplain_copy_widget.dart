@@ -60,6 +60,9 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
   final animationsMap = <String, AnimationInfo>{};
 
+  final PageStorageKey _scrollKey = PageStorageKey('my_list_view_key');
+
+
   // 초기화 코드: 스와이핑, 탭, 등의 컨트롤러 등을 초기화하는 코드
   // model.dart하고 연결되어있음.
   @override
@@ -69,8 +72,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
     // _model을 먼저 초기화한 후에 pageController를 초기화
     _model = LocationexplainCopyModel();
-
     _model.pageController;
+
 
     //  여기 수정함 2024-08-31 오전11:00
     _model.tabBarController = TabController(
@@ -81,6 +84,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     {
 
     });
+
+
 
     // 초기 좌표 정해줌.(좌표 초기화 코드)
     initializeKakaoMapPosition();
@@ -626,6 +631,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   color: FlutterFlowTheme.of(context).secondaryBackground,
                                 ),
                                 child: ListView(
+                                  key: _scrollKey, // PageStorageKey를 ListView에 설정
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.vertical,
                                   children: [

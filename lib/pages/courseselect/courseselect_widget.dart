@@ -168,7 +168,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                   Expanded(
                     child: Container(
                       width: 370.0,
-                      height: 100.0,
+                      height: 50.0,
                       decoration: const BoxDecoration(
                         color: Colors.black,
                         shape: BoxShape.rectangle,
@@ -245,7 +245,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                             context,
                             title: '',
                             location: '양양군',
-                            imageUrl: 'assets/images/course_select_images/양양군_로고.jpg',
+                            imageUrl: 'assets/images/course_select_images/양양군_로고.png',
                             selectedDistrictCode: 7,
                             startLat: 38.077475,
                             startLng: 128.625875,
@@ -479,67 +479,52 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                 context.pushNamed('rottiepage');
               }
             },
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 1.0, 1.0, 1.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                color: Colors.grey,
-                                width: 1.5
-                            )
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 1.0, 10.0), // 이미지 위쪽에 10.0의 패딩 추가
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6.0),
+                      child: Container(
+                        decoration: BoxDecoration(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween, // 이미지와 아이콘을 양쪽에 배치
+                          children: [
+                            SizedBox(width: 10.0), // 이미지를 오른쪽으로 이동시키기 위해 왼쪽에 여백 추가
+                            Image.asset(
+                              imageUrl, // 로컬 이미지 경로 사용
+                              width: 200.0, // 이미지의 너비를 적절히 설정
+                              height: 50.0, // 이미지 높이는 유지
+                              fit: BoxFit.contain,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8.0), // 아이콘 주위에 여백을 추가
+                              child: const Icon(
+                                Icons.chevron_right_rounded,
+                                color: Color(0xFF57636C),
+                                size: 24.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Image.asset(
-                        imageUrl, // 로컬 이미지 경로 사용
-                        width: double.infinity,
-                        height: 150.0,
-                        fit: BoxFit.contain,
-                      ),
                     ),
                   ),
-                ),
-                if (title.isNotEmpty) // title이 비어있지 않으면 렌더링
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 0.0, 0.0),
-                    child: Text(
-                      title,
-                      style: FlutterFlowTheme.of(context).headlineSmall.override(
-                        fontFamily: 'Outfit',
-                        letterSpacing: 0.0,
-                      ),
-                    ),
-                  ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 4.0, 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        location,
-                        textAlign: TextAlign.end,
-                        style: FlutterFlowTheme.of(context).titleLarge.override(
+                  if (title.isNotEmpty) // title이 비어있지 않으면 렌더링
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 0.0, 0.0),
+                      child: Text(
+                        title,
+                        style: FlutterFlowTheme.of(context).headlineSmall.override(
                           fontFamily: 'Outfit',
                           letterSpacing: 0.0,
                         ),
                       ),
-                      const Icon(
-                        Icons.chevron_right_rounded,
-                        color: Color(0xFF57636C),
-                        size: 24.0,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                    ),
+                ],
+              )
           ),
         ),
       ),

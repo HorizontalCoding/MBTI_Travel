@@ -34,6 +34,8 @@ class LocationexplainCopyModel extends ChangeNotifier {
   late PageController pageController;
   int currentIndex = 0; // 현재 페이지 인덱스를 저장
 
+
+
   // TextField 관련 필드
   TextEditingController? textController;
   FocusNode? textFieldFocusNode;
