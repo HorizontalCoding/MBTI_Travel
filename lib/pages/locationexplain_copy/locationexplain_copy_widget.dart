@@ -121,7 +121,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     // 마커 && 이미지 이니셜라이즈(초기화) 코드
     _initializeMarkersAndImages();
 
-
     // 전환 될때마다 나오는 애니메이션 세트
     animationsMap.addAll({
       'containerOnPageLoadAnimation1': AnimationInfo(
@@ -1286,7 +1285,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       ),
                                                     ),
                                                   ),
-
                                                   // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
                                                   Padding(
                                                     padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
@@ -1320,11 +1318,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         ),
                                       ),
                                     ),
-
-
-
-
-
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                                       child: InkWell(
@@ -1446,8 +1439,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         ),
                                       ),
                                     ),
-
-
                                     Padding( // 6번 카드
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                                       child: InkWell(  // 카드 클릭 시 이벤트 추가
