@@ -1079,7 +1079,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       ),
                                                     ),
                                                   ),
-
                                                   // 텍스트 및 설명 부분
                                                   Expanded(
                                                     child: Padding(
@@ -1511,7 +1510,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-
                                                           // Kakao map 버튼 (텍스트 대신 버튼으로)
                                                           Padding(
                                                             padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
@@ -1581,12 +1579,15 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   Expanded(
                                     child: GestureDetector(
                                       onVerticalDragUpdate: (details) {
-                                        if (details.delta.dy > 0 && _model.currentIndex == 0) {
+                                        if (details.delta.dy > 0 && _model.currentIndex == 0)
+                                        {
                                           // 첫 번째 카드에서 아래로 스와이프 막기
-                                          print("첫 번째 카드에서 더 이상 아래로 스와이프할 수 없습니다.");
-                                        } else if (details.delta.dy < 0 && _model.currentIndex == markerPositions.length - 1) {
+                                          // print("첫 번째 카드에서 더 이상 아래로 스와이프할 수 없습니다.");
+                                        }
+                                        else if (details.delta.dy < 0 && _model.currentIndex == markerPositions.length - 1)
+                                        {
                                           // 마지막 카드에서 위로 스와이프 막기
-                                          print("마지막 카드에서 더 이상 위로 스와이프할 수 없습니다.");
+                                          // print("마지막 카드에서 더 이상 위로 스와이프할 수 없습니다.");
                                         } else {
                                           // 일반적인 스와이프 처리
                                           if (details.delta.dy > 0) {
@@ -1694,7 +1695,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
           ),
         )
     );
-
   }
 }
 /*여행지 명 리턴 함수*/
