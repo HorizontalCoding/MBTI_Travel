@@ -5,6 +5,7 @@ import '../../flutter_flow/flutter_flow_model.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 import 'selectpage_model.dart';
 import 'mbti_model.dart'; // MBTIModel 클래스 가져오기
+import 'package:mbtitravel/data_frame/data_frame.dart';
 
 class SelectpageWidget extends StatefulWidget {
   const SelectpageWidget({super.key});
@@ -68,9 +69,9 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: const Color(0xFF0C0202),
+          backgroundColor: const Color(0xFF1BA004),
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: const Icon(
@@ -98,7 +99,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0), // 상단/하단 패딩을 10으로 줄임
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0), // 상단/하단 패딩을 10으로 줄임
                 ),
                 GridView.builder(
                   shrinkWrap: true, // 추가: GridView 크기 조절
@@ -107,7 +108,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4, // 4열로 이미지 배치
                     crossAxisSpacing: 5.0, // 이미지 간의 가로 간격
-                    mainAxisSpacing: 40.0, // 이미지 간의 세로 간격 (행 간격)
+                    mainAxisSpacing: 10.0, // 이미지 간의 세로 간격 (행 간격)
                     childAspectRatio: 1.0, // 이미지 비율을 1:1로 설정
                   ),
                   itemCount: mbtiTypes.length,
@@ -119,6 +120,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
+                          mbtiStringValue = mbti;
                           selectedMbti = mbti;
                         });
                         mbtiModel.setMBTI(mbti); // 전역 상태 업데이트
@@ -142,19 +144,19 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                   },
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 15.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 70.0, 0.0, 15.0),
                   child: Text(
                     selectedMbti != null
                         ? 'MBTI는 $selectedMbti가 선택되었습니다'
                         : '당신의 MBTI를 선택해주세요.',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 18,
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 70.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: selectedMbti != null
                         ? () {
@@ -169,13 +171,14 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                     text: '다음',
                     options: FFButtonOptions(
                       // 버튼 높이
-                      height: 40.0,
+                      height: 50.0,
                       // 버튼 쪽 사이즈
-                      padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(34.0, 0.0, 34.0, 0.0),
                       color: selectedMbti != null ? Colors.blue : Colors.grey,
                       textStyle: const TextStyle(
                         fontFamily: 'Readex Pro',
                         color: Colors.white,
+                        fontSize: 18.0, // Set the font size here (adjust as needed)
                       ),
                       borderRadius: BorderRadius.circular(8.0),
                     ),

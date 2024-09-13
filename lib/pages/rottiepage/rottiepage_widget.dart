@@ -214,7 +214,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
                           width: 250.0, // Lottie 크기를 줄여서 그라데이션이 보이게 함
                           height: 250.0,
                           child: Lottie.network(
-                            'https://lottie.host/9c880513-ce22-4092-83a1-fb2163431bcb/X5eYZ8iT6u.json',
+                            'https://lottie.host/4a8e8af3-f1b2-481d-a9ef-9039fc31b0cf/KRkFxdGJFi.json',
                             fit: BoxFit.contain,
                             animate: true,
                           ),

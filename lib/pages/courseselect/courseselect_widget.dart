@@ -112,9 +112,9 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xFFEDEDED),
         appBar: AppBar(
-          backgroundColor: const Color(0xFF0C0202),
+          backgroundColor: const Color(0xFF1BA004),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -131,7 +131,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
             },
           ),
           title: Text(
-            'MBTI TRAVEL',
+            '지역 선택',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
               fontFamily: 'Outfit',
               color: Colors.white,
@@ -160,6 +160,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                         '추천 코스',
                         style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily: 'Readex Pro',
+                          color: Colors.black, // Sets the text color to black
                           letterSpacing: 0.0,
                         ),
                       ),
@@ -170,7 +171,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                       width: 370.0,
                       height: 50.0,
                       decoration: const BoxDecoration(
-                        color: Colors.black,
+                        color: Color(0xFFEDEDED),
                         shape: BoxShape.rectangle,
                       ),
                       child: ListView(
