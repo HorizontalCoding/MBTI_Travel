@@ -476,6 +476,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                 g_districtCode = selectedDistrictCode;
                 g_kakaoMapStartLat = startLat;
                 g_kakaoMapStartLng = startLng;
+                g_locationName = location;
                 // 로딩 화면으로 이동
                 context.pushNamed('rottiepage');
               }

@@ -14,7 +14,9 @@ int? g_districtCode = 0;
 int g_currentPageIndex = 0; // 전역 변수로 현재 페이지 인덱스를 유지
 double g_kakaoMapStartLat = 0.0;
 double g_kakaoMapStartLng = 0.0;
-String mbtiStringValue = '';
+
+String g_locationName = '';
+String g_mbtiStringValue = '';
 
 // API 키
 late final String tourApiKey;

@@ -120,7 +120,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          mbtiStringValue = mbti;
+                          g_mbtiStringValue = mbti;
                           selectedMbti = mbti;
                         });
                         mbtiModel.setMBTI(mbti); // 전역 상태 업데이트

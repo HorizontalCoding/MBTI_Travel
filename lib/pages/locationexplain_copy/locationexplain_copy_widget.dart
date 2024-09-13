@@ -526,7 +526,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                 },
               ),
               title: Text(
-                '${mbtiStringValue}',
+                '${g_mbtiStringValue}',
                 style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Outfit',
                   color: Colors.white,
@@ -544,13 +544,11 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Align(
-                    alignment: const AlignmentDirectional(0.0, 0.0),
+                    alignment: Alignment.center,  // 텍스트를 중앙에 정렬합니다
                     child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(
-                          16.0, 16.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
                       child: Text(
-
-                        getSelectedLocation(context),
+                        "${g_locationName}",
                         style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily: 'Readex Pro',
                           letterSpacing: 0.0,
@@ -1122,7 +1120,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndex(4); // 탭 클릭 시 4번 카드로 이동
+                                              _model.updatePageControllerWithNewIndex(3); // 탭 클릭 시 4번 카드로 이동
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1164,7 +1162,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       ),
                                                       child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[4]['contentid']),
+                                                        child: buildThumbnailLoader(context, markerPositions[3]['contentid']),
                                                       ),
                                                     ),
                                                   ),
@@ -1179,7 +1177,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                         children: [
                                                           // 장소 이름
                                                           Text(
-                                                            '${markerPositions[4]['name']}',
+                                                            '${markerPositions[3]['name']}',
                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
                                                               fontFamily: 'Outfit',
                                                               color: Colors.white,
@@ -1199,7 +1197,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                     if (_model.tabBarController != null) {
                                                                       // 페이지를 4번 카드로 전환
                                                                       setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(4);
+                                                                        _model.updatePageControllerWithNewIndex(3);
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환
@@ -1253,8 +1251,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                           _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
                                                         }
                                                         Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[4]['lat'],  // 새 lat 값
-                                                          markerPositions[4]['lng'],  // 새 lng 값
+                                                          markerPositions[3]['lat'],  // 새 lat 값
+                                                          markerPositions[3]['lng'],  // 새 lng 값
                                                           3,                          // 새 zoomLevel 값
                                                         );
                                                       },
@@ -1888,11 +1886,11 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     );
   }
 }
-/*여행지 명 리턴 함수*/
-String getSelectedLocation(BuildContext context)
-{
-  return Provider.of<LocationModel>(context, listen: false).selectedLocation;
-}
+// /*여행지 명 리턴 함수*/
+// String getSelectedLocation(BuildContext context)
+// {
+//   return Provider.of<LocationModel>(context, listen: false).selectedLocation;
+// }
 
 /// 이미지 URL을 가져오는 함수
 String _getImageUrlHelper(Map<String, dynamic> marker, List<String> imageKeys, String defaultUrl) {
