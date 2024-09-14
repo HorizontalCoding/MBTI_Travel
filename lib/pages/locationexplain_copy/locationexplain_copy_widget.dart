@@ -665,6 +665,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           if (_model.tabBarController != null) {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(0); // 탭 클릭 시 0번 카드로 이동
+                                              _model.updateScrollControllerWithNewIndex(0);
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -742,6 +743,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       // 페이지를 0번 카드로 전환
                                                                       setState(() {
                                                                         _model.updatePageControllerWithNewIndex(0);
+                                                                        _model.updateScrollControllerWithNewIndex(0);
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환
@@ -827,6 +829,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           if (_model.tabBarController != null) {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(1); // 탭 클릭 시 1번 카드로 이동
+                                              _model.updateScrollControllerWithNewIndex(1);
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -904,6 +907,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       // 페이지를 1번 카드로 전환
                                                                       setState(() {
                                                                         _model.updatePageControllerWithNewIndex(1);
+                                                                        _model.updateScrollControllerWithNewIndex(1);
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환
@@ -988,6 +992,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           if (_model.tabBarController != null) {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(2); // 탭 클릭 시 2번 카드로 이동
+                                              _model.updateScrollControllerWithNewIndex(2);
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1065,6 +1070,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       // 페이지를 2번 카드로 전환
                                                                       setState(() {
                                                                         _model.updatePageControllerWithNewIndex(2);
+                                                                        _model.updateScrollControllerWithNewIndex(2);
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환
@@ -1149,6 +1155,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           if (_model.tabBarController != null) {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(3); // 탭 클릭 시 4번 카드로 이동
+                                              _model.updateScrollControllerWithNewIndex(3);
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1226,6 +1233,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       // 페이지를 4번 카드로 전환
                                                                       setState(() {
                                                                         _model.updatePageControllerWithNewIndex(3);
+                                                                        _model.updateScrollControllerWithNewIndex(3);
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환
@@ -1303,6 +1311,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                         ),
                                       ),
                                     ),
+                                    // 4번
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                                       child: InkWell(
@@ -1310,6 +1319,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           if (_model.tabBarController != null) {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(4); // 탭 클릭 시 4번 카드로 이동
+                                              _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1387,6 +1397,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       // 페이지를 4번 카드로 전환
                                                                       setState(() {
                                                                         _model.updatePageControllerWithNewIndex(4);
+                                                                        _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환
@@ -1470,6 +1481,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           if (_model.tabBarController != null) {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(5); // 탭 클릭 시 5번 카드로 이동
+                                              _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1547,6 +1559,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       // 페이지를 5번 카드로 전환
                                                                       setState(() {
                                                                         _model.updatePageControllerWithNewIndex(5);
+                                                                        _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환
@@ -1631,6 +1644,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           if (_model.tabBarController != null) {
                                             setState(() {
                                               _model.updatePageControllerWithNewIndex(6); // 탭 클릭 시 6번 카드로 이동
+                                              _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
                                             });
 
                                             // UI 갱신 후 탭 전환
@@ -1708,6 +1722,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       // 페이지를 6번 카드로 전환
                                                                       setState(() {
                                                                         _model.updatePageControllerWithNewIndex(6);
+                                                                        _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
                                                                       });
 
                                                                       // UI 갱신 후 '코스설명' 탭으로 전환

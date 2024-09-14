@@ -29,11 +29,12 @@ class RottiepageWidget extends StatefulWidget {
 
 class _RottiepageWidgetState extends State<RottiepageWidget> {
   late RottiepageModel _model;
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription; // 네트워크 상태 변화 감지
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription; // 네트워크 상태 변화 감지 (nullable)
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true; // 서버 요청 중인지 여부를 나타내는 변수
   bool _isNavigating = false; // 화면 전환 중인지 여부를 나타내는 변수
+  bool _hasNavigated = false; // 화면 전환이 완료된 후에는 네트워크 체크 무시
 
   @override
   void initState() {
@@ -49,8 +50,8 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
 
     // 네트워크 상태 변화를 감지
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        // 네트워크 연결이 끊어졌을 때 처리
+      // 화면 전환이 완료되었는지 확인 후, 네트워크 체크 실행
+      if (!_hasNavigated && result == ConnectivityResult.none) {
         Fluttertoast.showToast(
           msg: "네트워크 연결이 끊어졌습니다. 코스선택 화면으로 돌아갑니다.",
           toastLength: Toast.LENGTH_LONG,
@@ -59,7 +60,9 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        Navigator.pop(context); // 코스선택 화면으로 돌아가기
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context); // 코스선택 화면으로 돌아가기
+        }
       }
     });
   }
@@ -79,7 +82,9 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
         fontSize: 16.0,
       );
 
-      Navigator.pop(context); // 현재 화면을 닫고 이전 화면으로 돌아감
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context); // 현재 화면을 닫고 이전 화면으로 돌아감
+      }
     } else {
       // 네트워크 연결이 있을 경우 서버로 데이터 전송 시작
       print("fetchRecommendations called");
@@ -89,7 +94,8 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel(); // 네트워크 상태 변화 감지 구독 해제
+    // 구독 해제 전에 null이 아닌지 확인
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 
@@ -125,23 +131,24 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
         // Provider를 통해 상태를 업데이트
         markerPositionsModel.updateMarkerPositions(markerPositions);
 
-        // debugPrint("들어온 DATA : ${markerPositions}"); // 업데이트 된 markerPositions 리스트 디버깅
-        // debugPrint("들어온 MBTI DATA : ${mbtiValue}"); // 업데이트 된 MBTI 데이터 디버깅
-        // debugPrint("들어온 여행 지역 DATA : ${selectedArea}"); // 업데이트 된 여행지역 디버깅
-
         // 화면 전환 중 플래그 설정
         setState(() {
           _isNavigating = true;
         });
 
+        // 화면 전환 직전에 구독 해제
+        _connectivitySubscription?.cancel();
+
         // 화면 전환
         await context.pushNamed('locationexplainCopy');
 
-        // 화면 전환이 완료되면 로딩 상태 해제
+        // 화면 전환 완료 플래그 설정
         setState(() {
           _isLoading = false;
           _isNavigating = false;
+          _hasNavigated = true; // 화면 전환 완료로 플래그 설정
         });
+
       } else {
         print('Failed to send data to the server.');
       }

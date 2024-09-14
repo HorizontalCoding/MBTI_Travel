@@ -64,7 +64,8 @@ class LocationexplainCopyModel extends ChangeNotifier
     print("갱신완료!");
   }
 
-  void updateScrollControllerWithNewIndex(int newIndex) {
+  void updateScrollControllerWithNewIndex(int newIndex)
+  {
     // 각 아이템의 높이 (예시: 148.0)
     double itemHeight = 148.0;
 
@@ -83,7 +84,7 @@ class LocationexplainCopyModel extends ChangeNotifier
     else
     {
       listViewController = ScrollController(initialScrollOffset: 444.0);
-      print("업데이트");
+      print("444.0 업데이트");
     }
 
     // 현재 인덱스를 업데이트
