@@ -28,13 +28,13 @@ import 'package:mbtitravel/data_frame/data_frame.dart';
 import 'map_model.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 
-class LocationexplainCopyModel extends ChangeNotifier {
+class LocationexplainCopyModel extends ChangeNotifier
+{
   final unfocusNode = FocusNode();
   TabController? tabBarController;
   late PageController pageController;
+  late ScrollController listViewController;
   int currentIndex = 0; // 현재 페이지 인덱스를 저장
-
-
 
   // TextField 관련 필드
   TextEditingController? textController;
@@ -44,6 +44,7 @@ class LocationexplainCopyModel extends ChangeNotifier {
   LocationexplainCopyModel({this.currentIndex = 0})
   {
     pageController = PageController(initialPage: currentIndex);
+    listViewController = ScrollController();
   }
 
   // 새로운 PageController로 초기화
@@ -61,7 +62,38 @@ class LocationexplainCopyModel extends ChangeNotifier {
     // UI 갱신 알림
     notifyListeners();
     print("갱신완료!");
+  }
+
+  void updateScrollControllerWithNewIndex(int newIndex) {
+    // 각 아이템의 높이 (예시: 148.0)
+    double itemHeight = 148.0;
+
+    // 새로운 인덱스에 맞는 스크롤 위치 계산
+    double offset = newIndex * itemHeight;
+
+    // 기존 ScrollController 해제
+    listViewController.dispose();
+
+    if(offset < 592.0)
+    {
+      // 새로운 ScrollController로 초기화
+      listViewController = ScrollController(initialScrollOffset: offset);
+      print("업데이트");
     }
+    else
+    {
+      listViewController = ScrollController(initialScrollOffset: 444.0);
+      print("업데이트");
+    }
+
+    // 현재 인덱스를 업데이트
+    currentIndex = newIndex;
+
+    // UI 갱신 알림
+    notifyListeners();
+    print("리스트뷰 컨트롤러 갱신 완료! offset: $offset");
+  }
+
 
 
   @override
@@ -71,6 +103,7 @@ class LocationexplainCopyModel extends ChangeNotifier {
     pageController.dispose(); // PageController 해제
     textController?.dispose(); // TextController 해제
     textFieldFocusNode?.dispose(); // TextFieldFocusNode 해제
+    listViewController.dispose();
     super.dispose(); // 부모 클래스의 dispose 메서드 호출
   }
 }

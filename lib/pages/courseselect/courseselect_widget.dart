@@ -31,8 +31,10 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     _model = createModel(context, () => CourseselectModel());
 

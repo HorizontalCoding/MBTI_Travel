@@ -54,16 +54,21 @@ class LocationexplainCopyWidget extends StatefulWidget
 class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     with TickerProviderStateMixin
 {
+
   late LocationexplainCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final animationsMap = <String, AnimationInfo>{};
 
-  final PageStorageKey _scrollKey = PageStorageKey('my_list_view_key');
+  // final PageStorageKey _scrollKey = PageStorageKey('my_list_view_key');
+  final GlobalKey _listViewKey = GlobalKey();
+  int _pendingIndex = 0; // 스크롤 애니메이션 후 전환할 탭 인덱스
 
   // 초기화 코드: 스와이핑, 탭, 등의 컨트롤러 등을 초기화하는 코드
   // model.dart하고 연결되어있음.
+
+
   @override
   void initState()
   {
@@ -79,10 +84,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
       vsync: this,
       length: 3,
       initialIndex: 0,
-    )..addListener(()
-    {
+    )..addListener(() {});
 
-    });
 
     // 초기 좌표 정해줌.(좌표 초기화 코드)
     initializeKakaoMapPosition();
@@ -92,34 +95,58 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
     // 지도 스와이핑 코드
     // TabController에 리스너 추가(업데이트 코드)
-    _model.tabBarController?.addListener(()
-    {
-      final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
-      final mapModel = Provider.of<MapModel>(context, listen: false);
-      final markerPositions = markerPositionsModel.markerPositions;
-
-      // 업데이트 될 떄마다.
-      if (_model.tabBarController?.index == 2)
+      _model.tabBarController?.addListener(()
       {
-        // 지도로 스와이핑되었을 때 좌표 변경
-        if (markerPositions.isNotEmpty)
-        {
-          double newLat = g_kakaoMapStartLat;
-          double newLng = g_kakaoMapStartLng;
-          int newZoomLevel = 9;
+        // if (_model.tabBarController?.index == 0)
+        // {
+        //   double itemHeight = 148.0; // 각 아이템의 높이
+        //   double offset = _model.currentIndex * itemHeight;
+        //
+        //   // 프레임이 완전히 그려진 후에 스크롤을 시도
+        //   WidgetsBinding.instance.addPostFrameCallback((_)
+        //   {
+        //     if (_model.listViewController.hasClients)
+        //     {
+        //       _model.listViewController.animateTo(
+        //         offset,
+        //         duration: Duration(milliseconds: 50),  // 매우 짧은 시간으로 빠른 애니메이션
+        //         curve: Curves.easeInOut,
+        //       );
+        //     }
+        //     else
+        //     {
+        //       print("ScrollController is not attached to any scroll views.");
+        //     }
+        //   });
+        // }
 
-          mapModel.updateCoordinates(newLat, newLng, newZoomLevel);
-          // print('지도 탭으로 스와이프됨: 새로운 좌표와 줌 레벨이 설정되었습니다.');
-        }
-        else
+        final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
+        final mapModel = Provider.of<MapModel>(context, listen: false);
+        final markerPositions = markerPositionsModel.markerPositions;
+
+        // 업데이트 될 떄마다.
+        if (_model.tabBarController?.index == 2)
         {
-          print('지도 탭으로 스와이프됨: 마커 위치가 없습니다.');
+          // 지도로 스와이핑되었을 때 좌표 변경
+          if (markerPositions.isNotEmpty)
+          {
+            double newLat = g_kakaoMapStartLat;
+            double newLng = g_kakaoMapStartLng;
+            int newZoomLevel = 9;
+
+            mapModel.updateCoordinates(newLat, newLng, newZoomLevel);
+            // print('지도 탭으로 스와이프됨: 새로운 좌표와 줌 레벨이 설정되었습니다.');
+          }
+          else
+          {
+            print('지도 탭으로 스와이프됨: 마커 위치가 없습니다.');
+          }
         }
-      }
     });
 
     // 마커 && 이미지 이니셜라이즈(초기화) 코드
     _initializeMarkersAndImages();
+
 
     // 전환 될때마다 나오는 애니메이션 세트
     animationsMap.addAll({
@@ -309,7 +336,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
   }
 
   // 안드로이드 인터페이스(뒤로가기) 세팅
-
   Future<bool> _onWillPop() async
   {
     if (_model.tabBarController?.index == 1 || _model.tabBarController?.index == 2)
@@ -428,6 +454,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
   void dispose()
   {
     _model.dispose();
+
     super.dispose();
   }
 
@@ -625,7 +652,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   color: FlutterFlowTheme.of(context).secondaryBackground,
                                 ),
                                 child: ListView(
-                                  key: _scrollKey,
+                                  controller: _model.listViewController,
+                                  key: _listViewKey,
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.vertical,
                                   children: [
@@ -1794,39 +1822,42 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           }
                                         }
                                       },
-                                      child: PageView.builder(
+                                      child: PageView(
                                         controller: _model.pageController,
                                         scrollDirection: Axis.vertical, // 스크롤 방향을 수직으로 변경
-                                        itemCount: markerPositions.length,
                                         onPageChanged: (index) {
-                                          setState(() {
+                                          setState(()
+                                          {
                                             _model.updatePageControllerWithNewIndex(index);
+                                            _model.updateScrollControllerWithNewIndex(index);
+                                            print("index 값:${index}");// 스크롤 컨트롤러도 업데이트
                                           });
                                         },
                                         // PageView.builder에서 각 카드 함수 호출
-                                        itemBuilder: (context, index) {
+                                        children: List.generate(markerPositions.length, (index) {
                                           return Column(
                                             children: [
                                               Expanded(
                                                 child: Container(
                                                   child: Builder(
                                                     builder: (context) {
-                                                      if (index == 0) {
-                                                        return buildCard0(context, markerPositions[index]);
-                                                      } else if (index == 1) {
-                                                        return buildCard1(context, markerPositions[index]);
-                                                      } else if (index == 2) {
-                                                        return buildCard2(context, markerPositions[index]);
-                                                      } else if (index == 3) {
-                                                        return buildCard3(context, markerPositions[index]);
-                                                      } else if (index == 4) {
-                                                        return buildCard4(context, markerPositions[index]);
-                                                      } else if (index == 5) {
-                                                        return buildCard5(context, markerPositions[index]);
-                                                      } else if (index == 6) {
-                                                        return buildCard6(context, markerPositions[index]);
-                                                      } else {
-                                                        throw Exception('Invalid index: $index');
+                                                      switch (index) {
+                                                        case 0:
+                                                          return buildCard0(context, markerPositions[index]);
+                                                        case 1:
+                                                          return buildCard1(context, markerPositions[index]);
+                                                        case 2:
+                                                          return buildCard2(context, markerPositions[index]);
+                                                        case 3:
+                                                          return buildCard3(context, markerPositions[index]);
+                                                        case 4:
+                                                          return buildCard4(context, markerPositions[index]);
+                                                        case 5:
+                                                          return buildCard5(context, markerPositions[index]);
+                                                        case 6:
+                                                          return buildCard6(context, markerPositions[index]);
+                                                        default:
+                                                          throw Exception('Invalid index: $index');
                                                       }
                                                     },
                                                   ),
@@ -1841,8 +1872,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                 ),
                                             ],
                                           );
-                                        },
-                                      ),
+                                        }),
+                                      )
                                     ),
                                   ),
                                 ],
