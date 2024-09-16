@@ -57,9 +57,10 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
                 alignment: AlignmentDirectional(0.0, 0.0),
                 child: Padding(
                   padding:
-                  EdgeInsetsDirectional.fromSTEB(10.0, 250.0, 10.0, 30.0),
+                  //     좌상오햐
+                  EdgeInsetsDirectional.fromSTEB(10.0, 200.0, 10.0, 30.0),
                   child:Image.asset(
-                    'assets/images/logo_files/MBTI TRAVEL LOGO.png', // 여기에 사용할 이미지 경로를 입력
+                    'assets/images/logo_files/MBTI_TRAVEL_LOGO.png', // 여기에 사용할 이미지 경로를 입력
                     width: 310.0,  // 이미지의 너비
                     height: 175.0, // 이미지의 높이
                     fit: BoxFit.cover, // 이미지를 어떻게 맞출지 설정 (cover로 설정하여 비율 유지)
