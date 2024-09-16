@@ -40,13 +40,13 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           actions: [],
           centerTitle: false,
-          elevation: 2.0,
+          elevation: 0.0,
         ),
         body: SafeArea(
           top: true,
@@ -57,21 +57,17 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
                 alignment: AlignmentDirectional(0.0, 0.0),
                 child: Padding(
                   padding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 200.0, 0.0, 30.0),
-                  child: Text(
-                    'MBTI TRAVEL',
-                    textAlign: TextAlign.center,
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Readex Pro',
-                          color: Colors.white,
-                          fontSize: 50.0,
-                          letterSpacing: 0.0,
-                        ),
+                  EdgeInsetsDirectional.fromSTEB(10.0, 250.0, 10.0, 30.0),
+                  child:Image.asset(
+                    'assets/images/logo_files/MBTI TRAVEL LOGO.png', // 여기에 사용할 이미지 경로를 입력
+                    width: 310.0,  // 이미지의 너비
+                    height: 175.0, // 이미지의 높이
+                    fit: BoxFit.cover, // 이미지를 어떻게 맞출지 설정 (cover로 설정하여 비율 유지)
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0,90.0, 0.0, 0.0),
                 child: FFButtonWidget(
                   onPressed: () async {
                     context.pushNamed('Selectpage');
@@ -80,15 +76,15 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
                   options: FFButtonOptions(
                     height: 40.0,
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                    EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                     iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: Colors.black,
+                    EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: Colors.blue,
                     textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          fontFamily: 'Readex Pro',
-                          color: Colors.white,
-                          letterSpacing: 0.0,
-                        ),
+                      fontFamily: 'Readex Pro',
+                      color: Colors.white,
+                      letterSpacing: 0.0,
+                    ),
                     elevation: 3.0,
                     borderSide: BorderSide(
                       color: FlutterFlowTheme.of(context).alternate,

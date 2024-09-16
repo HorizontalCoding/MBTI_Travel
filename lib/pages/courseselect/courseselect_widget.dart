@@ -386,103 +386,98 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () async {
-              // 경고 대화 상자를 띄우고 사용자가 '예'를 선택한 경우에만 이동 처리
-              bool? confirmed = await showDialog<bool>(
-                context: context,
-                builder: (alertDialogContext) {
-                  return AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
-                    ),
-                    title: Text(
-                      'AI 분석\n',
-                      textAlign: TextAlign.center,
-                    ),
-                    content: RichText(
-                      textAlign: TextAlign.center, // 텍스트 가운데 정렬
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'AI 분석을 위한 확인 부탁드리겠습니다. \n\n\n',
-                            style: TextStyle(color: Colors.black, fontSize: 18),
-                          ),
-                          TextSpan(
-                            text: '선택한 지역   :     ',
-                            style: TextStyle(color: Colors.black, fontSize: 18),
-                          ),
-                          TextSpan(
-                            text: '$location\n\n', // 사용자가 선택한 지역
-                            style: TextStyle(
-                              color: Colors.lightBlue[300], // 텍스트 강조 색상 변경
-                              fontSize: 22, // 더 큰 폰트 사이즈
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'MBTI 유형   :     ',
-                            style: TextStyle(color: Colors.black, fontSize: 18),
-                          ),
-                          TextSpan(
-                            text: '$mbtiValue', // 사용자의 MBTI
-                            style: TextStyle(
-                              color: Colors.red[300], // 강조 색상
-                              fontSize: 22, // 더 큰 폰트 사이즈
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+              splashColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () async {
+                // 경고 대화 상자를 띄우고 사용자가 '예'를 선택한 경우에만 이동 처리
+                bool? confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (alertDialogContext) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
                       ),
-                    ),
-                    actions: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '(주의: AI 분석 시에는 뒤로가기 불가능합니다. \n한번 더 확인해주세요.)\n\n',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange, // 강조를 위해 빨간색으로 설정
+                      content: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'AI 분석을 진행하시겠습니까? \n\n\n',
+                              style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
-                            children: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(alertDialogContext, true),
-                                child: Text('예'),
+                            TextSpan(
+                              text: '지역   :     ',
+                              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                              text: '$location\n\n', // 사용자가 선택한 지역
+                              style: TextStyle(
+                                color: Colors.lightBlue[300], // 텍스트 강조 색상 변경
+                                fontSize: 22, // 더 큰 폰트 사이즈
+                                fontWeight: FontWeight.bold,
                               ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(alertDialogContext, false),
-                                child: Text('아니오'),
+                            ),
+                            TextSpan(
+                              text: 'MBTI   :     ',
+                              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                              text: '$mbtiValue', // 사용자의 MBTI
+                              style: TextStyle(
+                                color: Colors.red[300], // 강조 색상
+                                fontSize: 22, // 더 큰 폰트 사이즈
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  );
-                },
-              );
+                      actions: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end, // 버튼 중앙 정렬
+                              children: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(alertDialogContext, true),
+                                  child: Text('예'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(alertDialogContext, false),
+                                  child: Text('아니오'),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '\n(주의: 분석 중에는 변경이 불가합니다. \n한번 더 확인해주세요.)\n',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange, // 강조를 위해 빨간색으로 설정
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                );
 
-              // 사용자가 '예'를 선택한 경우에만 실행
-              if (confirmed == true) {
-                // 선택한 지역 이름을 전역적으로 저장
-                Provider.of<LocationModel>(context, listen: false).setLocation(location);
+                // 사용자가 '예'를 선택한 경우에만 실행
+                if (confirmed == true) {
+                  // 선택한 지역 이름을 전역적으로 저장
+                  Provider.of<LocationModel>(context, listen: false).setLocation(location);
 
-                g_districtCode = selectedDistrictCode;
-                g_kakaoMapStartLat = startLat;
-                g_kakaoMapStartLng = startLng;
-                g_locationName = location;
-                // 로딩 화면으로 이동
-                context.pushNamed('rottiepage');
-              }
-            },
+                  g_districtCode = selectedDistrictCode;
+                  g_kakaoMapStartLat = startLat;
+                  g_kakaoMapStartLng = startLng;
+                  g_locationName = location;
+                  // 로딩 화면으로 이동
+                  context.pushNamed('rottiepage');
+                }
+              },
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,

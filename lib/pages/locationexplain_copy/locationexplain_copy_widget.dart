@@ -62,8 +62,9 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
   final animationsMap = <String, AnimationInfo>{};
 
   // final PageStorageKey _scrollKey = PageStorageKey('my_list_view_key');
-  final GlobalKey _listViewKey = GlobalKey();
-  int _pendingIndex = 0; // 스크롤 애니메이션 후 전환할 탭 인덱스
+  // final GlobalKey _listViewKey = GlobalKey();
+  final PageStorageKey<String> _listViewKey = PageStorageKey('listViewKey');
+  // int _pendingIndex = 0; // 스크롤 애니메이션 후 전환할 탭 인덱스
 
   // 초기화 코드: 스와이핑, 탭, 등의 컨트롤러 등을 초기화하는 코드
   // model.dart하고 연결되어있음.
@@ -477,10 +478,10 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
               : FocusScope.of(context).unfocus(),
           child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.white, // 여기 변경
 
             appBar: AppBar(
-              backgroundColor: const Color(0xFF0C0202),
+              backgroundColor: const Color(0xFF1BA004), // 여기 변경
               automaticallyImplyLeading: false,
               leading: FlutterFlowIconButton(
                 borderColor: Colors.transparent,
@@ -570,15 +571,19 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Align(
-                    alignment: Alignment.center,  // 텍스트를 중앙에 정렬합니다
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
-                      child: Text(
-                        "${g_locationName}",
-                        style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Readex Pro',
-                          letterSpacing: 0.0,
+                  Container(
+                    color: Colors.white,
+                    child: Align(
+                      alignment: Alignment.center,  // 텍스트를 중앙에 정렬합니다
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+                        child: Text(
+                          "${g_locationName}",
+                          style: FlutterFlowTheme.of(context).titleMedium.override(
+                            fontFamily: 'Readex Pro',
+                            letterSpacing: 0.0,
+                            color:Colors.black,
+                          ),
                         ),
                       ),
                     ),
@@ -586,58 +591,65 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                   Expanded(
                     child: Column(
                       children: [
-                        Align(
-                          alignment: const Alignment(0.0, 0),
-                          child: TabBar(
-                            labelColor: Colors.white,
-                            unselectedLabelColor: const Color(0xFF434F57),
-                            labelStyle:
-                            FlutterFlowTheme.of(context).titleMedium.override(
-                              fontFamily: 'Readex Pro',
-                              letterSpacing: 0.0,
-                            ),
-                            unselectedLabelStyle: const TextStyle(),
-                            indicatorColor: FlutterFlowTheme.of(context).primary,
-                            padding: const EdgeInsets.all(4.0),
-                            tabs: const [
-                              Tab(
-                                text: '코스',
+                        Container(
+                          color: Colors.transparent, // 배경 투명
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min, // Column의 크기를 최소로 설정
+                            children: [
+                              Align(
+                                alignment: const Alignment(0.0, 0),
+                                child: TabBar(
+                                  labelColor: Colors.black,
+                                  unselectedLabelColor: Colors.grey,
+                                  labelStyle: FlutterFlowTheme.of(context).titleMedium.override(
+                                    fontFamily: 'Readex Pro',
+                                    letterSpacing: 0.0,
+                                  ),
+                                  unselectedLabelStyle: const TextStyle(),
+                                  indicatorColor: Colors.blue,
+                                  indicatorWeight: 4.0, // indicator의 두께 설정
+                                  padding: const EdgeInsets.all(0.0),
+                                  tabs: const [
+                                    Tab(
+                                      text: '코스',
+                                    ),
+                                    Tab(
+                                      text: '장소설명',
+                                    ),
+                                    Tab(
+                                      text: '지도',
+                                    ),
+                                  ],
+                                  controller: _model.tabBarController,
+                                  onTap: (i) async {
+                                    [() async {
+                                      // 첫 번째 탭 클릭시(코스)
+                                    }, () async {
+                                      // 두 번째 탭 클릭시(장소 설명)
+                                    }, () async {
+                                      // 세 번째 탭 클릭시(지도)
+                                      if (markerPositions.isNotEmpty) {
+                                        double newLat = g_kakaoMapStartLat; // 첫 번째 마커의 위도 사용
+                                        double newLng = g_kakaoMapStartLng; // 첫 번째 마커의 경도 사용
+                                        int newZoomLevel = 9; // 예시 줌 레벨
+
+                                        // updateCoordinates 메서드를 호출하여 좌표 및 줌 레벨 업데이트
+                                        mapModel.updateCoordinates(newLat, newLng, newZoomLevel);
+
+                                        // print('지도 탭 클릭됨: 새로운 좌표와 줌 레벨이 설정되었습니다.');
+                                      } else {
+                                        print('지도 탭 클릭됨: 마커 위치가 없습니다.');
+                                      }
+                                    }][i]();
+                                  },
+                                ),
                               ),
-                              Tab(
-                                text: '장소설명',
-                              ),
-                              Tab(
-                                text: '지도',
+                              const Divider( // TabBar 바로 아래에 회색 선 추가
+                                color: Colors.grey,
+                                thickness: 1, // 선의 두께 설정
+                                height: 0, // 선과 indicator 사이 여백을 없앰
                               ),
                             ],
-                            controller: _model.tabBarController,
-                            onTap: (i) async {
-                              [() async
-                              {
-                                // 첫 번째 탭 클릭시(코스)
-                              }, () async
-                              {
-                                // 두 번째 탭 클릭시(장소 설명)
-                              }, () async
-                              {
-                                // 세 번째 탭 클릭시(지도)
-                                if (markerPositions.isNotEmpty)
-                                {
-                                  double newLat = g_kakaoMapStartLat; // 첫 번째 마커의 위도 사용
-                                  double newLng = g_kakaoMapStartLng; // 첫 번째 마커의 경도 사용
-                                  int newZoomLevel = 9; // 예시 줌 레벨
-
-                                  // updateCoordinates 메서드를 호출하여 좌표 및 줌 레벨 업데이트
-                                  mapModel.updateCoordinates(newLat, newLng, newZoomLevel);
-
-                                  // print('지도 탭 클릭됨: 새로운 좌표와 줌 레벨이 설정되었습니다.');
-                                }
-                                else
-                                {
-                                  print('지도 탭 클릭됨: 마커 위치가 없습니다.');
-                                }
-                              }][i]();
-                            },
                           ),
                         ),
                         Expanded(
@@ -649,7 +661,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                 width: 100.0,
                                 height: 100.0,
                                 decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                                  color: const Color(0xFFEDEDED), // 여기 변경
                                 ),
                                 child: ListView(
                                   controller: _model.listViewController,
@@ -657,1144 +669,940 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.vertical,
                                   children: [
-                                    // 첫 번째 카드형 리스트 아이템
-                                    Padding( // 0번 카드
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
-                                        onTap: () {
-                                          if (_model.tabBarController != null) {
-                                            setState(() {
-                                              _model.updatePageControllerWithNewIndex(0); // 탭 클릭 시 0번 카드로 이동
-                                              _model.updateScrollControllerWithNewIndex(0);
-                                            });
-
-                                            // UI 갱신 후 탭 전환
-                                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                            });
-                                          }
-                                        },
-                                        child: Card(
-                                          elevation: 3.0, // 그림자 효과
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 148.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  // 썸네일 이미지
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                    child: Container(
-                                                      width: 77.0,
-                                                      height: 77.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme.of(context).accent1,
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme.of(context).primary,
-                                                          width: 2.0,
-                                                        ),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[0]['contentid']),
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 텍스트 및 설명 부분
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          // 장소 이름
-                                                          Text(
-                                                            '${markerPositions[0]['name']}',
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-
-                                                          // Kakao Map 버튼
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // 페이지를 0번 카드로 전환
-                                                                      setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(0);
-                                                                        _model.updateScrollControllerWithNewIndex(0);
-                                                                      });
-
-                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
-                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소 설명',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        if (_model.tabBarController != null) {
-                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                        }
-                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[0]['lat'],  // 새 lat 값
-                                                          markerPositions[0]['lng'],  // 새 lng 값
-                                                          3,                          // 새 zoomLevel 값
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset(
-                                                            'assets/images/number-1.png',  // 이미지 경로
-                                                            width: 64.0,  // 이미지 크기 조정
-                                                            height: 64.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    // 다른 카드형 리스트 아이템들 추가 가능...
-                                    Padding( // 1번 카드
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
-                                        onTap: () {
-                                          if (_model.tabBarController != null) {
-                                            setState(() {
-                                              _model.updatePageControllerWithNewIndex(1); // 탭 클릭 시 1번 카드로 이동
-                                              _model.updateScrollControllerWithNewIndex(1);
-                                            });
-
-                                            // UI 갱신 후 탭 전환
-                                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                            });
-                                          }
-                                        },
-                                        child: Card(
-                                          elevation: 3.0, // 그림자 효과
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 148.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  // 썸네일 이미지
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                    child: Container(
-                                                      width: 77.0,
-                                                      height: 77.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme.of(context).accent1,
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme.of(context).primary,
-                                                          width: 2.0,
-                                                        ),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[1]['contentid']),
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 텍스트 및 설명 부분
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          // 장소 이름
-                                                          Text(
-                                                            '${markerPositions[1]['name']}',
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-
-                                                          // Kakao Map 버튼
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // 페이지를 1번 카드로 전환
-                                                                      setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(1);
-                                                                        _model.updateScrollControllerWithNewIndex(1);
-                                                                      });
-
-                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
-                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소 설명',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        if (_model.tabBarController != null) {
-                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                        }
-                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[1]['lat'],  // 새 lat 값
-                                                          markerPositions[1]['lng'],  // 새 lng 값
-                                                          3,                          // 새 zoomLevel 값
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset(
-                                                            'assets/images/number-2.png',  // 이미지 경로
-                                                            width: 64.0,  // 이미지 크기 조정
-                                                            height: 64.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding( // 2번 카드
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
-                                        onTap: () {
-                                          if (_model.tabBarController != null) {
-                                            setState(() {
-                                              _model.updatePageControllerWithNewIndex(2); // 탭 클릭 시 2번 카드로 이동
-                                              _model.updateScrollControllerWithNewIndex(2);
-                                            });
-
-                                            // UI 갱신 후 탭 전환
-                                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                            });
-                                          }
-                                        },
-                                        child: Card(
-                                          elevation: 3.0, // 그림자 효과
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 148.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  // 썸네일 이미지
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                    child: Container(
-                                                      width: 77.0,
-                                                      height: 77.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme.of(context).accent1,
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme.of(context).primary,
-                                                          width: 2.0,
-                                                        ),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[2]['contentid']),
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 텍스트 및 설명 부분
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          // 장소 이름
-                                                          Text(
-                                                            '${markerPositions[2]['name']}',
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-
-                                                          // Kakao Map 버튼
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // 페이지를 2번 카드로 전환
-                                                                      setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(2);
-                                                                        _model.updateScrollControllerWithNewIndex(2);
-                                                                      });
-
-                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
-                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소 설명',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        if (_model.tabBarController != null) {
-                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                        }
-                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[2]['lat'],  // 새 lat 값
-                                                          markerPositions[2]['lng'],  // 새 lng 값
-                                                          3,                          // 새 zoomLevel 값
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset(
-                                                            'assets/images/number-3.png',  // 이미지 경로
-                                                            width: 64.0,  // 이미지 크기 조정
-                                                            height: 64.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding( // 4번 카드
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
-                                        onTap: () {
-                                          if (_model.tabBarController != null) {
-                                            setState(() {
-                                              _model.updatePageControllerWithNewIndex(3); // 탭 클릭 시 4번 카드로 이동
-                                              _model.updateScrollControllerWithNewIndex(3);
-                                            });
-
-                                            // UI 갱신 후 탭 전환
-                                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                            });
-                                          }
-                                        },
-                                        child: Card(
-                                          elevation: 3.0, // 그림자 효과
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 148.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  // 썸네일 이미지
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                    child: Container(
-                                                      width: 77.0,
-                                                      height: 77.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme.of(context).accent1,
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme.of(context).primary,
-                                                          width: 2.0,
-                                                        ),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[3]['contentid']),
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 텍스트 및 설명 부분
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          // 장소 이름
-                                                          Text(
-                                                            '${markerPositions[3]['name']}',
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-
-                                                          // Kakao Map 버튼
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // 페이지를 4번 카드로 전환
-                                                                      setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(3);
-                                                                        _model.updateScrollControllerWithNewIndex(3);
-                                                                      });
-
-                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
-                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소 설명',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        if (_model.tabBarController != null) {
-                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                        }
-                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[3]['lat'],  // 새 lat 값
-                                                          markerPositions[3]['lng'],  // 새 lng 값
-                                                          3,                          // 새 zoomLevel 값
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset(
-                                                            'assets/images/number-4.png',  // 이미지 경로
-                                                            width: 64.0,  // 이미지 크기 조정
-                                                            height: 64.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    // 4번
+                                    /*==================0번 카드===================*/
                                     Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
                                       child: InkWell(
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndex(4); // 탭 클릭 시 4번 카드로 이동
-                                              _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
+                                              _model.updatePageControllerWithNewIndex(0);
+                                              // _model.updateScrollControllerWithNewIndex(0);
                                             });
 
-                                            // UI 갱신 후 탭 전환
                                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                              _model.tabBarController!.animateTo(1);
                                             });
                                           }
                                         },
                                         child: Card(
-                                          elevation: 3.0, // 그림자 효과
+                                          margin: EdgeInsets.all(0),
+                                          elevation: 3.0,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                            borderRadius: BorderRadius.circular(12.0),
                                           ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 148.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  // 썸네일 이미지
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                    child: Container(
-                                                      width: 77.0,
-                                                      height: 77.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme.of(context).accent1,
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme.of(context).primary,
-                                                          width: 2.0,
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(  // 카드의 메인 레이아웃은 Row로 유지
+                                              crossAxisAlignment: CrossAxisAlignment.start,  // Row의 아이템들을 세로로 정렬
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[0]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(  // 텍스트와 버튼을 세로로 정렬
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          '${markerPositions[0]['name']}'.replaceAll(' ', '\n'), // 스페이스바를 \n으로 변환
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,  // 최대 두 줄까지 허용
+                                                          overflow: TextOverflow.visible,
                                                         ),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[4]['contentid']),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                        // Kakao Map 버튼
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              if (_model.tabBarController != null) {
+                                                                setState(() {
+                                                                  _model.updatePageControllerWithNewIndex(0);
+                                                                  // _model.updateScrollControllerWithNewIndex(0);
+                                                                });
 
-                                                  // 텍스트 및 설명 부분
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          // 장소 이름
-                                                          Text(
-                                                            '${markerPositions[4]['name']}',
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
+                                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                  _model.tabBarController!.animateTo(1);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              '장소 설명',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Readex Pro',
+                                                                fontSize: 16.0,
+                                                                letterSpacing: 0.0,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.blue,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12.0),
+                                                              ),
                                                             ),
                                                           ),
-
-                                                          // Kakao Map 버튼
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // 페이지를 4번 카드로 전환
-                                                                      setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(4);
-                                                                        _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
-                                                                      });
-
-                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
-                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소 설명',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        if (_model.tabBarController != null) {
-                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                        }
-                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[4]['lat'],  // 새 lat 값
-                                                          markerPositions[4]['lng'],  // 새 lng 값
-                                                          3,                          // 새 zoomLevel 값
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset(
-                                                            'assets/images/number-5.png',  // 이미지 경로
-                                                            width: 64.0,  // 이미지 크기 조정
-                                                            height: 64.0,
-                                                          ),
-                                                        ],
-                                                      ),
+                                                ),
+
+                                                // 오른쪽에 이미지 버튼 (세로 정렬 고정)
+                                                Align(
+                                                  alignment: Alignment.topCenter,  // 이미지 버튼을 Row 내에서 세로 중앙에 유지
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[0]['lat'],
+                                                        markerPositions[0]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-1.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    Padding( // 5번 카드
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+
+                                    /*==================1번 카드===================*/
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 4.0),
+                                      child: InkWell(
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndex(5); // 탭 클릭 시 5번 카드로 이동
-                                              _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
+                                              _model.updatePageControllerWithNewIndex(1);
+                                              // _model.updateScrollControllerWithNewIndex(1);
                                             });
 
-                                            // UI 갱신 후 탭 전환
                                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                              _model.tabBarController!.animateTo(1);
                                             });
                                           }
                                         },
                                         child: Card(
-                                          elevation: 3.0, // 그림자 효과
+                                          margin: EdgeInsets.all(0),
+                                          elevation: 3.0,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                            borderRadius: BorderRadius.circular(12.0),
                                           ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 148.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  // 썸네일 이미지
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                    child: Container(
-                                                      width: 77.0,
-                                                      height: 77.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme.of(context).accent1,
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme.of(context).primary,
-                                                          width: 2.0,
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(  // 카드의 메인 레이아웃은 Row로 유지
+                                              crossAxisAlignment: CrossAxisAlignment.start,  // Row의 아이템들을 세로로 정렬
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[1]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(  // 텍스트와 버튼을 세로로 정렬
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          '${markerPositions[1]['name']}'.replaceAll(' ', '\n'), // 스페이스바를 \n으로 변환
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,  // 최대 두 줄까지 허용
+                                                          overflow: TextOverflow.visible,
                                                         ),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[5]['contentid']),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                        // Kakao Map 버튼
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              if (_model.tabBarController != null) {
+                                                                setState(() {
+                                                                  _model.updatePageControllerWithNewIndex(1);
+                                                                  // _model.updateScrollControllerWithNewIndex(1);
+                                                                });
 
-                                                  // 텍스트 및 설명 부분
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          // 장소 이름
-                                                          Text(
-                                                            '${markerPositions[5]['name']}',
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
+                                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                  _model.tabBarController!.animateTo(1);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              '장소 설명',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Readex Pro',
+                                                                fontSize: 16.0,
+                                                                letterSpacing: 0.0,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.blue,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12.0),
+                                                              ),
                                                             ),
                                                           ),
-
-                                                          // Kakao Map 버튼
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // 페이지를 5번 카드로 전환
-                                                                      setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(5);
-                                                                        _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
-                                                                      });
-
-                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
-                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소 설명',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
+                                                ),
 
-                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        if (_model.tabBarController != null) {
-                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                        }
-                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[5]['lat'],  // 새 lat 값
-                                                          markerPositions[5]['lng'],  // 새 lng 값
-                                                          3,                          // 새 zoomLevel 값
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset(
-                                                            'assets/images/number-6.png',  // 이미지 경로
-                                                            width: 64.0,  // 이미지 크기 조정
-                                                            height: 64.0,
-                                                          ),
-                                                        ],
-                                                      ),
+                                                // 오른쪽에 이미지 버튼 (세로 정렬 고정)
+                                                Align(
+                                                  alignment: Alignment.topCenter,  // 이미지 버튼을 Row 내에서 세로 중앙에 유지
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[1]['lat'],
+                                                        markerPositions[1]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-2.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    Padding( // 6번 카드
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                                      child: InkWell(  // 카드 클릭 시 이벤트 추가
+                                    /*==================2번 카드===================*/
+                                    Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 4.0),
+                                      child: InkWell(
                                         onTap: () {
                                           if (_model.tabBarController != null) {
                                             setState(() {
-                                              _model.updatePageControllerWithNewIndex(6); // 탭 클릭 시 6번 카드로 이동
-                                              _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
+                                              _model.updatePageControllerWithNewIndex(2);
+                                              // _model.updateScrollControllerWithNewIndex(2);
                                             });
 
-                                            // UI 갱신 후 탭 전환
                                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
+                                              _model.tabBarController!.animateTo(1);
                                             });
                                           }
                                         },
                                         child: Card(
-                                          elevation: 3.0, // 그림자 효과
+                                          margin: EdgeInsets.all(0),
+                                          elevation: 3.0,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0), // 카드 모서리 둥글게
+                                            borderRadius: BorderRadius.circular(12.0),
                                           ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 148.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(12.0),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  // 썸네일 이미지
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(4.0, 30.0, 0.0, 0.0),
-                                                    child: Container(
-                                                      width: 77.0,
-                                                      height: 77.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme.of(context).accent1,
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme.of(context).primary,
-                                                          width: 2.0,
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(  // 카드의 메인 레이아웃은 Row로 유지
+                                              crossAxisAlignment: CrossAxisAlignment.start,  // Row의 아이템들을 세로로 정렬
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[2]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(  // 텍스트와 버튼을 세로로 정렬
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          '${markerPositions[2]['name']}'.replaceAll(' ', '\n'), // 스페이스바를 \n으로 변환
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,  // 최대 두 줄까지 허용
+                                                          overflow: TextOverflow.visible,
                                                         ),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.0),
-                                                        child: buildThumbnailLoader(context, markerPositions[6]['contentid']),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                        // Kakao Map 버튼
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              if (_model.tabBarController != null) {
+                                                                setState(() {
+                                                                  _model.updatePageControllerWithNewIndex(2);
+                                                                  // _model.updateScrollControllerWithNewIndex(2);
+                                                                });
 
-                                                  // 텍스트 및 설명 부분
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 8.0, 12.0),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          // 장소 이름
-                                                          Text(
-                                                            '${markerPositions[6]['name']}',
-                                                            style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                              fontFamily: 'Outfit',
-                                                              color: Colors.white,
-                                                              fontSize: 16.0,
-                                                              letterSpacing: 0.0,
-                                                              fontWeight: FontWeight.w500,
+                                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                  _model.tabBarController!.animateTo(1);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              '장소 설명',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Readex Pro',
+                                                                fontSize: 16.0,
+                                                                letterSpacing: 0.0,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.blue,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12.0),
+                                                              ),
                                                             ),
                                                           ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
 
-                                                          // Kakao Map 버튼
-                                                          Padding(
-                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                            child: Row(
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed: () {
-                                                                    if (_model.tabBarController != null) {
-                                                                      // 페이지를 6번 카드로 전환
-                                                                      setState(() {
-                                                                        _model.updatePageControllerWithNewIndex(6);
-                                                                        _model.updateScrollControllerWithNewIndex(3); // 더이상 스크롤 못함.
-                                                                      });
+                                                // 오른쪽에 이미지 버튼 (세로 정렬 고정)
+                                                Align(
+                                                  alignment: Alignment.topCenter,  // 이미지 버튼을 Row 내에서 세로 중앙에 유지
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[2]['lat'],
+                                                        markerPositions[2]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-3.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    /*==================3번 카드===================*/
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 4.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndex(3);
+                                              // _model.updateScrollControllerWithNewIndex(3);
+                                            });
 
-                                                                      // UI 갱신 후 '코스설명' 탭으로 전환
-                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                        _model.tabBarController!.animateTo(1); // '코스설명' 탭으로 이동
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    '장소 설명',
-                                                                    style: TextStyle(
-                                                                      fontFamily: 'Readex Pro',
-                                                                      fontSize: 16.0,
-                                                                      letterSpacing: 0.0,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: FlutterFlowTheme.of(context).primary,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12.0),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                // 화살표 아이콘
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                                                                  child: InkWell(
-                                                                    onTap: () {},
-                                                                    child: Icon(
-                                                                      Icons.chevron_right_rounded,
-                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                      size: 24.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1);
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          margin: EdgeInsets.all(0),
+                                          elevation: 3.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(  // 카드의 메인 레이아웃은 Row로 유지
+                                              crossAxisAlignment: CrossAxisAlignment.start,  // Row의 아이템들을 세로로 정렬
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[3]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(  // 텍스트와 버튼을 세로로 정렬
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          '${markerPositions[3]['name']}'.replaceAll(' ', '\n'), // 스페이스바를 \n으로 변환
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,  // 최대 두 줄까지 허용
+                                                          overflow: TextOverflow.visible,
+                                                        ),
+                                                        // Kakao Map 버튼
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              if (_model.tabBarController != null) {
+                                                                setState(() {
+                                                                  _model.updatePageControllerWithNewIndex(3);
+                                                                  // _model.updateScrollControllerWithNewIndex(3);
+                                                                });
+
+                                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                  _model.tabBarController!.animateTo(1);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              '장소 설명',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Readex Pro',
+                                                                fontSize: 16.0,
+                                                                letterSpacing: 0.0,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.blue,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12.0),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
+                                                ),
 
-                                                  // 오른쪽에 이미지 버튼 (세로 중앙에 맞추기)
-                                                  Padding(
-                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        if (_model.tabBarController != null) {
-                                                          _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
-                                                        }
-                                                        Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                          markerPositions[6]['lat'],  // 새 lat 값
-                                                          markerPositions[6]['lng'],  // 새 lng 값
-                                                          3,                          // 새 zoomLevel 값
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset(
-                                                            'assets/images/number-7.png',  // 이미지 경로
-                                                            width: 64.0,  // 이미지 크기 조정
-                                                            height: 64.0,
-                                                          ),
-                                                        ],
-                                                      ),
+                                                // 오른쪽에 이미지 버튼 (세로 정렬 고정)
+                                                Align(
+                                                  alignment: Alignment.topCenter,  // 이미지 버튼을 Row 내에서 세로 중앙에 유지
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[3]['lat'],
+                                                        markerPositions[3]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-4.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    /*==================4번 카드===================*/
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 4.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndex(4);
+                                              // _model.updateScrollControllerWithNewIndex(4);
+                                            });
+
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1);
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          margin: EdgeInsets.all(0),
+                                          elevation: 3.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(  // 카드의 메인 레이아웃은 Row로 유지
+                                              crossAxisAlignment: CrossAxisAlignment.start,  // Row의 아이템들을 세로로 정렬
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[4]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(  // 텍스트와 버튼을 세로로 정렬
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          '${markerPositions[4]['name']}'.replaceAll(' ', '\n'), // 스페이스바를 \n으로 변환
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,  // 최대 두 줄까지 허용
+                                                          overflow: TextOverflow.visible,
+                                                        ),
+                                                        // Kakao Map 버튼
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              if (_model.tabBarController != null) {
+                                                                setState(() {
+                                                                  _model.updatePageControllerWithNewIndex(4);
+                                                                  // _model.updateScrollControllerWithNewIndex(4);
+                                                                });
+
+                                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                  _model.tabBarController!.animateTo(1);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              '장소 설명',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Readex Pro',
+                                                                fontSize: 16.0,
+                                                                letterSpacing: 0.0,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.blue,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12.0),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 오른쪽에 이미지 버튼 (세로 정렬 고정)
+                                                Align(
+                                                  alignment: Alignment.topCenter,  // 이미지 버튼을 Row 내에서 세로 중앙에 유지
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[4]['lat'],
+                                                        markerPositions[4]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-5.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    /*==================5번 카드===================*/
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 4.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndex(5);
+                                              // _model.updateScrollControllerWithNewIndex(5);
+                                            });
+
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1);
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          margin: EdgeInsets.all(0),
+                                          elevation: 3.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(  // 카드의 메인 레이아웃은 Row로 유지
+                                              crossAxisAlignment: CrossAxisAlignment.start,  // Row의 아이템들을 세로로 정렬
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[5]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(  // 텍스트와 버튼을 세로로 정렬
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          '${markerPositions[5]['name']}'.replaceAll(' ', '\n'), // 스페이스바를 \n으로 변환
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,  // 최대 두 줄까지 허용
+                                                          overflow: TextOverflow.visible,
+                                                        ),
+                                                        // Kakao Map 버튼
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              if (_model.tabBarController != null) {
+                                                                setState(() {
+                                                                  _model.updatePageControllerWithNewIndex(5);
+                                                                  // _model.updateScrollControllerWithNewIndex(5);
+                                                                });
+
+                                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                  _model.tabBarController!.animateTo(1);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              '장소 설명',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Readex Pro',
+                                                                fontSize: 16.0,
+                                                                letterSpacing: 0.0,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.blue,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12.0),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 오른쪽에 이미지 버튼 (세로 정렬 고정)
+                                                Align(
+                                                  alignment: Alignment.topCenter,  // 이미지 버튼을 Row 내에서 세로 중앙에 유지
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[5]['lat'],
+                                                        markerPositions[5]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-6.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    /*==================6번 카드===================*/
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 4.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndex(6);
+                                              // _model.updateScrollControllerWithNewIndex(6);
+                                            });
+
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1);
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          elevation: 3.0,
+                                          margin: EdgeInsets.all(0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(  // 카드의 메인 레이아웃은 Row로 유지
+                                              crossAxisAlignment: CrossAxisAlignment.start,  // Row의 아이템들을 세로로 정렬
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[6]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(  // 텍스트와 버튼을 세로로 정렬
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          '${markerPositions[6]['name']}'.replaceAll(' ', '\n'), // 스페이스바를 \n으로 변환
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,  // 최대 두 줄까지 허용
+                                                          overflow: TextOverflow.visible,
+                                                        ),
+                                                        // Kakao Map 버튼
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              if (_model.tabBarController != null) {
+                                                                setState(() {
+                                                                  _model.updatePageControllerWithNewIndex(6);
+                                                                  // _model.updateScrollControllerWithNewIndex(6);
+                                                                });
+
+                                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                  _model.tabBarController!.animateTo(1);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              '장소 설명',
+                                                              style: TextStyle(
+                                                                fontFamily: 'Readex Pro',
+                                                                fontSize: 16.0,
+                                                                letterSpacing: 0.0,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.blue,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12.0),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 오른쪽에 이미지 버튼 (세로 정렬 고정)
+                                                Align(
+                                                  alignment: Alignment.topCenter,  // 이미지 버튼을 Row 내에서 세로 중앙에 유지
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2); // "지도" 탭으로 이동
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[6]['lat'],
+                                                        markerPositions[6]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-7.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -1844,8 +1652,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           setState(()
                                           {
                                             _model.updatePageControllerWithNewIndex(index);
-                                            _model.updateScrollControllerWithNewIndex(index);
-                                            print("index 값:${index}");// 스크롤 컨트롤러도 업데이트
+                                            // _model.updateScrollControllerWithNewIndex(index);
+                                            // print("index 값:${index}");// 스크롤 컨트롤러도 업데이트
                                           });
                                         },
                                         // PageView.builder에서 각 카드 함수 호출
@@ -2127,7 +1935,7 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
                 markerPosition['name'],
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Outfit',
-                  color: Colors.white,
+                  color: Colors.black, // 여기 변경
                   letterSpacing: 0.0,
                 ),
                 maxLines: 1, // 한 줄로 제한
@@ -2164,7 +1972,7 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
             style: {
               "p": Style(
                 fontFamily: 'Readex Pro',
-                color: Colors.white,
+                color: Colors.black, // 여기 변경
                 letterSpacing: 0.0,
                 fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
               ),
@@ -2193,7 +2001,7 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
                 markerPosition['name'],
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Outfit',
-                  color: Colors.white,
+                  color: Colors.black,
                   letterSpacing: 0.0,
                 ),
                 maxLines: 1, // 한 줄로 제한
@@ -2230,7 +2038,7 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
             style: {
               "p": Style(
                 fontFamily: 'Readex Pro',
-                color: Colors.white,
+                color: Colors.black,
                 letterSpacing: 0.0,
                 fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
               ),
@@ -2259,7 +2067,7 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
                 markerPosition['name'],
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Outfit',
-                  color: Colors.white,
+                  color: Colors.black,
                   letterSpacing: 0.0,
                 ),
                 maxLines: 1, // 한 줄로 제한
@@ -2296,7 +2104,7 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
             style: {
               "p": Style(
                 fontFamily: 'Readex Pro',
-                color: Colors.white,
+                color: Colors.black,
                 letterSpacing: 0.0,
                 fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
               ),
@@ -2325,7 +2133,7 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
                 markerPosition['name'],
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Outfit',
-                  color: Colors.white,
+                  color: Colors.black,
                   letterSpacing: 0.0,
                 ),
                 maxLines: 1, // 한 줄로 제한
@@ -2362,7 +2170,7 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
             style: {
               "p": Style(
                 fontFamily: 'Readex Pro',
-                color: Colors.white,
+                color: Colors.black,
                 letterSpacing: 0.0,
                 fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
               ),
@@ -2391,7 +2199,7 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
                 markerPosition['name'],
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Outfit',
-                  color: Colors.white,
+                  color: Colors.black,
                   letterSpacing: 0.0,
                 ),
                 maxLines: 1, // 한 줄로 제한
@@ -2428,7 +2236,7 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
             style: {
               "p": Style(
                 fontFamily: 'Readex Pro',
-                color: Colors.white,
+                color: Colors.black,
                 letterSpacing: 0.0,
                 fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
               ),
@@ -2457,7 +2265,7 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
                 markerPosition['name'],
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Outfit',
-                  color: Colors.white,
+                  color: Colors.black,
                   letterSpacing: 0.0,
                 ),
                 maxLines: 1, // 한 줄로 제한
@@ -2494,7 +2302,7 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
             style: {
               "p": Style(
                 fontFamily: 'Readex Pro',
-                color: Colors.white,
+                color: Colors.black,
                 letterSpacing: 0.0,
                 fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
               ),
@@ -2523,7 +2331,7 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
                 markerPosition['name'],
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Outfit',
-                  color: Colors.white,
+                  color: Colors.black,
                   letterSpacing: 0.0,
                 ),
                 maxLines: 1, // 한 줄로 제한
@@ -2560,7 +2368,7 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
             style: {
               "p": Style(
                 fontFamily: 'Readex Pro',
-                color: Colors.white,
+                color: Colors.black,
                 letterSpacing: 0.0,
                 fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
               ),

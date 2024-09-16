@@ -124,6 +124,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
             'name': entry.value['VISIT_AREA_NM'],
             'lat': entry.value['Y_COORD'],
             'lng': entry.value['X_COORD'],
+            'score': entry.value['SCORE'],
             'tourkey': entry.value['TOUR_KEYWORD'],
           }),
         );
@@ -173,9 +174,9 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
             : FocusScope.of(context).unfocus(),
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: const Color(0xFF0C0202),
+            backgroundColor: const Color(0xFF1BA004), // 여기 변경
             automaticallyImplyLeading: false,
             title: const Text(
               'AI 분석',
@@ -202,20 +203,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        // 그라데이션 효과를 가진 컨테이너
-                        Container(
-                          width: 150.0,
-                          height: 150.0,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white.withOpacity(0.8), // 하얀색 그림자
-                                blurRadius: 80.0, // 그림자의 퍼짐 정도
-                                spreadRadius: 20.0, // 그림자의 확산 범위
-                              ),
-                            ],
-                          ),
-                        ),
+                        //여기 통으로 뺌
                         // 실제 Lottie 애니메이션을 담고 있는 컨테이너
                         Container(
                           width: 250.0, // Lottie 크기를 줄여서 그라데이션이 보이게 함
@@ -235,6 +223,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
                   child: Text(
                     '\n\n\n\n추천 여행지를 불러오는 중입니다...',
                     style: FlutterFlowTheme.of(context).titleMedium.override(
+                      color: Colors.black, // 여기 추가
                       fontFamily: 'Readex Pro',
                       fontSize: 20,
                       letterSpacing: 0.0,

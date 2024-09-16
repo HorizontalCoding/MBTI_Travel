@@ -38,7 +38,8 @@ class MarkerPositionsModel with ChangeNotifier {
 
   // 데이터를 업데이트하고 변경 알림
   void updateMarkerPositions(List<Map<String, dynamic>> positions) {
-    _markerPositions = positions.map((position) {
+    _markerPositions = positions.map((position)
+    {
       return {
         ...position,
         'contentid': position['contentid'] ?? 'N/A',
@@ -192,6 +193,14 @@ class MarkerPositionsModel with ChangeNotifier {
       print('Error fetching overview: $e');
     }
   }
+
+  // 'name' 필드에서 스페이스바를 줄바꿈으로 변환하는 함수
+  String formatNameWithNewline(String name)
+  {
+    return name.replaceAll(' ', '\n');
+  }
+
+
 
   String _cleanOverview(String overview)
   {
