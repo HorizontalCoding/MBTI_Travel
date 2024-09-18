@@ -135,28 +135,44 @@ class MarkerPositionsModel with ChangeNotifier {
 
     final Uri imageUri = Uri.parse(imageEndpoint).replace(queryParameters: imageParams);
 
-    final imageResponse = await http.get(imageUri);
+    try {
+      final imageResponse = await http.get(imageUri);
 
-    if (imageResponse.statusCode == 200) {
-      final imageData = json.decode(utf8.decode(imageResponse.bodyBytes));
-      final imageItems = imageData['response']['body']['items']['item'];
+      if (imageResponse.statusCode == 200) {
+        final imageData = json.decode(utf8.decode(imageResponse.bodyBytes));
+        final imageItems = imageData['response']['body']['items']['item'];
 
-      if (imageItems is List && imageItems.isNotEmpty) {
-        for (int j = 0; j < imageItems.length; j++) {
-          final int imgIndex = j + 1;
-          _markerPositions[index].addAll({
-            'smallimageurl$imgIndex': imageItems[j]['smallimageurl'] ?? '',
-            'originimgurl$imgIndex': imageItems[j]['originimgurl'] ?? '',
-          });
+        if (imageItems is List && imageItems.isNotEmpty) {
+          for (int j = 0; j < imageItems.length; j++) {
+            final int imgIndex = j + 1;
+
+            // try-catch로 인덱스 오류를 방지
+            try {
+              _markerPositions[index].addAll({
+                'smallimageurl$imgIndex': imageItems[j]['smallimageurl'] ?? '',
+                'originimgurl$imgIndex': imageItems[j]['originimgurl'] ?? '',
+              });
+            } catch (e) {
+              print('Error at index $index: $e');
+              // 오류가 발생하면 패스하고 다음으로 넘어감
+              continue;
+            }
+          }
+        } else if (imageItems is Map) {
+          try {
+            _markerPositions[index].addAll({
+              'smallimageurl1': imageItems['smallimageurl'] ?? '',
+              'originimgurl1': imageItems['originimgurl'] ?? '',
+            });
+          } catch (e) {
+            print('Error at index $index: $e');
+          }
         }
-      } else if (imageItems is Map) {
-        _markerPositions[index].addAll({
-          'smallimageurl1': imageItems['smallimageurl'] ?? '',
-          'originimgurl1': imageItems['originimgurl'] ?? '',
-        });
+      } else {
+        print('Error: Image API received status code ${imageResponse.statusCode}');
       }
-    } else {
-      print('Error: Image API received status code ${imageResponse.statusCode}');
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -205,8 +221,15 @@ class MarkerPositionsModel with ChangeNotifier {
   String _cleanOverview(String overview)
   {
     // <br> 태그를 공백 문자로 대체
-    // 설명: HTML 문서에서 줄바꿈을 나타내는 <br> 태그를 공백으로 바꿉니다.
     overview = overview.replaceAll('<br>', ' ');
+
+    // '다.' 이후부터 문자열을 잘라냅니다.
+    int endIndex = overview.indexOf('다.');
+    if (endIndex != -1)
+    {
+      // '다.'를 포함하여 문자열을 잘라서 반환
+      return overview.substring(0, endIndex + 2);
+    }
 
     // 문자열의 각 문자를 순차적으로 검사합니다.
     for (int i = 0; i < overview.length; i++)
@@ -216,7 +239,6 @@ class MarkerPositionsModel with ChangeNotifier {
       {
         // 1. 마침표가 문자열의 마지막 문자이거나
         // 2. 마침표 바로 뒤에 공백이 있는 경우
-        // 위 두 가지 조건 중 하나라도 만족하면 그 위치에서 문자열을 잘라냅니다.
         if (i + 1 == overview.length || overview[i + 1] == ' ')
         {
           // 문자열을 마침표 뒤까지 포함하여 잘라서 반환합니다.
@@ -225,10 +247,10 @@ class MarkerPositionsModel with ChangeNotifier {
       }
     }
 
-    // 만약 마침표가 없거나 잘라낼 필요가 없으면
-    // 원래의 전체 문자열을 그대로 반환합니다.
+    // 위 조건이 모두 적용되지 않을 경우 원본 문자열 반환
     return overview;
   }
+
 
 
   Map<String, dynamic> _extractMarkerInfo(dynamic item) {

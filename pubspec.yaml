@@ -117,6 +117,7 @@ flutter:
     - assets/images/course_select_images/
     - assets/images/Mbti_Tile_Images/
     - assets/images/logo_files/
+    - assets/images/background/
 
   
   # An image asset can refer to one or more resolution-specific "variants", see
