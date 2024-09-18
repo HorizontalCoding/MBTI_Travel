@@ -1,30 +1,25 @@
+import 'dart:async'; // Timer 사용
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_html/flutter_html.dart';
-// import 'dart:io';
-
-// =====================================================================
-// 6차 업데이트 <br> 태그제거 + 마침표 + 정규표현식(1. 2. 3. 예외처리)
-// =====================================================================
 
 // 전역 변수
-// 카카오 시작 좌표, 지역 번호
 int? g_districtCode = 0;
-int g_currentPageIndex = 0; // 전역 변수로 현재 페이지 인덱스를 유지
+int g_currentPageIndex = 0;
 double g_kakaoMapStartLat = 0.0;
 double g_kakaoMapStartLng = 0.0;
 
 String g_locationName = '';
 String g_mbtiStringValue = '';
 
-// API 키
 late final String tourApiKey;
 late final String kakaoMapKey;
 late final String tourApi_Encoding_key;
 
 late final String PROD_URL;
 late final String DEV_URL;
+
 class MarkerPositionsModel with ChangeNotifier {
   List<Map<String, dynamic>> _markerPositions = [];
   List<Map<String, dynamic>> _detailedMarkerInfo = [];
@@ -32,14 +27,11 @@ class MarkerPositionsModel with ChangeNotifier {
 
   bool get isDataLoaded => _isDataLoaded;
 
-  // Getter를 사용하여 데이터에 접근
   List<Map<String, dynamic>> get markerPositions => _markerPositions;
   List<Map<String, dynamic>> get detailedMarkerInfo => _detailedMarkerInfo;
 
-  // 데이터를 업데이트하고 변경 알림
   void updateMarkerPositions(List<Map<String, dynamic>> positions) {
-    _markerPositions = positions.map((position)
-    {
+    _markerPositions = positions.map((position) {
       return {
         ...position,
         'contentid': position['contentid'] ?? 'N/A',
@@ -48,11 +40,10 @@ class MarkerPositionsModel with ChangeNotifier {
     }).toList();
 
     _detailedMarkerInfo = List<Map<String, dynamic>>.filled(positions.length, {});
-    _isDataLoaded = false;  // 데이터가 새로 업데이트 되면 로딩 상태로 전환
+    _isDataLoaded = false;
     notifyListeners();
   }
 
-  // 각 markerPosition의 'keyword'를 기반으로 API 호출 및 여러 필드 업데이트
   Future<void> fetchAndUpdateData(String apiKey) async {
     final String searchEndpoint = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchKeyword';
     final String imageEndpoint = 'http://apis.data.go.kr/B551011/KorService1/detailImage1';
@@ -77,13 +68,29 @@ class MarkerPositionsModel with ChangeNotifier {
       };
 
       final Uri searchUri = Uri.parse(searchEndpoint).replace(queryParameters: searchParams);
-      fetchTasks.add(_fetchDataAndImages(i, searchUri, imageEndpoint, overViewEndpoint, apiKey));
+      fetchTasks.add(_retryFetch(() => _fetchDataAndImages(i, searchUri, imageEndpoint, overViewEndpoint, apiKey)));
     }
 
-    // 모든 데이터를 가져온 후에만 UI를 업데이트
     await Future.wait(fetchTasks);
-    _isDataLoaded = true;  // 데이터 로드 완료 후 상태 갱신
+    _isDataLoaded = true;
     notifyListeners();
+  }
+
+  // 재시도 로직을 포함한 API 호출 함수
+  Future<void> _retryFetch(Future<void> Function() fetchFunction, {int maxRetries = 3}) async {
+    int retryCount = 0;
+    while (retryCount < maxRetries) {
+      try {
+        await fetchFunction().timeout(Duration(seconds: 5)); // 10초 타임아웃
+        return; // 성공 시 리턴
+      } catch (e) {
+        retryCount++;
+        print('Error: $e - 재시도 횟수: $retryCount');
+        if (retryCount >= maxRetries) {
+          print('최대 재시도 횟수를 초과했습니다.');
+        }
+      }
+    }
   }
 
   Future<void> _fetchDataAndImages(int index, Uri searchUri, String imageEndpoint, String overViewEndpoint, String apiKey) async {
@@ -105,11 +112,10 @@ class MarkerPositionsModel with ChangeNotifier {
         }
 
         final String contentId = _detailedMarkerInfo[index]['contentid'] ?? 'N/A';
-        // 병렬 처리(Future.wait) 사용(_fetchImages, _fetchOverview 를 병렬로 처리하는 코드)
         if (contentId != 'N/A') {
           await Future.wait([
-            _fetchImages(contentId, index, imageEndpoint, apiKey),
-            _fetchOverview(contentId, index, overViewEndpoint, apiKey),
+            _retryFetch(() => _fetchImages(contentId, index, imageEndpoint, apiKey)),
+            _retryFetch(() => _fetchOverview(contentId, index, overViewEndpoint, apiKey)),
           ]);
         }
       } else {
@@ -145,8 +151,6 @@ class MarkerPositionsModel with ChangeNotifier {
         if (imageItems is List && imageItems.isNotEmpty) {
           for (int j = 0; j < imageItems.length; j++) {
             final int imgIndex = j + 1;
-
-            // try-catch로 인덱스 오류를 방지
             try {
               _markerPositions[index].addAll({
                 'smallimageurl$imgIndex': imageItems[j]['smallimageurl'] ?? '',
@@ -154,7 +158,6 @@ class MarkerPositionsModel with ChangeNotifier {
               });
             } catch (e) {
               print('Error at index $index: $e');
-              // 오류가 발생하면 패스하고 다음으로 넘어감
               continue;
             }
           }
@@ -178,12 +181,12 @@ class MarkerPositionsModel with ChangeNotifier {
 
   Future<void> _fetchOverview(String contentId, int index, String overViewEndpoint, String apiKey) async {
     final Map<String, String> overviewParams = {
-      'serviceKey': apiKey,
-      'contentId': contentId,
-      'defaultYN': 'N',
-      'addrinfoYN': 'N',
-      'overviewYN': 'Y',
-      'MobileOS': 'ETC',
+    'serviceKey': apiKey,
+    'contentId': contentId,
+    'defaultYN': 'N',
+    'addrinfoYN': 'N',
+    'overviewYN': 'Y',
+    'MobileOS': 'ETC',
       'MobileApp': 'MBTI',
       '_type': 'json',
     };
@@ -210,48 +213,25 @@ class MarkerPositionsModel with ChangeNotifier {
     }
   }
 
-  // 'name' 필드에서 스페이스바를 줄바꿈으로 변환하는 함수
-  String formatNameWithNewline(String name)
-  {
+  String formatNameWithNewline(String name) {
     return name.replaceAll(' ', '\n');
   }
 
-
-
-  String _cleanOverview(String overview)
-  {
-    // <br> 태그를 공백 문자로 대체
+  String _cleanOverview(String overview) {
     overview = overview.replaceAll('<br>', ' ');
 
-    // '다.' 이후부터 문자열을 잘라냅니다.
     int endIndex = overview.indexOf('다.');
-    if (endIndex != -1)
-    {
-      // '다.'를 포함하여 문자열을 잘라서 반환
+    if (endIndex != -1) {
       return overview.substring(0, endIndex + 2);
     }
 
-    // 문자열의 각 문자를 순차적으로 검사합니다.
-    for (int i = 0; i < overview.length; i++)
-    {
-      // 마침표를 찾았을 때
-      if (overview[i] == '.')
-      {
-        // 1. 마침표가 문자열의 마지막 문자이거나
-        // 2. 마침표 바로 뒤에 공백이 있는 경우
-        if (i + 1 == overview.length || overview[i + 1] == ' ')
-        {
-          // 문자열을 마침표 뒤까지 포함하여 잘라서 반환합니다.
-          return overview.substring(0, i + 1);
-        }
+    for (int i = 0; i < overview.length; i++) {
+      if (overview[i] == '.' && (i + 1 == overview.length || overview[i + 1] == ' ')) {
+        return overview.substring(0, i + 1);
       }
     }
-
-    // 위 조건이 모두 적용되지 않을 경우 원본 문자열 반환
     return overview;
   }
-
-
 
   Map<String, dynamic> _extractMarkerInfo(dynamic item) {
     return {
@@ -275,13 +255,7 @@ class MarkerPositionsModel with ChangeNotifier {
       'sigungucode': item['sigungucode'] ?? '',
       'tel': item['tel'] ?? '',
       'title': item['title'] ?? '',
-      'overview': '아직 해당 관광지에 대한 정보가 없어요.', // 기본 overview 값 추가
+      'overview': '아직 해당 관광지에 대한 정보가 없어요.',
     };
   }
 }
-
-
-
-
-
-

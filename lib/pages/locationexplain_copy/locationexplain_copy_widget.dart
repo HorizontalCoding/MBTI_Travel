@@ -487,6 +487,24 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     super.dispose();
   }
 
+  String formatText(String text)
+  {
+    // 영어와 한글이 섞여있는지 확인하는 정규식
+    final RegExp mixedLang = RegExp(r'(?=.*[a-zA-Z])(?=.*[가-힣])');
+
+    // 영어 단어에만 매칭되는 정규식
+    final RegExp englishWord = RegExp(r'^[a-zA-Z\s]+$');
+
+    // 혼합된 경우 공백을 유지하고, 한글만 있는 경우 공백을 \n으로 대체
+    if (mixedLang.hasMatch(text)) {
+      return text; // 영어와 한글이 섞여있으면 그대로 반환
+    } else if (!englishWord.hasMatch(text)) {
+      return text.replaceAll(' ', '\n'); // 한글만 있으면 공백을 줄바꿈으로 대체
+    } else {
+      return text; // 영어만 있으면 그대로 반환
+    }
+  }
+
   @override
   Widget build(BuildContext context)
   {
@@ -811,7 +829,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                             children: [
                                               // 장소 이름
                                               Text(
-                                                '${markerPositions[0]['name']}'.replaceAll(' ', '\n'),
+                                                formatText(markerPositions[0]['name']) ,
                                                 style: FlutterFlowTheme.of(context).displaySmall.override(
                                                   fontFamily: 'Outfit',
                                                   color: Colors.black,
@@ -977,7 +995,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       children: [
                                                         // 장소 이름
                                                         Text(
-                                                          '${markerPositions[1]['name']}'.replaceAll(' ', '\n'),
+                                                          formatText(markerPositions[1]['name']),
                                                           style: FlutterFlowTheme.of(context).displaySmall.override(
                                                             fontFamily: 'Outfit',
                                                             color: Colors.black,
@@ -1142,7 +1160,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       children: [
                                                         // 장소 이름
                                                         Text(
-                                                          '${markerPositions[2]['name']}'.replaceAll(' ', '\n'),
+                                                          formatText(markerPositions[2]['name']),
                                                           style: FlutterFlowTheme.of(context).displaySmall.override(
                                                             fontFamily: 'Outfit',
                                                             color: Colors.black,
@@ -1307,7 +1325,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       children: [
                                                         // 장소 이름
                                                         Text(
-                                                          '${markerPositions[3]['name']}'.replaceAll(' ', '\n'),
+                                                          formatText(markerPositions[3]['name']),
                                                           style: FlutterFlowTheme.of(context).displaySmall.override(
                                                             fontFamily: 'Outfit',
                                                             color: Colors.black,
@@ -1472,7 +1490,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       children: [
                                                         // 장소 이름
                                                         Text(
-                                                          '${markerPositions[4]['name']}'.replaceAll(' ', '\n'),
+                                                          formatText(markerPositions[4]['name']),
                                                           style: FlutterFlowTheme.of(context).displaySmall.override(
                                                             fontFamily: 'Outfit',
                                                             color: Colors.black,
@@ -1637,7 +1655,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       children: [
                                                         // 장소 이름
                                                         Text(
-                                                          '${markerPositions[5]['name']}'.replaceAll(' ', '\n'),
+                                                          formatText(markerPositions[5]['name']),
                                                           style: FlutterFlowTheme.of(context).displaySmall.override(
                                                             fontFamily: 'Outfit',
                                                             color: Colors.black,
@@ -1802,7 +1820,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                       children: [
                                                         // 장소 이름
                                                         Text(
-                                                          '${markerPositions[6]['name']}'.replaceAll(' ', '\n'),
+                                                          formatText(markerPositions[6]['name']),
                                                           style: FlutterFlowTheme.of(context).displaySmall.override(
                                                             fontFamily: 'Outfit',
                                                             color: Colors.black,
@@ -2082,30 +2100,9 @@ String getImageUrl(List<Map<String, dynamic>> markerPositions, String? contentId
   return defaultUrl;
 }
 
-// 썸네일 이미지 URL을 가져오는 함수
-Future<String> getThumbnailUrl(List<Map<String, dynamic>> markerPositions, String? contentId, String defaultUrl) {
-  if (contentId == null || contentId.isEmpty) {
-    return Future.value(defaultUrl);
-  }
-
-  final marker = markerPositions.firstWhere(
-        (element) => element['contentid'] == contentId,
-    orElse: () => <String, dynamic>{},
-  );
-
-  if (marker.isNotEmpty) {
-    if (contentId == '2815362') {
-      return Future.value(marker['smallimageurl5'] ?? defaultUrl);
-    } else {
-      return Future.value(_getImageUrlHelper(marker, ['firstimage2', 'smallimageurl1'], defaultUrl));
-    }
-  }
-
-  return Future.value(defaultUrl);
-}
-
 /// CachedNetworkImage 위젯을 생성하는 함수
-Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String contentId, int g_districtCode) {
+Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String contentId, int g_districtCode)
+{
   final defaultImageUrl = subScriptsImages[g_districtCode] ?? 'https://picsum.photos/seed/872/600';
   final imageUrl = getImageUrl(markerPositions, contentId, defaultImageUrl);
 
@@ -2123,10 +2120,6 @@ Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String conte
     height: 200.0,
     fit: BoxFit.contain,
   );
-}
-
-String getNonCachedImageUrl(String imageUrl) {
-  return '$imageUrl?timestamp=${DateTime.now().millisecondsSinceEpoch}';
 }
 
 Widget _buildNetworkImage(String? imageUrl) {
@@ -2177,10 +2170,36 @@ Widget _buildNetworkImage(String? imageUrl) {
   );
 }
 
-Widget buildThumbnailLoader(BuildContext context, String contentId) {
+// ==========================썸네일 코드===================================
+// 썸네일 이미지 URL을 가져오는 함수
+Future<String> getThumbnailUrl(List<Map<String, dynamic>> markerPositions, String? contentId, String defaultUrl)
+{
+  if (contentId == null || contentId.isEmpty) {
+    return Future.value(defaultUrl);
+  }
+
+  final marker = markerPositions.firstWhere(
+        (element) => element['contentid'] == contentId,
+    orElse: () => <String, dynamic>{},
+  );
+
+  if (marker.isNotEmpty) {
+    if (contentId == '2815362') {
+      return Future.value(marker['smallimageurl5'] ?? defaultUrl);
+    } else {
+      return Future.value(_getImageUrlHelper(marker, ['firstimage2', 'smallimageurl1'], defaultUrl));
+    }
+  }
+
+  return Future.value(defaultUrl);
+}
+
+Widget buildThumbnailLoader(BuildContext context, String contentId)
+{
   final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
 
-  if (!markerPositionsModel.isDataLoaded) {
+  if (!markerPositionsModel.isDataLoaded)
+  {
     // 데이터가 로드되지 않았을 때 로딩 스피너 표시
     return Center(
       child: SizedBox(
@@ -2219,6 +2238,8 @@ Widget buildThumbnailLoader(BuildContext context, String contentId) {
     },
   );
 }
+
+// ==========================썸네일 코드===================================
 
 // 각각의 카드 빌더 함수들 정의
 Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
