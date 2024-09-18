@@ -116,7 +116,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
         key: scaffoldKey,
         backgroundColor: Color(0xFFEDEDED),
         appBar: AppBar(
-          backgroundColor: const Color(0xFF1BA004),
+          backgroundColor: const Color(0xFF7996BE),
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
             borderColor: Colors.transparent,
@@ -404,29 +404,54 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                           children: [
                             TextSpan(
                               text: 'AI 분석을 진행하시겠습니까? \n\n\n',
-                              style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: '지역   :     ',
-                              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: '$location\n\n', // 사용자가 선택한 지역
                               style: TextStyle(
-                                color: Colors.lightBlue[300], // 텍스트 강조 색상 변경
-                                fontSize: 22, // 더 큰 폰트 사이즈
-                                fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold
                               ),
                             ),
+                            // "지역"과 "MBTI"를 붙여서 간격을 좁게 설정
                             TextSpan(
-                              text: 'MBTI   :     ',
-                              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                              children: [
+                                // 지역 텍스트
+                                TextSpan(
+                                  text: '지역: ', // "지역" 텍스트
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                // 지역 이름
+                                TextSpan(
+                                  text: '$location\n', // 사용자가 선택한 지역
+                                  style: TextStyle(
+                                    color: Colors.lightBlue[300], // 텍스트 강조 색상 변경
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                // 지역과 MBTI 사이에 간격을 추가 (공백 추가)
+                                TextSpan(
+                                  text: '\n', // 한 줄 공백 추가
+                                  style: TextStyle(fontSize: 10), // 공백의 크기를 조절할 수 있습니다
+                                ),
+                                // MBTI 텍스트
+                                TextSpan(
+                                  text: 'MBTI: ', // "MBTI" 텍스트
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                             TextSpan(
                               text: '$mbtiValue', // 사용자의 MBTI
                               style: TextStyle(
-                                color: Colors.red[300], // 강조 색상
-                                fontSize: 22, // 더 큰 폰트 사이즈
+                                color: Colors.red[300],
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -438,7 +463,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end, // 버튼 중앙 정렬
+                              mainAxisAlignment: MainAxisAlignment.end, // 버튼 오른쪽 정렬
                               children: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(alertDialogContext, true),
@@ -454,7 +479,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                               '\n(주의: 분석 중에는 변경이 불가합니다. \n한번 더 확인해주세요.)\n',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.orange, // 강조를 위해 빨간색으로 설정
+                                color: Colors.orange, // 강조를 위해 오렌지색으로 설정
                               ),
                               textAlign: TextAlign.center,
                             ),

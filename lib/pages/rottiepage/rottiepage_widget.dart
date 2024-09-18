@@ -176,7 +176,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
           key: scaffoldKey,
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: const Color(0xFF1BA004), // 여기 변경
+            backgroundColor: const Color(0xFF7996BE), // 여기 변경
             automaticallyImplyLeading: false,
             title: const Text(
               'AI 분석',

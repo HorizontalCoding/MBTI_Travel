@@ -360,39 +360,67 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
               ),
-              title: Text(
-                '경고',
-                textAlign: TextAlign.center,
-              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // "경고" 텍스트 빨간색으로 중앙 정렬
                   Text(
-                    '지역 선택화면으로 돌아가시겠습니까?',
-                    textAlign: TextAlign.center, // 텍스트 중앙 정렬
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    '(주의: 현재 코스는 저장되지 않습니다.)',
+                    '경고\n',
                     style: TextStyle(
+                      color: Colors.red, // 빨간색 텍스트
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.orange, // 강조를 위해 주황색으로 설정
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.center, // 중앙 정렬
+                  ),
+                  SizedBox(height: 20), // 텍스트와 아래 내용 간격
+                  // "선택화면으로 돌아가시겠습니까?" 텍스트 설정
+                  Text(
+                    '선택화면으로 돌아가시겠습니까?',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center, // 중앙 정렬
                   ),
                 ],
               ),
               actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
+                Column(
                   children: [
-                    TextButton(
-                      onPressed: () => Navigator.of(alertDialogContext).pop(true),
-                      child: Text('예'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end, // 버튼을 오른쪽에 정렬
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.of(alertDialogContext).pop(true),
+                          child: Text(
+                            '예',
+                            style: TextStyle(
+                              color: Colors.blue, // 예 버튼 파란색으로 설정
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(alertDialogContext).pop(false),
+                          child: Text(
+                            '아니요',
+                            style: TextStyle(
+                              color: Colors.blue, // 아니요 버튼 파란색으로 설정
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.of(alertDialogContext).pop(false),
-                      child: Text('아니요'),
+                    SizedBox(height: 10),
+                    // "(주의: 현재 코스는 저장되지 않습니다.)" 텍스트 설정
+                    Text(
+                      '(주의: 현재 코스는 저장되지 않습니다.)\n',
+                      style: TextStyle(
+                        color: Colors.orange,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center, // 중앙 정렬
                     ),
                   ],
                 ),
@@ -481,7 +509,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
             backgroundColor: Colors.white, // 여기 변경
 
             appBar: AppBar(
-              backgroundColor: const Color(0xFF1BA004), // 여기 변경
+              backgroundColor: const Color(0xFF7996BE), // 여기 변경
               automaticallyImplyLeading: false,
               leading: FlutterFlowIconButton(
                 borderColor: Colors.transparent,
@@ -502,39 +530,67 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
                         ),
-                        title: Text(
-                          '경고',
-                          textAlign: TextAlign.center,
-                        ),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            // "경고" 텍스트 빨간색으로 중앙 정렬
                             Text(
-                              '지역 선택화면으로 돌아가시겠습니까?',
-                              textAlign: TextAlign.center, // 텍스트 중앙 정렬
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              '(주의: 현재 코스는 저장되지 않습니다.)',
+                              '경고\n',
                               style: TextStyle(
+                                color: Colors.red, // 빨간색 텍스트
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.orange, // 강조를 위해 주황색으로 설정
                               ),
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.center, // 중앙 정렬
+                            ),
+                            SizedBox(height: 20), // 텍스트와 아래 내용 간격
+                            // "선택화면으로 돌아가시겠습니까?" 텍스트 설정
+                            Text(
+                              '선택화면으로 돌아가시겠습니까?',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                              textAlign: TextAlign.center, // 중앙 정렬
                             ),
                           ],
                         ),
                         actions: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
+                          Column(
                             children: [
-                              TextButton(
-                                onPressed: () => Navigator.of(alertDialogContext).pop(true),
-                                child: Text('예'),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end, // 버튼을 오른쪽에 정렬
+                                children: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(alertDialogContext).pop(true),
+                                    child: Text(
+                                      '예',
+                                      style: TextStyle(
+                                        color: Colors.blue, // 예 버튼 파란색으로 설정
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.of(alertDialogContext).pop(false),
+                                    child: Text(
+                                      '아니요',
+                                      style: TextStyle(
+                                        color: Colors.blue, // 아니요 버튼 파란색으로 설정
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              TextButton(
-                                onPressed: () => Navigator.of(alertDialogContext).pop(false),
-                                child: Text('아니요'),
+                              SizedBox(height: 10),
+                              // "(주의: 현재 코스는 저장되지 않습니다.)" 텍스트 설정
+                              Text(
+                                '(주의: 현재 코스는 저장되지 않습니다.)\n',
+                                style: TextStyle(
+                                  color: Colors.orange,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center, // 중앙 정렬
                               ),
                             ],
                           ),
