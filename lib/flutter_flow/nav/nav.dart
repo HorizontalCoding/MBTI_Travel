@@ -25,8 +25,6 @@ export 'serialization_util.dart';
 const kTransitionInfoKey = '__transition_info__';
 
 
-
-
 class AppStateNotifier extends ChangeNotifier {
   AppStateNotifier._();
 
@@ -35,7 +33,8 @@ class AppStateNotifier extends ChangeNotifier {
 
   bool showSplashImage = false;
 
-  void stopShowingSplashImage() {
+  void stopShowingSplashImage()
+  {
     showSplashImage = false;
     notifyListeners();
   }
@@ -49,10 +48,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ? Builder(
               builder: (context) => Container(
                 color: Colors.transparent,
-                /*child: Image.asset(
+                child: Image.asset(
                   'assets/images/WIwn4C-e_400x400.jpg',
                   fit: BoxFit.fill,
-                ),*/
+                ),
               ),
             )
           : HOMEPageWidget(),
@@ -64,10 +63,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               ? Builder(
                   builder: (context) => Container(
                     color: Colors.transparent,
-                    /*child: Image.asset(
+                    child: Image.asset(
                       'assets/images/WIwn4C-e_400x400.jpg',
                       fit: BoxFit.fill,
-                    ),*/
+                    ),
                   ),
                 )
               : HOMEPageWidget(),
@@ -86,25 +85,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'courseselect',
           path: '/courseselect',
           builder: (context, params) => CourseselectWidget(),
-          /*{
-            // Provider를 통해 전역적으로 관리되는 MBTI 값을 가져옴
-            final mbtiModel = Provider.of<MBTIModel>(context, listen: false);
-            final mbti = mbtiModel.mbti;
-
-            // 전역 상태에서 가져온 MBTI 값을 출력
-            print("MBTI의 값(nav.dart): ${mbti}");
-
-            // 만약 MBTI 값이 설정되지 않았거나, 비어있다면 기본값을 설정하거나 오류 처리
-            if (mbti.isEmpty) {
-              return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-            // MBTI 값이 유효한 경우, 해당 위젯으로 이동
-            return CourseselectWidget();
-          },*/
         ),
         FFRoute(
           name: 'rottiepage',

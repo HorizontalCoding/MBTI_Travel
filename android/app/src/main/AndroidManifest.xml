@@ -12,7 +12,8 @@
         tools:replace="android:label"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="false">
 
         <activity
             android:name=".MainActivity"

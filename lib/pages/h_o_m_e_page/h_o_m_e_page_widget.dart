@@ -29,9 +29,11 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return GestureDetector(
-      onTap: () async {
+      onTap: () async
+      {
         context.pushNamed('Selectpage');
       },
       child: Scaffold(
