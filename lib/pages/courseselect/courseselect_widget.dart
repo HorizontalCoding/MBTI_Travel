@@ -150,7 +150,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
           child: Align(
             alignment: AlignmentDirectional(0.0, 0.0),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -158,14 +158,6 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                     alignment: const AlignmentDirectional(-1.0, 0.0),
                     child: Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 20.0),
-                      child: Text(
-                        '추천 코스',
-                        style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Readex Pro',
-                          color: Colors.black, // Sets the text color to black
-                          letterSpacing: 0.0,
-                        ),
-                      ),
                     ),
                   ),
                   Expanded(

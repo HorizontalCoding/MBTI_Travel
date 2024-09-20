@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'h_o_m_e_page_model.dart';
 
+
 class HOMEPageWidget extends StatefulWidget {
   const HOMEPageWidget({super.key});
 
@@ -71,8 +72,9 @@ class _HOMEPageWidgetState extends State<HOMEPageWidget> {
                           style: FlutterFlowTheme.of(context).titleSmall.override(
                             fontFamily: 'Readex Pro',
                             color: Colors.white,
-                            fontSize: 20.0,
+                            fontSize: 13.0,
                             letterSpacing: 0.0,
+                            fontWeight: FontWeight.w300, // 얇은 글꼴
                           ),
                         ),
                       ),

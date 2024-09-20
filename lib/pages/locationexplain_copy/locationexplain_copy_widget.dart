@@ -774,172 +774,179 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   scrollDirection: Axis.vertical,
                                   children: [
                                     /*==================0번 카드===================*/
-                                Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                            child: InkWell(
-                              onTap: () {
-                                if (_model.tabBarController != null) {
-                                  setState(() {
-                                    _model.updatePageControllerWithNewIndex(0);
-                                  });
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (_model.tabBarController != null) {
+                                            setState(() {
+                                              _model.updatePageControllerWithNewIndex(0);
+                                            });
 
-                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                    _model.tabBarController!.animateTo(1);
-                                  });
-                                }
-                              },
-                              child: Card(
-                                margin: EdgeInsets.all(0),
-                                elevation: 3.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // 썸네일 이미지
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                        child: Container(
-                                          width: 77.0,
-                                          height: 77.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context).accent1,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: Colors.blue,
-                                              width: 2.0,
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              _model.tabBarController!.animateTo(1);
+                                            });
+                                          }
+                                        },
+                                        child: Card(
+                                          margin: EdgeInsets.all(0),
+                                          elevation: 3.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                // 썸네일 이미지
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 77.0,
+                                                    height: 77.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(context).accent1,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: Colors.blue,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      child: buildThumbnailLoader(context, markerPositions[0]['contentid']),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 텍스트 및 설명 부분
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // 장소 이름
+                                                        Text(
+                                                          formatText(markerPositions[0]['name']),
+                                                          style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                            fontFamily: 'Outfit',
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          softWrap: true,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.visible,
+                                                        ),
+
+                                                        // 장소 설명 버튼과 평점/별 이미지 Row
+                                                        Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                            crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                            children: [
+                                                              // 장소 설명 버튼
+                                                              ElevatedButton(
+                                                                onPressed: () {
+                                                                  if (_model.tabBarController != null) {
+                                                                    setState(() {
+                                                                      _model.updatePageControllerWithNewIndex(0);
+                                                                    });
+
+                                                                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                      _model.tabBarController!.animateTo(1);
+                                                                    });
+                                                                  }
+                                                                },
+                                                                child: Text(
+                                                                  '장소 설명',
+                                                                  style: TextStyle(
+                                                                    fontFamily: 'Readex Pro',
+                                                                    fontSize: 16.0,
+                                                                    letterSpacing: 0.0,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                style: ElevatedButton.styleFrom(
+                                                                  backgroundColor: Colors.blue,
+                                                                  shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(12.0),
+                                                                  ),
+                                                                ),
+                                                              ),
+
+                                                              SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
+
+                                                              // Flexible을 사용하여 공간 조정
+                                                              Flexible(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                                    children: [
+                                                                      // 별 이미지
+                                                                      Image.asset(
+                                                                        'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                        width: 25.0,
+                                                                        height: 25.0,
+                                                                      ),
+                                                                      SizedBox(width: 4.0),
+                                                                      // 평점 텍스트
+                                                                      Text(
+                                                                        '${double.parse(markerPositions[0]['score'].toString()).toStringAsFixed(2)}',
+                                                                        style: TextStyle(
+                                                                          fontFamily: 'Readex Pro',
+                                                                          fontSize: 18.0,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                        overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // 오른쪽 이미지 버튼
+                                                Align(
+                                                  alignment: Alignment.topCenter,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      if (_model.tabBarController != null) {
+                                                        _model.tabBarController!.animateTo(2);
+                                                      }
+                                                      Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                        markerPositions[0]['lat'],
+                                                        markerPositions[0]['lng'],
+                                                        3,
+                                                      );
+                                                    },
+                                                    child: Image.asset(
+                                                      'assets/images/number-1.png',
+                                                      width: 64.0,
+                                                      height: 64.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(50.0),
-                                            child: buildThumbnailLoader(context, markerPositions[0]['contentid']),
-                                          ),
                                         ),
                                       ),
+                                    ),
 
-                                      // 텍스트 및 설명 부분
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              // 장소 이름
-                                              Text(
-                                                formatText(markerPositions[0]['name']) ,
-                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                  fontFamily: 'Outfit',
-                                                  color: Colors.black,
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                softWrap: true,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.visible,
-                                              ),
-
-                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                child: Row(
-                                                  children: [
-                                                    // 장소 설명 버튼
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        if (_model.tabBarController != null) {
-                                                          setState(() {
-                                                            _model.updatePageControllerWithNewIndex(0);
-                                                          });
-
-                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                            _model.tabBarController!.animateTo(1);
-                                                          });
-                                                        }
-                                                      },
-                                                      child: Text(
-                                                        '장소 설명',
-                                                        style: TextStyle(
-                                                          fontFamily: 'Readex Pro',
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: Colors.blue,
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(12.0),
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                                    SizedBox(width: 40.0),  // 장소 설명 버튼과 별 이미지 사이 간격
-
-                                                    // 별 이미지와 평점 추가 (위로 올리기 위한 padding 추가)
-                                                    Padding(
-                                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),  // 위로 이동
-                                                      child: Row(
-                                                        children: [
-                                                          // 별 이미지
-                                                          Image.asset(
-                                                            'assets/images/star-icon.png',  // 별 이미지 경로
-                                                            width: 25.0,
-                                                            height: 25.0,
-                                                          ),
-                                                          SizedBox(width: 4.0),
-                                                          // 평점 텍스트
-                                                          Text(
-                                                            '${double.parse(markerPositions[0]['score'].toString()).toStringAsFixed(2)}',
-                                                            style: TextStyle(
-                                                              fontFamily: 'Readex Pro',
-                                                              fontSize: 18.0,
-                                                              color: Colors.black,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-
-                                      // 오른쪽 이미지 버튼
-                                      Align(
-                                        alignment: Alignment.topCenter,
-                                        child: InkWell(
-                                          onTap: () {
-                                            if (_model.tabBarController != null) {
-                                              _model.tabBarController!.animateTo(2);
-                                            }
-                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                              markerPositions[0]['lat'],
-                                              markerPositions[0]['lng'],
-                                              3,
-                                            );
-                                          },
-                                          child: Image.asset(
-                                            'assets/images/number-1.png',
-                                            width: 64.0,
-                                            height: 64.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                            /*==================1번 카드===================*/
+                                    /*==================1번 카드===================*/
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
                                       child: InkWell(
@@ -1012,6 +1019,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                         Padding(
                                                           padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                                           child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                            crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                             children: [
                                                               // 장소 설명 버튼
                                                               ElevatedButton(
@@ -1043,30 +1052,35 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                 ),
                                                               ),
 
-                                                              SizedBox(width: 40.0),  // 장소 설명 버튼과 별 이미지 사이 간격
+                                                              SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
 
-                                                              // 별 이미지와 평점 추가 (위로 올리기 위한 padding 추가)
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),  // 위로 이동
-                                                                child: Row(
-                                                                  children: [
-                                                                    // 별 이미지
-                                                                    Image.asset(
-                                                                      'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                      width: 25.0,
-                                                                      height: 25.0,
-                                                                    ),
-                                                                    SizedBox(width: 4.0),
-                                                                    // 평점 텍스트
-                                                                    Text(
-                                                                      '${double.parse(markerPositions[1]['score'].toString()).toStringAsFixed(2)}',
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Readex Pro',
-                                                                        fontSize: 18.0,
-                                                                        color: Colors.black,
+                                                              // Flexible을 사용하여 공간 조정
+                                                              Flexible(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                                    children: [
+                                                                      // 별 이미지
+                                                                      Image.asset(
+                                                                        'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                        width: 25.0,
+                                                                        height: 25.0,
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      SizedBox(width: 4.0),
+                                                                      // 평점 텍스트
+                                                                      Text(
+                                                                        '${double.parse(markerPositions[1]['score'].toString()).toStringAsFixed(2)}',
+                                                                        style: TextStyle(
+                                                                          fontFamily: 'Readex Pro',
+                                                                          fontSize: 18.0,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                        overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -1177,6 +1191,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                         Padding(
                                                           padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                                           child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                            crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                             children: [
                                                               // 장소 설명 버튼
                                                               ElevatedButton(
@@ -1208,30 +1224,35 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                 ),
                                                               ),
 
-                                                              SizedBox(width: 40.0),  // 장소 설명 버튼과 별 이미지 사이 간격
+                                                              SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
 
-                                                              // 별 이미지와 평점 추가 (위로 올리기 위한 padding 추가)
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),  // 위로 이동
-                                                                child: Row(
-                                                                  children: [
-                                                                    // 별 이미지
-                                                                    Image.asset(
-                                                                      'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                      width: 25.0,
-                                                                      height: 25.0,
-                                                                    ),
-                                                                    SizedBox(width: 4.0),
-                                                                    // 평점 텍스트
-                                                                    Text(
-                                                                      '${double.parse(markerPositions[2]['score'].toString()).toStringAsFixed(2)}',
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Readex Pro',
-                                                                        fontSize: 18.0,
-                                                                        color: Colors.black,
+                                                              // Flexible을 사용하여 공간 조정
+                                                              Flexible(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                                    children: [
+                                                                      // 별 이미지
+                                                                      Image.asset(
+                                                                        'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                        width: 25.0,
+                                                                        height: 25.0,
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      SizedBox(width: 4.0),
+                                                                      // 평점 텍스트
+                                                                      Text(
+                                                                        '${double.parse(markerPositions[2]['score'].toString()).toStringAsFixed(2)}',
+                                                                        style: TextStyle(
+                                                                          fontFamily: 'Readex Pro',
+                                                                          fontSize: 18.0,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                        overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -1342,6 +1363,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                         Padding(
                                                           padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                                           child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                            crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                             children: [
                                                               // 장소 설명 버튼
                                                               ElevatedButton(
@@ -1373,30 +1396,35 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                 ),
                                                               ),
 
-                                                              SizedBox(width: 40.0),  // 장소 설명 버튼과 별 이미지 사이 간격
+                                                              SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
 
-                                                              // 별 이미지와 평점 추가 (위로 올리기 위한 padding 추가)
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),  // 위로 이동
-                                                                child: Row(
-                                                                  children: [
-                                                                    // 별 이미지
-                                                                    Image.asset(
-                                                                      'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                      width: 25.0,
-                                                                      height: 25.0,
-                                                                    ),
-                                                                    SizedBox(width: 4.0),
-                                                                    // 평점 텍스트
-                                                                    Text(
-                                                                      '${double.parse(markerPositions[3]['score'].toString()).toStringAsFixed(2)}',
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Readex Pro',
-                                                                        fontSize: 18.0,
-                                                                        color: Colors.black,
+                                                              // Flexible을 사용하여 공간 조정
+                                                              Flexible(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                                    children: [
+                                                                      // 별 이미지
+                                                                      Image.asset(
+                                                                        'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                        width: 25.0,
+                                                                        height: 25.0,
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      SizedBox(width: 4.0),
+                                                                      // 평점 텍스트
+                                                                      Text(
+                                                                        '${double.parse(markerPositions[3]['score'].toString()).toStringAsFixed(2)}',
+                                                                        style: TextStyle(
+                                                                          fontFamily: 'Readex Pro',
+                                                                          fontSize: 18.0,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                        overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -1507,6 +1535,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                         Padding(
                                                           padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                                           child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                            crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                             children: [
                                                               // 장소 설명 버튼
                                                               ElevatedButton(
@@ -1538,30 +1568,35 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                 ),
                                                               ),
 
-                                                              SizedBox(width: 40.0),  // 장소 설명 버튼과 별 이미지 사이 간격
+                                                              SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
 
-                                                              // 별 이미지와 평점 추가 (위로 올리기 위한 padding 추가)
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),  // 위로 이동
-                                                                child: Row(
-                                                                  children: [
-                                                                    // 별 이미지
-                                                                    Image.asset(
-                                                                      'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                      width: 25.0,
-                                                                      height: 25.0,
-                                                                    ),
-                                                                    SizedBox(width: 4.0),
-                                                                    // 평점 텍스트
-                                                                    Text(
-                                                                      '${double.parse(markerPositions[4]['score'].toString()).toStringAsFixed(2)}',
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Readex Pro',
-                                                                        fontSize: 18.0,
-                                                                        color: Colors.black,
+                                                              // Flexible을 사용하여 공간 조정
+                                                              Flexible(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                                    children: [
+                                                                      // 별 이미지
+                                                                      Image.asset(
+                                                                        'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                        width: 25.0,
+                                                                        height: 25.0,
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      SizedBox(width: 4.0),
+                                                                      // 평점 텍스트
+                                                                      Text(
+                                                                        '${double.parse(markerPositions[4]['score'].toString()).toStringAsFixed(2)}',
+                                                                        style: TextStyle(
+                                                                          fontFamily: 'Readex Pro',
+                                                                          fontSize: 18.0,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                        overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -1672,6 +1707,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                         Padding(
                                                           padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                                           child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                            crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                             children: [
                                                               // 장소 설명 버튼
                                                               ElevatedButton(
@@ -1703,30 +1740,35 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                 ),
                                                               ),
 
-                                                              SizedBox(width: 40.0),  // 장소 설명 버튼과 별 이미지 사이 간격
+                                                              SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
 
-                                                              // 별 이미지와 평점 추가 (위로 올리기 위한 padding 추가)
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),  // 위로 이동
-                                                                child: Row(
-                                                                  children: [
-                                                                    // 별 이미지
-                                                                    Image.asset(
-                                                                      'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                      width: 25.0,
-                                                                      height: 25.0,
-                                                                    ),
-                                                                    SizedBox(width: 4.0),
-                                                                    // 평점 텍스트
-                                                                    Text(
-                                                                      '${double.parse(markerPositions[5]['score'].toString()).toStringAsFixed(2)}',
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Readex Pro',
-                                                                        fontSize: 18.0,
-                                                                        color: Colors.black,
+                                                              // Flexible을 사용하여 공간 조정
+                                                              Flexible(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                                    children: [
+                                                                      // 별 이미지
+                                                                      Image.asset(
+                                                                        'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                        width: 25.0,
+                                                                        height: 25.0,
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      SizedBox(width: 4.0),
+                                                                      // 평점 텍스트
+                                                                      Text(
+                                                                        '${double.parse(markerPositions[5]['score'].toString()).toStringAsFixed(2)}',
+                                                                        style: TextStyle(
+                                                                          fontFamily: 'Readex Pro',
+                                                                          fontSize: 18.0,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                        overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -1837,6 +1879,8 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                         Padding(
                                                           padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                                           child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                            crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                             children: [
                                                               // 장소 설명 버튼
                                                               ElevatedButton(
@@ -1868,30 +1912,35 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                 ),
                                                               ),
 
-                                                              SizedBox(width: 40.0),  // 장소 설명 버튼과 별 이미지 사이 간격
+                                                              SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
 
-                                                              // 별 이미지와 평점 추가 (위로 올리기 위한 padding 추가)
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),  // 위로 이동
-                                                                child: Row(
-                                                                  children: [
-                                                                    // 별 이미지
-                                                                    Image.asset(
-                                                                      'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                      width: 25.0,
-                                                                      height: 25.0,
-                                                                    ),
-                                                                    SizedBox(width: 4.0),
-                                                                    // 평점 텍스트
-                                                                    Text(
-                                                                      '${double.parse(markerPositions[6]['score'].toString()).toStringAsFixed(2)}',
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Readex Pro',
-                                                                        fontSize: 18.0,
-                                                                        color: Colors.black,
+                                                              // Flexible을 사용하여 공간 조정
+                                                              Flexible(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                    crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
+                                                                    children: [
+                                                                      // 별 이미지
+                                                                      Image.asset(
+                                                                        'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                        width: 25.0,
+                                                                        height: 25.0,
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      SizedBox(width: 4.0),
+                                                                      // 평점 텍스트
+                                                                      Text(
+                                                                        '${double.parse(markerPositions[6]['score'].toString()).toStringAsFixed(2)}',
+                                                                        style: TextStyle(
+                                                                          fontFamily: 'Readex Pro',
+                                                                          fontSize: 18.0,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                        overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],

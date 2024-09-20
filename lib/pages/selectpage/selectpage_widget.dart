@@ -188,7 +188,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                     padding: const EdgeInsets.all(12.0), // 텍스트와 테두리 사이 여백
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: selectedMbti != null ? getMbtiColor(selectedMbti) : Colors.black, // 테두리 색상 선택
+                        color: selectedMbti != null ? getMbtiColor(selectedMbti) : Colors.grey[600]!, // 테두리 색상 선택
                         width: 2.0, // 테두리 두께
                       ),
                       borderRadius: BorderRadius.circular(12.0), // 테두리 둥글게
@@ -200,14 +200,17 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                           color: Colors.black, // 기본 텍스트 색상
                         ),
                         children: [
-                          TextSpan(
-                            text: selectedMbti != null
-                                ? 'MBTI  :  '
-                                : '당신의 MBTI를 선택해주세요.', // 기본 텍스트 부분
-                          ),
                           if (selectedMbti != null) ...[
-                            // ISFP일 경우 외곽선 있는 텍스트 추가
+                            TextSpan(
+                              text: 'MBTI  :  ', // 'MBTI :' 텍스트만 회색으로 변경
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.grey[600], // 'MBTI :' 색상 변경
+                              ),
+                            ),
                             WidgetSpan(
+                              alignment: PlaceholderAlignment.baseline, // 기준선을 맞추는 속성
+                              baseline: TextBaseline.alphabetic, // 텍스트의 baseline을 사용
                               child: selectedMbti == 'ISFP'
                                   ? Stack(
                                 children: <Widget>[
@@ -241,6 +244,14 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                                   fontWeight: FontWeight.bold,
                                   color: getMbtiColor(selectedMbti), // 텍스트 색상
                                 ),
+                              ),
+                            ),
+                          ] else ...[
+                            TextSpan(
+                              text: '당신의 MBTI를 선택해주세요.', // 기본 텍스트
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.grey[600], // 기본 텍스트 색상
                               ),
                             ),
                           ],
