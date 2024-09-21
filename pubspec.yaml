@@ -64,7 +64,7 @@ dependencies:
   url_launcher: ^6.1.0
   swipe_cards: ^0.1.0
   connectivity_plus: ^2.3.0
-  fluttertoast: ^8.1.2
+  fluttertoast: ^8.2.8
   flutter_html: ^3.0.0-beta.2
 
   kakaomap_webview:
