@@ -69,3 +69,22 @@ Future<void> openKakaoMapAtCoordinates(int targetId, List<Map<String, dynamic>> 
     print("id가 $targetId인 마커가 없습니다.");
   }
 }
+
+// "더보기" URL 카카오맵 오픈 함수
+Future<void> openKakaoMapByLatLng(String name, double lat, double lng) async {
+  // Kakao Map URL 생성
+  final Uri url = Uri.parse('kakaomap://search?q=$name&p=$lat,$lng');
+  final Uri webUrl = Uri.parse('https://map.kakao.com/link/map/$name,$lat,$lng');
+
+  print("Kakao Map 호출 URL: $url");
+
+  // Kakao Map URL 열기
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+    print("(flutter 프레임워크 제한) -> 삼성 디바이스에서 카카오맵 앱으로 실행");
+  } else {
+    await launchUrl(webUrl);
+    print("(flutter 프레임워크 제한) -> 카카오맵 앱이 없거나 URL 스키마가 허용되지 않으면, 웹 브라우저로 실행");
+    throw 'Could not launch $webUrl';
+  }
+}

@@ -116,34 +116,35 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
         key: scaffoldKey,
         backgroundColor: Color(0xFFEDEDED),
         appBar: AppBar(
-          backgroundColor: const Color(0xFF7996BE),
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
-          leading: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30.0,
-            borderWidth: 1.0,
-            buttonSize: 60.0,
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.white,
-              size: 30.0,
-            ),
-            onPressed: () async {
-              Navigator.pop(context);
-            },
-          ),
+          // leading: FlutterFlowIconButton(
+          //   borderColor: Colors.transparent,
+          //   borderRadius: 30.0,
+          //   borderWidth: 1.0,
+          //   buttonSize: 60.0,
+          //   icon: const Icon(
+          //     Icons.arrow_back_rounded,
+          //     color: Colors.white,
+          //     size: 30.0,
+          //   ),
+          //   onPressed: () async {
+          //     Navigator.pop(context);
+          //   },
+          // ),
           title: Text(
-            '지역 선택',
+            '지역',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
               fontFamily: 'Outfit',
-              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
               fontSize: 22.0,
               letterSpacing: 0.0,
             ),
           ),
           actions: const [],
           centerTitle: false,
-          elevation: 2.0,
+          elevation: 0.0,
         ),
         body: SafeArea(
           top: true,
@@ -407,7 +408,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                               children: [
                                 // 지역 텍스트
                                 TextSpan(
-                                  text: '지역: ', // "지역" 텍스트
+                                  text: '지역  :  ', // "지역" 텍스트
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
@@ -420,7 +421,6 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                                   style: TextStyle(
                                     color: Colors.lightBlue[300], // 텍스트 강조 색상 변경
                                     fontSize: 22,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 // 지역과 MBTI 사이에 간격을 추가 (공백 추가)
@@ -430,7 +430,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                                 ),
                                 // MBTI 텍스트
                                 TextSpan(
-                                  text: 'MBTI: ', // "MBTI" 텍스트
+                                  text: 'MBTI  :  ', // "MBTI" 텍스트
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
@@ -444,7 +444,6 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                               style: TextStyle(
                                 color: Colors.red[300],
                                 fontSize: 22,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],

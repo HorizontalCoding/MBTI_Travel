@@ -1,5 +1,6 @@
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:mbtitravel/pages/selectpage/mbti_model.dart';
+import 'package:mbtitravel/pages/selectpage/selectpage_widget.dart';
 
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -337,51 +338,44 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
   }
 
   // 안드로이드 인터페이스(뒤로가기) 세팅
-  Future<bool> _onWillPop() async
-  {
-    if (_model.tabBarController?.index == 1 || _model.tabBarController?.index == 2)
-    {
+  Future<bool> _onWillPop() async {
+    if (_model.tabBarController?.index == 1 || _model.tabBarController?.index == 2) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _model.tabBarController!.animateTo(0);
       });
       return false; // 뒤로 가기 동작을 막음
     }
-    // _model.tabBarController?.index == 0이라면,
-    if(_model.tabBarController?.index == 0)
-    {
-      if (Navigator.of(context).canPop())
-      {
+
+    if (_model.tabBarController?.index == 0) {
+      if (Navigator.of(context).canPop()) {
         // 경고 창을 띄움
         final shouldPop = await showDialog<bool>(
           context: context,
-          builder: (BuildContext alertDialogContext)
-          {
+          builder: (BuildContext alertDialogContext) {
             return AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
+                borderRadius: BorderRadius.circular(20.0),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // "경고" 텍스트 빨간색으로 중앙 정렬
                   Text(
                     '경고\n',
                     style: TextStyle(
-                      color: Colors.red, // 빨간색 텍스트
+                      color: Colors.red,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
-                    textAlign: TextAlign.center, // 중앙 정렬
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20), // 텍스트와 아래 내용 간격
-                  // "선택화면으로 돌아가시겠습니까?" 텍스트 설정
+                  SizedBox(height: 20),
                   Text(
-                    '선택화면으로 돌아가시겠습니까?',
+                    '원하시는 동작을 선택해주세요',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
                     ),
-                    textAlign: TextAlign.center, // 중앙 정렬
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -389,30 +383,40 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                 Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end, // 버튼을 오른쪽에 정렬
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        // MBTI 선택 버튼
                         TextButton(
-                          onPressed: () => Navigator.of(alertDialogContext).pop(true),
+                          onPressed: () {
+                            Navigator.of(alertDialogContext).pop(true); // 첫 번째 pop
+                            Future.delayed(Duration(milliseconds: 0), () {
+                              Navigator.of(alertDialogContext).pop(true); // 두 번째 pop
+                            });
+                          },
                           child: Text(
-                            '예',
-                            style: TextStyle(
-                              color: Colors.blue, // 예 버튼 파란색으로 설정
+                            'MBTI',
+                            style: TextStyle(color: Colors.blue),
                             ),
-                          ),
                         ),
-                        TextButton(
+                        // 유지 버튼
+                        /*TextButton(
                           onPressed: () => Navigator.of(alertDialogContext).pop(false),
                           child: Text(
-                            '아니요',
-                            style: TextStyle(
-                              color: Colors.blue, // 아니요 버튼 파란색으로 설정
-                            ),
+                            '유지',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),*/
+                        // 종료 버튼
+                        TextButton(
+                          onPressed: () => SystemNavigator.pop(),
+                          child: Text(
+                            '종료',
+                            style: TextStyle(color: Colors.red),
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: 10),
-                    // "(주의: 현재 코스는 저장되지 않습니다.)" 텍스트 설정
                     Text(
                       '(주의: 현재 코스는 저장되지 않습니다.)\n',
                       style: TextStyle(
@@ -420,7 +424,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
-                      textAlign: TextAlign.center, // 중앙 정렬
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
@@ -428,17 +432,21 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
             );
           },
         );
-        if (shouldPop == true)
-        {
-          // 사용자가 "예"를 눌렀을 때 두 번 pop 수행
+
+        if (shouldPop == true) {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
         }
-        return false; // 추가적인 pop을 막기 위해 false 반환
+        return false;// 사용자가 '기존 화면 유지'를 선택할 경우 false 반환
       }
     }
-    return true;
+
+    return true; // 나머지 경우에는 true 반환
   }
+
+
+
+
 
   // 카카오 포지션 초기화 함수
   void initializeKakaoMapPosition()
@@ -527,106 +535,114 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
             backgroundColor: Colors.white, // 여기 변경
 
             appBar: AppBar(
-              backgroundColor: const Color(0xFF7996BE), // 여기 변경
+              backgroundColor: context.watch<MBTIModel>().mbtiColor, // 여기 변경
               automaticallyImplyLeading: false,
-              leading: FlutterFlowIconButton(
-                borderColor: Colors.transparent,
-                borderRadius: 30.0,
-                borderWidth: 1.0,
-                buttonSize: 60.0,
-                icon: const Icon(
-                  Icons.arrow_back_rounded,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                onPressed: () async {
-                  // 경고 창을 띄움
-                  final shouldPop = await showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext alertDialogContext) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // "경고" 텍스트 빨간색으로 중앙 정렬
-                            Text(
-                              '경고\n',
-                              style: TextStyle(
-                                color: Colors.red, // 빨간색 텍스트
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center, // 중앙 정렬
-                            ),
-                            SizedBox(height: 20), // 텍스트와 아래 내용 간격
-                            // "선택화면으로 돌아가시겠습니까?" 텍스트 설정
-                            Text(
-                              '선택화면으로 돌아가시겠습니까?',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                              textAlign: TextAlign.center, // 중앙 정렬
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end, // 버튼을 오른쪽에 정렬
-                                children: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(alertDialogContext).pop(true),
-                                    child: Text(
-                                      '예',
-                                      style: TextStyle(
-                                        color: Colors.blue, // 예 버튼 파란색으로 설정
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(alertDialogContext).pop(false),
-                                    child: Text(
-                                      '아니요',
-                                      style: TextStyle(
-                                        color: Colors.blue, // 아니요 버튼 파란색으로 설정
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              // "(주의: 현재 코스는 저장되지 않습니다.)" 텍스트 설정
-                              Text(
-                                '(주의: 현재 코스는 저장되지 않습니다.)\n',
-                                style: TextStyle(
-                                  color: Colors.orange,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center, // 중앙 정렬
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  if (shouldPop == true)
-                  {
-                    // 사용자가 "예"를 선택했을 때 두 번 pop 수행
-                    markerPositions.clear();
-                    for (int popIndex = 0; popIndex < 2; popIndex++)
-                    {
-                      Navigator.pop(context);
-                    }
-                  }
-                },
-              ),
+              // leading: FlutterFlowIconButton(
+              //   borderColor: Colors.transparent,
+              //   borderRadius: 30.0,
+              //   borderWidth: 1.0,
+              //   buttonSize: 60.0,
+              //   icon: const Icon(
+              //     Icons.arrow_back_rounded,
+              //     color: Colors.white,
+              //     size: 30.0,
+              //   ),
+              //   onPressed: () async {
+              //     // 경고 창을 띄움
+              //     final shouldPop = await showDialog<bool>(
+              //       context: context,
+              //       builder: (BuildContext alertDialogContext) {
+              //         return AlertDialog(
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
+              //           ),
+              //           content: Column(
+              //             mainAxisSize: MainAxisSize.min,
+              //             children: [
+              //               Text(
+              //                 '경고\n',
+              //                 style: TextStyle(
+              //                   color: Colors.red,
+              //                   fontSize: 20,
+              //                   fontWeight: FontWeight.bold,
+              //                 ),
+              //                 textAlign: TextAlign.center,
+              //               ),
+              //               SizedBox(height: 20),
+              //               Text(
+              //                 '원하시는 동작을 선택해주세요',
+              //                 style: TextStyle(
+              //                   color: Colors.black,
+              //                   fontSize: 18,
+              //                 ),
+              //                 textAlign: TextAlign.center,
+              //               ),
+              //             ],
+              //           ),
+              //           actions: [
+              //             Column(
+              //               children: [
+              //                 Row(
+              //                   mainAxisAlignment: MainAxisAlignment.end,
+              //                   children: [
+              //                     // MBTI 선택 버튼
+              //                     TextButton(
+              //                       onPressed: () {
+              //                         Navigator.of(alertDialogContext).pop(true); // 첫 번째 pop
+              //                         Future.delayed(Duration(milliseconds: 0), () {
+              //                           Navigator.of(alertDialogContext).pop(true); // 두 번째 pop
+              //                         });
+              //                       },
+              //                       child: Text(
+              //                         'MBTI 선택',
+              //                         style: TextStyle(color: Colors.blue),
+              //                       ),
+              //                     ),
+              //                     // 유지 버튼
+              //                     TextButton(
+              //                       onPressed: () => Navigator.of(alertDialogContext).pop(false),
+              //                       child: Text(
+              //                         '기존 화면 유지',
+              //                         style: TextStyle(color: Colors.blue),
+              //                       ),
+              //                     ),
+              //                     // 종료 버튼
+              //                     TextButton(
+              //                       onPressed: () => SystemNavigator.pop(),
+              //                       child: Text(
+              //                         '종료',
+              //                         style: TextStyle(color: Colors.red),
+              //                       ),
+              //                     ),
+              //                   ],
+              //                 ),
+              //                 SizedBox(height: 10),
+              //                 Text(
+              //                   '(주의: 현재 코스는 저장되지 않습니다.)\n',
+              //                   style: TextStyle(
+              //                     color: Colors.orange,
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.bold,
+              //                   ),
+              //                   textAlign: TextAlign.center,
+              //                 ),
+              //               ],
+              //             ),
+              //           ],
+              //         );
+              //       },
+              //     );
+              //     if (shouldPop == true)
+              //     {
+              //       // 사용자가 "예"를 선택했을 때 두 번 pop 수행
+              //       markerPositions.clear();
+              //       for (int popIndex = 0; popIndex < 2; popIndex++)
+              //       {
+              //         Navigator.pop(context);
+              //       }
+              //     }
+              //   },
+              // ),
               title: Text(
                 '${g_mbtiStringValue}',
                 style: FlutterFlowTheme.of(context).headlineMedium.override(
@@ -2293,462 +2309,651 @@ Widget buildThumbnailLoader(BuildContext context, String contentId)
 // 각각의 카드 빌더 함수들 정의
 Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                markerPosition['name'],
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.black, // 여기 변경
-                  letterSpacing: 0.0,
+  return SingleChildScrollView( // 스크롤 가능하도록 전체를 감쌈
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.0),
+          // 제목을 이미지 위쪽에 배치
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  markerPosition['name'],
+                  style: FlutterFlowTheme.of(context).headlineLarge.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.black,
+                    letterSpacing: 0.0,
+                  ),
+                  maxLines: 1, // 한 줄로 제한
+                  overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
                 ),
-                maxLines: 1, // 한 줄로 제한
-                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              )
+          ),
+
+          SizedBox(height: 50.0),
+
+          // 이미지
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               ),
-            )
-        ),
-
-        SizedBox(height: 50.0),
-
-        // 이미지
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-          child: AspectRatio(
-            aspectRatio: 16/9,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
             ),
           ),
-        ),
-        // 설명 텍스트
+          // 설명 텍스트
+          SizedBox(height: 50.0),
 
-        SizedBox(height: 50.0),
-
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
-          child: Html(
-            data: """
-              <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                $overViewText
-              </p>
-            """,
-            style: {
-              "p": Style(
-                fontFamily: 'Readex Pro',
-                color: Colors.black, // 여기 변경
-                letterSpacing: 0.0,
-                fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
-              ),
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
+            child: Html(
+              data: """
+                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
+                  $overViewText
+                </p>
+              """,
+              style: {
+                "p": Style(
+                  fontFamily: 'Readex Pro',
+                  color: Colors.black,
+                  letterSpacing: 0.0,
+                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                ),
+              },
+            ),
           ),
-        ),
-      ],
+
+          SizedBox(height: 20.0),
+          // 더보기 버튼
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                // 버튼 클릭 시 호출할 함수
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent, // 연파랑색
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                "더보기",
+                style: TextStyle(
+                  color: Colors.white, // 하얀색 텍스트
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
 
 Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                markerPosition['name'],
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.black,
-                  letterSpacing: 0.0,
+  return SingleChildScrollView( // 스크롤 가능하도록 전체를 감쌈
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.0),
+          // 제목을 이미지 위쪽에 배치
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  markerPosition['name'],
+                  style: FlutterFlowTheme.of(context).headlineLarge.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.black,
+                    letterSpacing: 0.0,
+                  ),
+                  maxLines: 1, // 한 줄로 제한
+                  overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
                 ),
-                maxLines: 1, // 한 줄로 제한
-                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              )
+          ),
+
+          SizedBox(height: 50.0),
+
+          // 이미지
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               ),
-            )
-        ),
-
-        SizedBox(height: 50.0),
-
-        // 이미지
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-          child: AspectRatio(
-            aspectRatio: 16/9,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
             ),
           ),
-        ),
-        // 설명 텍스트
+          // 설명 텍스트
+          SizedBox(height: 50.0),
 
-        SizedBox(height: 50.0),
-
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
-          child: Html(
-            data: """
-              <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                $overViewText
-              </p>
-            """,
-            style: {
-              "p": Style(
-                fontFamily: 'Readex Pro',
-                color: Colors.black,
-                letterSpacing: 0.0,
-                fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
-              ),
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
+            child: Html(
+              data: """
+                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
+                  $overViewText
+                </p>
+              """,
+              style: {
+                "p": Style(
+                  fontFamily: 'Readex Pro',
+                  color: Colors.black,
+                  letterSpacing: 0.0,
+                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                ),
+              },
+            ),
           ),
-        ),
-      ],
+
+          SizedBox(height: 20.0),
+          // 더보기 버튼
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                // 버튼 클릭 시 호출할 함수
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent, // 연파랑색
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                "더보기",
+                style: TextStyle(
+                  color: Colors.white, // 하얀색 텍스트
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
 
 Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                markerPosition['name'],
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.black,
-                  letterSpacing: 0.0,
+  return SingleChildScrollView( // 스크롤 가능하도록 전체를 감쌈
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.0),
+          // 제목을 이미지 위쪽에 배치
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  markerPosition['name'],
+                  style: FlutterFlowTheme.of(context).headlineLarge.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.black,
+                    letterSpacing: 0.0,
+                  ),
+                  maxLines: 1, // 한 줄로 제한
+                  overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
                 ),
-                maxLines: 1, // 한 줄로 제한
-                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              )
+          ),
+
+          SizedBox(height: 50.0),
+
+          // 이미지
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               ),
-            )
-        ),
-
-        SizedBox(height: 50.0),
-
-        // 이미지
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-          child: AspectRatio(
-            aspectRatio: 16/9,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
             ),
           ),
-        ),
-        // 설명 텍스트
+          // 설명 텍스트
+          SizedBox(height: 50.0),
 
-        SizedBox(height: 50.0),
-
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
-          child: Html(
-            data: """
-              <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                $overViewText
-              </p>
-            """,
-            style: {
-              "p": Style(
-                fontFamily: 'Readex Pro',
-                color: Colors.black,
-                letterSpacing: 0.0,
-                fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
-              ),
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
+            child: Html(
+              data: """
+                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
+                  $overViewText
+                </p>
+              """,
+              style: {
+                "p": Style(
+                  fontFamily: 'Readex Pro',
+                  color: Colors.black,
+                  letterSpacing: 0.0,
+                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                ),
+              },
+            ),
           ),
-        ),
-      ],
+
+          SizedBox(height: 20.0),
+          // 더보기 버튼
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                // 버튼 클릭 시 호출할 함수
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent, // 연파랑색
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                "더보기",
+                style: TextStyle(
+                  color: Colors.white, // 하얀색 텍스트
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
 
 Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                markerPosition['name'],
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.black,
-                  letterSpacing: 0.0,
+  return SingleChildScrollView( // 스크롤 가능하도록 전체를 감쌈
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.0),
+          // 제목을 이미지 위쪽에 배치
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  markerPosition['name'],
+                  style: FlutterFlowTheme.of(context).headlineLarge.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.black,
+                    letterSpacing: 0.0,
+                  ),
+                  maxLines: 1, // 한 줄로 제한
+                  overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
                 ),
-                maxLines: 1, // 한 줄로 제한
-                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              )
+          ),
+
+          SizedBox(height: 50.0),
+
+          // 이미지
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               ),
-            )
-        ),
-
-        SizedBox(height: 50.0),
-
-        // 이미지
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-          child: AspectRatio(
-            aspectRatio: 16/9,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
             ),
           ),
-        ),
-        // 설명 텍스트
+          // 설명 텍스트
+          SizedBox(height: 50.0),
 
-        SizedBox(height: 50.0),
-
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
-          child: Html(
-            data: """
-              <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                $overViewText
-              </p>
-            """,
-            style: {
-              "p": Style(
-                fontFamily: 'Readex Pro',
-                color: Colors.black,
-                letterSpacing: 0.0,
-                fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
-              ),
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
+            child: Html(
+              data: """
+                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
+                  $overViewText
+                </p>
+              """,
+              style: {
+                "p": Style(
+                  fontFamily: 'Readex Pro',
+                  color: Colors.black,
+                  letterSpacing: 0.0,
+                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                ),
+              },
+            ),
           ),
-        ),
-      ],
+
+          SizedBox(height: 20.0),
+          // 더보기 버튼
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                // 버튼 클릭 시 호출할 함수
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent, // 연파랑색
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                "더보기",
+                style: TextStyle(
+                  color: Colors.white, // 하얀색 텍스트
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
 
 Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                markerPosition['name'],
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.black,
-                  letterSpacing: 0.0,
+  return SingleChildScrollView( // 스크롤 가능하도록 전체를 감쌈
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.0),
+          // 제목을 이미지 위쪽에 배치
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  markerPosition['name'],
+                  style: FlutterFlowTheme.of(context).headlineLarge.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.black,
+                    letterSpacing: 0.0,
+                  ),
+                  maxLines: 1, // 한 줄로 제한
+                  overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
                 ),
-                maxLines: 1, // 한 줄로 제한
-                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              )
+          ),
+
+          SizedBox(height: 50.0),
+
+          // 이미지
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               ),
-            )
-        ),
-
-        SizedBox(height: 50.0),
-
-        // 이미지
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-          child: AspectRatio(
-            aspectRatio: 16/9,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
             ),
           ),
-        ),
-        // 설명 텍스트
+          // 설명 텍스트
+          SizedBox(height: 50.0),
 
-        SizedBox(height: 50.0),
-
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
-          child: Html(
-            data: """
-              <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                $overViewText
-              </p>
-            """,
-            style: {
-              "p": Style(
-                fontFamily: 'Readex Pro',
-                color: Colors.black,
-                letterSpacing: 0.0,
-                fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
-              ),
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
+            child: Html(
+              data: """
+                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
+                  $overViewText
+                </p>
+              """,
+              style: {
+                "p": Style(
+                  fontFamily: 'Readex Pro',
+                  color: Colors.black,
+                  letterSpacing: 0.0,
+                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                ),
+              },
+            ),
           ),
-        ),
-      ],
+
+          SizedBox(height: 20.0),
+          // 더보기 버튼
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                // 버튼 클릭 시 호출할 함수
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent, // 연파랑색
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                "더보기",
+                style: TextStyle(
+                  color: Colors.white, // 하얀색 텍스트
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
 
 Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                markerPosition['name'],
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.black,
-                  letterSpacing: 0.0,
+  return SingleChildScrollView( // 스크롤 가능하도록 전체를 감쌈
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.0),
+          // 제목을 이미지 위쪽에 배치
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  markerPosition['name'],
+                  style: FlutterFlowTheme.of(context).headlineLarge.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.black,
+                    letterSpacing: 0.0,
+                  ),
+                  maxLines: 1, // 한 줄로 제한
+                  overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
                 ),
-                maxLines: 1, // 한 줄로 제한
-                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              )
+          ),
+
+          SizedBox(height: 50.0),
+
+          // 이미지
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               ),
-            )
-        ),
-
-        SizedBox(height: 50.0),
-
-        // 이미지
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-          child: AspectRatio(
-            aspectRatio: 16/9,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
             ),
           ),
-        ),
-        // 설명 텍스트
+          // 설명 텍스트
+          SizedBox(height: 50.0),
 
-        SizedBox(height: 50.0),
-
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
-          child: Html(
-            data: """
-              <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                $overViewText
-              </p>
-            """,
-            style: {
-              "p": Style(
-                fontFamily: 'Readex Pro',
-                color: Colors.black,
-                letterSpacing: 0.0,
-                fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
-              ),
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
+            child: Html(
+              data: """
+                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
+                  $overViewText
+                </p>
+              """,
+              style: {
+                "p": Style(
+                  fontFamily: 'Readex Pro',
+                  color: Colors.black,
+                  letterSpacing: 0.0,
+                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                ),
+              },
+            ),
           ),
-        ),
-      ],
+
+          SizedBox(height: 20.0),
+          // 더보기 버튼
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                // 버튼 클릭 시 호출할 함수
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent, // 연파랑색
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                "더보기",
+                style: TextStyle(
+                  color: Colors.white, // 하얀색 텍스트
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
 
 Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
   String overViewText = markerPosition['overview'] ?? "";
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                markerPosition['name'],
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.black,
-                  letterSpacing: 0.0,
+  return SingleChildScrollView( // 스크롤 가능하도록 전체를 감쌈
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.0),
+          // 제목을 이미지 위쪽에 배치
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 12.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  markerPosition['name'],
+                  style: FlutterFlowTheme.of(context).headlineLarge.override(
+                    fontFamily: 'Outfit',
+                    color: Colors.black,
+                    letterSpacing: 0.0,
+                  ),
+                  maxLines: 1, // 한 줄로 제한
+                  overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
                 ),
-                maxLines: 1, // 한 줄로 제한
-                overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+              )
+          ),
+
+          SizedBox(height: 50.0),
+
+          // 이미지
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
               ),
-            )
-        ),
-
-        SizedBox(height: 50.0),
-
-        // 이미지
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
-          child: AspectRatio(
-            aspectRatio: 16/9,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
             ),
           ),
-        ),
-        // 설명 텍스트
+          // 설명 텍스트
+          SizedBox(height: 50.0),
 
-        SizedBox(height: 50.0),
-
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
-          child: Html(
-            data: """
-              <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                $overViewText
-              </p>
-            """,
-            style: {
-              "p": Style(
-                fontFamily: 'Readex Pro',
-                color: Colors.black,
-                letterSpacing: 0.0,
-                fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
-              ),
-            },
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 0.0),
+            child: Html(
+              data: """
+                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
+                  $overViewText
+                </p>
+              """,
+              style: {
+                "p": Style(
+                  fontFamily: 'Readex Pro',
+                  color: Colors.black,
+                  letterSpacing: 0.0,
+                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                ),
+              },
+            ),
           ),
-        ),
-      ],
+
+          SizedBox(height: 20.0),
+          // 더보기 버튼
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                // 버튼 클릭 시 호출할 함수
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent, // 연파랑색
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                "더보기",
+                style: TextStyle(
+                  color: Colors.white, // 하얀색 텍스트
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

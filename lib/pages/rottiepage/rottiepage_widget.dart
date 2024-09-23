@@ -175,26 +175,13 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: const Color(0xFF7996BE), // 여기 변경
-            automaticallyImplyLeading: false,
-            title: const Text(
-              'AI 분석',
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                color: Colors.white,
-                fontSize: 22.0,
-              ),
-            ),
-            elevation: 2.0,
-          ),
           body: SafeArea(
             top: true,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 100.0),
+                SizedBox(height: 150.0),
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
                   child: Container(
@@ -218,10 +205,11 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
                     ),
                   ),
                 ),
+                SizedBox(height: 100.0),
                 Align(
                   alignment: AlignmentDirectional(0.0, 30.0),
                   child: Text(
-                    '\n\n\n\n추천 여행지를 불러오는 중입니다...',
+                    '추천 여행지를 불러오는 중입니다...',
                     style: FlutterFlowTheme.of(context).titleMedium.override(
                       color: Colors.black, // 여기 추가
                       fontFamily: 'Readex Pro',

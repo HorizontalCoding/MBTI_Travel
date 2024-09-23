@@ -81,7 +81,7 @@ class MarkerPositionsModel with ChangeNotifier {
     int retryCount = 0;
     while (retryCount < maxRetries) {
       try {
-        await fetchFunction().timeout(Duration(seconds: 5)); // 10초 타임아웃
+        await fetchFunction().timeout(Duration(seconds: 5)); 
         return; // 성공 시 리턴
       } catch (e) {
         retryCount++;
