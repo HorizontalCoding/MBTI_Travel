@@ -731,7 +731,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                   padding: const EdgeInsets.all(0.0),
                                   tabs: const [
                                     Tab(
-                                      text: '코스',
+                                      text: '관광지',
                                     ),
                                     Tab(
                                       text: '장소설명',
@@ -2307,32 +2307,66 @@ Widget buildThumbnailLoader(BuildContext context, String contentId)
 // ==========================썸네일 코드===================================
 
 // 각각의 카드 빌더 함수들 정의
-Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
+
+  // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
+      ? "카카오맵 정보 보기"
+      : "더보기";
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              markerPosition['name'],
-              style: FlutterFlowTheme.of(context).headlineLarge.override(
-                fontFamily: 'Outfit',
-                color: Colors.black,
-                letterSpacing: 0.0,
-              ),
-              maxLines: 1, // 한 줄로 제한
-              overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+
+        // 제목을 중앙에 배치
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            markerPosition['name'],
+            style: FlutterFlowTheme.of(context).headlineLarge.override(
+              fontFamily: 'Outfit',
+              color: Colors.black,
+              letterSpacing: 0.0,
             ),
+            maxLines: 1, // 한 줄로 제한
+            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
           ),
         ),
-        SizedBox(height: 50.0),
+
+        SizedBox(height: 10.0), // 간격 조절
+
+        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
+        Padding(
+          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
+            children: [
+              Image.asset(
+                'assets/images/star-icon.png',  // 별 이미지 경로
+                width: 25.0,
+                height: 25.0,
+              ),
+              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
+              // 평점 텍스트
+              Text(
+                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
+                style: TextStyle(
+                  fontFamily: 'Readex Pro',
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 20.0), // 간격 조절
 
         // 이미지
         Padding(
@@ -2371,7 +2405,7 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
         ),
         SizedBox(height: 20.0),
 
-        // 더보기 버튼
+        // 더보기 버튼 및 카카오 맵 정보 보기
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -2386,7 +2420,7 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
               ),
             ),
             child: Text(
-              "더보기",
+              buttonText,
               style: TextStyle(
                 color: Colors.white, // 하얀색 텍스트
                 fontSize: 16.0,
@@ -2400,32 +2434,66 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition) {
 }
 
 
-Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
+
+  // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
+      ? "카카오맵 정보 보기"
+      : "더보기";
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              markerPosition['name'],
-              style: FlutterFlowTheme.of(context).headlineLarge.override(
-                fontFamily: 'Outfit',
-                color: Colors.black,
-                letterSpacing: 0.0,
-              ),
-              maxLines: 1, // 한 줄로 제한
-              overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+
+        // 제목을 중앙에 배치
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            markerPosition['name'],
+            style: FlutterFlowTheme.of(context).headlineLarge.override(
+              fontFamily: 'Outfit',
+              color: Colors.black,
+              letterSpacing: 0.0,
             ),
+            maxLines: 1, // 한 줄로 제한
+            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
           ),
         ),
-        SizedBox(height: 50.0),
+
+        SizedBox(height: 10.0), // 간격 조절
+
+        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
+        Padding(
+          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
+            children: [
+              Image.asset(
+                'assets/images/star-icon.png',  // 별 이미지 경로
+                width: 25.0,
+                height: 25.0,
+              ),
+              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
+              // 평점 텍스트
+              Text(
+                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
+                style: TextStyle(
+                  fontFamily: 'Readex Pro',
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 20.0), // 간격 조절
 
         // 이미지
         Padding(
@@ -2464,7 +2532,7 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
         ),
         SizedBox(height: 20.0),
 
-        // 더보기 버튼
+        // 더보기 버튼 및 카카오 맵 정보 보기
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -2479,7 +2547,7 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
               ),
             ),
             child: Text(
-              "더보기",
+              buttonText,
               style: TextStyle(
                 color: Colors.white, // 하얀색 텍스트
                 fontSize: 16.0,
@@ -2492,32 +2560,66 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition) {
   );
 }
 
-Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
+
+  // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
+      ? "카카오맵 정보 보기"
+      : "더보기";
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              markerPosition['name'],
-              style: FlutterFlowTheme.of(context).headlineLarge.override(
-                fontFamily: 'Outfit',
-                color: Colors.black,
-                letterSpacing: 0.0,
-              ),
-              maxLines: 1, // 한 줄로 제한
-              overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+
+        // 제목을 중앙에 배치
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            markerPosition['name'],
+            style: FlutterFlowTheme.of(context).headlineLarge.override(
+              fontFamily: 'Outfit',
+              color: Colors.black,
+              letterSpacing: 0.0,
             ),
+            maxLines: 1, // 한 줄로 제한
+            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
           ),
         ),
-        SizedBox(height: 50.0),
+
+        SizedBox(height: 10.0), // 간격 조절
+
+        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
+        Padding(
+          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
+            children: [
+              Image.asset(
+                'assets/images/star-icon.png',  // 별 이미지 경로
+                width: 25.0,
+                height: 25.0,
+              ),
+              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
+              // 평점 텍스트
+              Text(
+                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
+                style: TextStyle(
+                  fontFamily: 'Readex Pro',
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 20.0), // 간격 조절
 
         // 이미지
         Padding(
@@ -2556,7 +2658,7 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
         ),
         SizedBox(height: 20.0),
 
-        // 더보기 버튼
+        // 더보기 버튼 및 카카오 맵 정보 보기
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -2571,7 +2673,7 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
               ),
             ),
             child: Text(
-              "더보기",
+              buttonText,
               style: TextStyle(
                 color: Colors.white, // 하얀색 텍스트
                 fontSize: 16.0,
@@ -2584,32 +2686,66 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition) {
   );
 }
 
-Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
+
+  // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
+      ? "카카오맵 정보 보기"
+      : "더보기";
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              markerPosition['name'],
-              style: FlutterFlowTheme.of(context).headlineLarge.override(
-                fontFamily: 'Outfit',
-                color: Colors.black,
-                letterSpacing: 0.0,
-              ),
-              maxLines: 1, // 한 줄로 제한
-              overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+
+        // 제목을 중앙에 배치
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            markerPosition['name'],
+            style: FlutterFlowTheme.of(context).headlineLarge.override(
+              fontFamily: 'Outfit',
+              color: Colors.black,
+              letterSpacing: 0.0,
             ),
+            maxLines: 1, // 한 줄로 제한
+            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
           ),
         ),
-        SizedBox(height: 50.0),
+
+        SizedBox(height: 10.0), // 간격 조절
+
+        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
+        Padding(
+          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
+            children: [
+              Image.asset(
+                'assets/images/star-icon.png',  // 별 이미지 경로
+                width: 25.0,
+                height: 25.0,
+              ),
+              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
+              // 평점 텍스트
+              Text(
+                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
+                style: TextStyle(
+                  fontFamily: 'Readex Pro',
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 20.0), // 간격 조절
 
         // 이미지
         Padding(
@@ -2648,7 +2784,7 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
         ),
         SizedBox(height: 20.0),
 
-        // 더보기 버튼
+        // 더보기 버튼 및 카카오 맵 정보 보기
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -2663,7 +2799,7 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
               ),
             ),
             child: Text(
-              "더보기",
+              buttonText,
               style: TextStyle(
                 color: Colors.white, // 하얀색 텍스트
                 fontSize: 16.0,
@@ -2676,32 +2812,66 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition) {
   );
 }
 
-Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
+
+  // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
+      ? "카카오맵 정보 보기"
+      : "더보기";
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              markerPosition['name'],
-              style: FlutterFlowTheme.of(context).headlineLarge.override(
-                fontFamily: 'Outfit',
-                color: Colors.black,
-                letterSpacing: 0.0,
-              ),
-              maxLines: 1, // 한 줄로 제한
-              overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+
+        // 제목을 중앙에 배치
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            markerPosition['name'],
+            style: FlutterFlowTheme.of(context).headlineLarge.override(
+              fontFamily: 'Outfit',
+              color: Colors.black,
+              letterSpacing: 0.0,
             ),
+            maxLines: 1, // 한 줄로 제한
+            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
           ),
         ),
-        SizedBox(height: 50.0),
+
+        SizedBox(height: 10.0), // 간격 조절
+
+        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
+        Padding(
+          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
+            children: [
+              Image.asset(
+                'assets/images/star-icon.png',  // 별 이미지 경로
+                width: 25.0,
+                height: 25.0,
+              ),
+              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
+              // 평점 텍스트
+              Text(
+                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
+                style: TextStyle(
+                  fontFamily: 'Readex Pro',
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 20.0), // 간격 조절
 
         // 이미지
         Padding(
@@ -2740,7 +2910,7 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
         ),
         SizedBox(height: 20.0),
 
-        // 더보기 버튼
+        // 더보기 버튼 및 카카오 맵 정보 보기
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -2755,7 +2925,7 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
               ),
             ),
             child: Text(
-              "더보기",
+              buttonText,
               style: TextStyle(
                 color: Colors.white, // 하얀색 텍스트
                 fontSize: 16.0,
@@ -2768,32 +2938,66 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition) {
   );
 }
 
-Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
+
+  // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
+      ? "카카오맵 정보 보기"
+      : "더보기";
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              markerPosition['name'],
-              style: FlutterFlowTheme.of(context).headlineLarge.override(
-                fontFamily: 'Outfit',
-                color: Colors.black,
-                letterSpacing: 0.0,
-              ),
-              maxLines: 1, // 한 줄로 제한
-              overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+
+        // 제목을 중앙에 배치
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            markerPosition['name'],
+            style: FlutterFlowTheme.of(context).headlineLarge.override(
+              fontFamily: 'Outfit',
+              color: Colors.black,
+              letterSpacing: 0.0,
             ),
+            maxLines: 1, // 한 줄로 제한
+            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
           ),
         ),
-        SizedBox(height: 50.0),
+
+        SizedBox(height: 10.0), // 간격 조절
+
+        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
+        Padding(
+          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
+            children: [
+              Image.asset(
+                'assets/images/star-icon.png',  // 별 이미지 경로
+                width: 25.0,
+                height: 25.0,
+              ),
+              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
+              // 평점 텍스트
+              Text(
+                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
+                style: TextStyle(
+                  fontFamily: 'Readex Pro',
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 20.0), // 간격 조절
 
         // 이미지
         Padding(
@@ -2832,7 +3036,7 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
         ),
         SizedBox(height: 20.0),
 
-        // 더보기 버튼
+        // 더보기 버튼 및 카카오 맵 정보 보기
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -2847,7 +3051,7 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
               ),
             ),
             child: Text(
-              "더보기",
+              buttonText,
               style: TextStyle(
                 color: Colors.white, // 하얀색 텍스트
                 fontSize: 16.0,
@@ -2860,32 +3064,66 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition) {
   );
 }
 
-Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
+Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition)
+{
   String overViewText = markerPosition['overview'] ?? "";
+
+  // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
+      ? "카카오맵 정보 보기"
+      : "더보기";
+
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20.0),
-        // 제목을 이미지 위쪽에 배치
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              markerPosition['name'],
-              style: FlutterFlowTheme.of(context).headlineLarge.override(
-                fontFamily: 'Outfit',
-                color: Colors.black,
-                letterSpacing: 0.0,
-              ),
-              maxLines: 1, // 한 줄로 제한
-              overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+
+        // 제목을 중앙에 배치
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            markerPosition['name'],
+            style: FlutterFlowTheme.of(context).headlineLarge.override(
+              fontFamily: 'Outfit',
+              color: Colors.black,
+              letterSpacing: 0.0,
             ),
+            maxLines: 1, // 한 줄로 제한
+            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
           ),
         ),
-        SizedBox(height: 50.0),
+
+        SizedBox(height: 10.0), // 간격 조절
+
+        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
+        Padding(
+          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
+            children: [
+              Image.asset(
+                'assets/images/star-icon.png',  // 별 이미지 경로
+                width: 25.0,
+                height: 25.0,
+              ),
+              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
+              // 평점 텍스트
+              Text(
+                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
+                style: TextStyle(
+                  fontFamily: 'Readex Pro',
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 20.0), // 간격 조절
 
         // 이미지
         Padding(
@@ -2924,7 +3162,7 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
         ),
         SizedBox(height: 20.0),
 
-        // 더보기 버튼
+        // 더보기 버튼 및 카카오 맵 정보 보기
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -2939,7 +3177,7 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition) {
               ),
             ),
             child: Text(
-              "더보기",
+              buttonText,
               style: TextStyle(
                 color: Colors.white, // 하얀색 텍스트
                 fontSize: 16.0,

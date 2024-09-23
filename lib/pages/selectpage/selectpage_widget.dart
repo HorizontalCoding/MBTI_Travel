@@ -111,40 +111,71 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          // leading: IconButton(
-          //   icon: const Icon(
-          //     Icons.arrow_back_rounded,
-          //     color: Colors.white,
-          //   ),
-          //   onPressed: () {
-          //     Navigator.pop(context);
-          //   },
-          // ),
-          title: const Text(
-            'MBTI',
-            style: TextStyle(
-              fontFamily: 'Outfit',
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 22.0,
-            ),
-          ),
-          elevation: 0.0,
-        ),
         body: SafeArea(
           top: true,
-          child: SingleChildScrollView( // 추가: 스크롤 가능하게 처리
+          child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0), // 상단/하단 패딩을 10으로 줄임
+                SizedBox(height: 30.0),
+                // 상단 MBTI 텍스트는 단순 출력만 함
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 15.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: selectedMbti != null ? getMbtiColor(selectedMbti) : Colors.grey[600]!, // 테두리 색상 선택
+                        width: 2.0, // 테두리 두께
+                      ),
+                      borderRadius: BorderRadius.circular(12.0), // 테두리 둥글게
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black, // 기본 텍스트 색상
+                        ),
+                        children: [
+                          if (selectedMbti != null) ...[
+                            TextSpan(
+                              text: 'MBTI  :  ', // 'MBTI :' 텍스트만 회색으로 변경
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.grey[600], // 'MBTI :' 색상 변경
+                              ),
+                            ),
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.baseline, // 기준선을 맞추는 속성
+                              baseline: TextBaseline.alphabetic, // 텍스트의 baseline을 사용
+                              child: Text(
+                                '$selectedMbti',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: getMbtiColor(selectedMbti), // 텍스트 색상
+                                ),
+                              ),
+                            ),
+                          ] else ...[
+                            TextSpan(
+                              text: '당신의 MBTI를 선택해주세요.', // 기본 텍스트
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.grey[600], // 기본 텍스트 색상
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
+                SizedBox(height: 30.0),
+
+                // GridView
                 GridView.builder(
-                  shrinkWrap: true, // 추가: GridView 크기 조절
+                  shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(), // GridView 자체 스크롤을 비활성화
                   padding: const EdgeInsets.all(15.0),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -177,17 +208,19 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: ClipRRect( // 이미지의 모서리도 둥글게 설정
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(image, width: 100.0, height: 100.0, fit: BoxFit.cover), // 이미지를 꽉 채워 표시
+                          child: Image.asset(image, width: 100.0, height: 100.0, fit: BoxFit.cover),
                         ),
                       ),
                     );
                   },
                 ),
+
+                // "다음으로" 버튼
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 70.0, 0.0, 15.0),
-                  child: GestureDetector( // 추가: GestureDetector로 감싸기
+                  child: GestureDetector(
                     onTap: selectedMbti != null
                         ? () {
                       context.pushNamed(
@@ -199,82 +232,26 @@ class _SelectpageWidgetState extends State<SelectpageWidget> {
                     }
                         : null, // 선택된 MBTI 없으면 비활성화
                     child: Container(
-                      padding: const EdgeInsets.all(12.0), // 텍스트와 테두리 사이 여백
+                      padding: const EdgeInsets.all(16.0), // 텍스트와 테두리 사이 여백 증가
+                      width: 100, // 버튼의 너비를 늘림
+                      height: 60, // 버튼의 높이를 늘림
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: selectedMbti != null ? getMbtiColor(selectedMbti) : Colors.grey[600]!, // 테두리 색상 선택
-                          width: 2.0, // 테두리 두께
-                        ),
-                        borderRadius: BorderRadius.circular(12.0), // 테두리 둥글게
+                        color: selectedMbti != null ? getMbtiColor(selectedMbti) : Colors.grey[400]!, // 배경색상
+                        borderRadius: BorderRadius.circular(12.0), // 버튼 둥글게
                       ),
-                      child: RichText(
-                        text: TextSpan(
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black, // 기본 텍스트 색상
+                      child: const Center( // 텍스트를 가운데 정렬
+                        child: Text(
+                          '다음',
+                          style: TextStyle(
+                            fontSize: 22, // 텍스트 크기 증가
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white, // 버튼 텍스트 색상
                           ),
-                          children: [
-                            if (selectedMbti != null) ...[
-                              TextSpan(
-                                text: 'MBTI  :  ', // 'MBTI :' 텍스트만 회색으로 변경
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  color: Colors.grey[600], // 'MBTI :' 색상 변경
-                                ),
-                              ),
-                              WidgetSpan(
-                                alignment: PlaceholderAlignment.baseline, // 기준선을 맞추는 속성
-                                baseline: TextBaseline.alphabetic, // 텍스트의 baseline을 사용
-                                child: selectedMbti == 'ISFP'
-                                    ? Stack(
-                                  children: <Widget>[
-                                    // 외곽선 텍스트
-                                    Text(
-                                      '$selectedMbti',
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 1.0 // 외곽선 두께
-                                          ..color = Colors.grey, // 테두리 색상
-                                      ),
-                                    ),
-                                    // 내부 채운 텍스트
-                                    Text(
-                                      '$selectedMbti',
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: getMbtiColor(selectedMbti), // 텍스트 색상
-                                      ),
-                                    ),
-                                  ],
-                                )
-                                    : Text(
-                                  '$selectedMbti',
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: getMbtiColor(selectedMbti), // 텍스트 색상
-                                  ),
-                                ),
-                              ),
-                            ] else ...[
-                              TextSpan(
-                                text: '당신의 MBTI를 선택해주세요.', // 기본 텍스트
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  color: Colors.grey[600], // 기본 텍스트 색상
-                                ),
-                              ),
-                            ],
-                          ],
                         ),
                       ),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ),
