@@ -107,7 +107,8 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -173,6 +174,7 @@ class _CourseselectWidgetState extends State<CourseselectWidget> {
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
+                        clipBehavior: Clip.none,
                         children: [
                           buildCourseCard(
                             context,

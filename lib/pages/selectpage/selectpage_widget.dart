@@ -227,7 +227,7 @@ class _SelectpageWidgetState extends State<SelectpageWidget>
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: isSelected ? Colors.blue : Colors.transparent,
-                            width: 2.0,
+                            width: 2.5,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
