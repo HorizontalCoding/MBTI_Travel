@@ -347,6 +347,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                         // MBTI 선택 버튼
                         TextButton(
                           onPressed: () {
+                            selectedButtonIndex = 1;
                             Navigator.of(alertDialogContext).pop(true); // 첫 번째 pop
                             Future.delayed(Duration(milliseconds: 0), () {
                               Navigator.of(alertDialogContext).pop(true); // 두 번째 pop
@@ -359,7 +360,10 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                         ),
                         // 종료 버튼
                         TextButton(
-                          onPressed: () => SystemNavigator.pop(),
+                          onPressed: () {
+                            selectedButtonIndex = 1;
+                            SystemNavigator.pop();
+                          },
                           child: Text(
                             '종료',
                             style: TextStyle(color: Colors.red),
