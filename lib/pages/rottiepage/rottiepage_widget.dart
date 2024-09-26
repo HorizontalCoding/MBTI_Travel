@@ -117,10 +117,24 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
         print('Data sent to server successfully.');
         final jsonResponse = json.decode(response.body);
 
-        // 서버에서 받은 데이터를 기존과 같은 방식으로 처리
+        // 서버에서 받은 데이터를 처리 (각 카테고리별로 분리)
+        final recommendedPlaces = jsonResponse['recommended_places'];
+        final places = jsonResponse['places'];
+        final activities = jsonResponse['activities'];
+        final food = jsonResponse['food'];
+        final hostels = jsonResponse['hostels'];
+
+        // 원하는 대로 데이터를 처리하거나 UI에 반영
+        print('Recommended Places: $recommendedPlaces');
+        print('Places: $places');
+        print('Activities: $activities');
+        print('Food: $food');
+        print('Hostels: $hostels');
+
+        // 예: 지도 마커 업데이트 (id 값을 1부터 증가)
         final markerPositions = List<Map<String, dynamic>>.from(
-          jsonResponse.asMap().entries.map((entry) => {
-            'id': entry.key + 1, // id는 1부터 시작
+          recommendedPlaces.asMap().entries.map((entry) => {
+            'id': entry.key + 1, // key 값을 1부터 시작하도록 설정
             'name': entry.value['VISIT_AREA_NM'],
             'lat': entry.value['Y_COORD'],
             'lng': entry.value['X_COORD'],
@@ -129,7 +143,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
           }),
         );
 
-        // Provider를 통해 상태를 업데이트
+        // Provider를 통해 상태 업데이트
         markerPositionsModel.updateMarkerPositions(markerPositions);
 
         // 화면 전환 중 플래그 설정
@@ -147,7 +161,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
         setState(() {
           _isLoading = false;
           _isNavigating = false;
-          _hasNavigated = true; // 화면 전환 완료로 플래그 설정
+          _hasNavigated = true;
         });
 
       } else {
@@ -157,6 +171,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
       print('Error sending data to server: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
