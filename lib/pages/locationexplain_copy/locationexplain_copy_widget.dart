@@ -1,27 +1,16 @@
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:mbtitravel/pages/selectpage/mbti_model.dart';
 import 'package:mbtitravel/pages/selectpage/selectpage_widget.dart';
-
 import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:math';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'locationexplain_copy_model.dart';
 import 'dart:async';
 export 'locationexplain_copy_model.dart';
 
 import 'package:flutter/services.dart';  // 이 줄을 추가해야 합니다
-
-
-// import 'dart:convert';
 import 'package:flutter/material.dart';
 // 데이터 프레임이 있는 곳
 import 'package:mbtitravel/function_manager.dart';
@@ -30,17 +19,11 @@ import 'package:mbtitravel/function_manager.dart';
 import 'package:mbtitravel/pages/courseselect/location_model.dart';
 // html 기능 사용하는 헤더
 import 'package:flutter_html/flutter_html.dart';
-
-// 카카오 패키지에서 만든 함수 가져오기(openKakaoMapAtCoordinates)
-// import 'package:kakaomap_webview/src/url_launcher_service.dart';
 // 데이터 프레임 가져오기
 import 'package:mbtitravel/data_frame/data_frame.dart';
 import 'package:mbtitravel/data_frame/default_images.dart';
 import 'package:mbtitravel/data_frame/subscripts_images.dart';
 import 'map_model.dart'; // MapModel이 정의된 파일
-
-// import 'locationexplain_copy_model.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 
 class LocationexplainCopyWidget extends StatefulWidget
@@ -70,8 +53,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
   // 초기화 코드: 스와이핑, 탭, 등의 컨트롤러 등을 초기화하는 코드
   // model.dart하고 연결되어있음.
 
-  int selectedButtonIndex = 1;
-
   @override
   void initState()
   {
@@ -100,29 +81,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     // TabController에 리스너 추가(업데이트 코드)
     _model.tabBarController?.addListener(()
     {
-      // if (_model.tabBarController?.index == 0)
-      // {
-      //   double itemHeight = 148.0; // 각 아이템의 높이
-      //   double offset = _model.currentIndex * itemHeight;
-      //
-      //   // 프레임이 완전히 그려진 후에 스크롤을 시도
-      //   WidgetsBinding.instance.addPostFrameCallback((_)
-      //   {
-      //     if (_model.listViewController.hasClients)
-      //     {
-      //       _model.listViewController.animateTo(
-      //         offset,
-      //         duration: Duration(milliseconds: 50),  // 매우 짧은 시간으로 빠른 애니메이션
-      //         curve: Curves.easeInOut,
-      //       );
-      //     }
-      //     else
-      //     {
-      //       print("ScrollController is not attached to any scroll views.");
-      //     }
-      //   });
-      // }
-
       final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
       final mapModel = Provider.of<MapModel>(context, listen: false);
       final markerPositions = markerPositionsModel.markerPositions;
@@ -399,14 +357,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
-                        // 유지 버튼
-                        /*TextButton(
-                          onPressed: () => Navigator.of(alertDialogContext).pop(false),
-                          child: Text(
-                            '유지',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),*/
                         // 종료 버튼
                         TextButton(
                           onPressed: () => SystemNavigator.pop(),
@@ -543,112 +493,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
             appBar: AppBar(
               backgroundColor: context.watch<MBTIModel>().mbtiColor, // 여기 변경
               automaticallyImplyLeading: false,
-              // leading: FlutterFlowIconButton(
-              //   borderColor: Colors.transparent,
-              //   borderRadius: 30.0,
-              //   borderWidth: 1.0,
-              //   buttonSize: 60.0,
-              //   icon: const Icon(
-              //     Icons.arrow_back_rounded,
-              //     color: Colors.white,
-              //     size: 30.0,
-              //   ),
-              //   onPressed: () async {
-              //     // 경고 창을 띄움
-              //     final shouldPop = await showDialog<bool>(
-              //       context: context,
-              //       builder: (BuildContext alertDialogContext) {
-              //         return AlertDialog(
-              //           shape: RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(20.0), // 모서리 둥글기 설정
-              //           ),
-              //           content: Column(
-              //             mainAxisSize: MainAxisSize.min,
-              //             children: [
-              //               Text(
-              //                 '경고\n',
-              //                 style: TextStyle(
-              //                   color: Colors.red,
-              //                   fontSize: 20,
-              //                   fontWeight: FontWeight.bold,
-              //                 ),
-              //                 textAlign: TextAlign.center,
-              //               ),
-              //               SizedBox(height: 20),
-              //               Text(
-              //                 '원하시는 동작을 선택해주세요',
-              //                 style: TextStyle(
-              //                   color: Colors.black,
-              //                   fontSize: 18,
-              //                 ),
-              //                 textAlign: TextAlign.center,
-              //               ),
-              //             ],
-              //           ),
-              //           actions: [
-              //             Column(
-              //               children: [
-              //                 Row(
-              //                   mainAxisAlignment: MainAxisAlignment.end,
-              //                   children: [
-              //                     // MBTI 선택 버튼
-              //                     TextButton(
-              //                       onPressed: () {
-              //                         Navigator.of(alertDialogContext).pop(true); // 첫 번째 pop
-              //                         Future.delayed(Duration(milliseconds: 0), () {
-              //                           Navigator.of(alertDialogContext).pop(true); // 두 번째 pop
-              //                         });
-              //                       },
-              //                       child: Text(
-              //                         'MBTI 선택',
-              //                         style: TextStyle(color: Colors.blue),
-              //                       ),
-              //                     ),
-              //                     // 유지 버튼
-              //                     TextButton(
-              //                       onPressed: () => Navigator.of(alertDialogContext).pop(false),
-              //                       child: Text(
-              //                         '기존 화면 유지',
-              //                         style: TextStyle(color: Colors.blue),
-              //                       ),
-              //                     ),
-              //                     // 종료 버튼
-              //                     TextButton(
-              //                       onPressed: () => SystemNavigator.pop(),
-              //                       child: Text(
-              //                         '종료',
-              //                         style: TextStyle(color: Colors.red),
-              //                       ),
-              //                     ),
-              //                   ],
-              //                 ),
-              //                 SizedBox(height: 10),
-              //                 Text(
-              //                   '(주의: 현재 코스는 저장되지 않습니다.)\n',
-              //                   style: TextStyle(
-              //                     color: Colors.orange,
-              //                     fontSize: 14,
-              //                     fontWeight: FontWeight.bold,
-              //                   ),
-              //                   textAlign: TextAlign.center,
-              //                 ),
-              //               ],
-              //             ),
-              //           ],
-              //         );
-              //       },
-              //     );
-              //     if (shouldPop == true)
-              //     {
-              //       // 사용자가 "예"를 선택했을 때 두 번 pop 수행
-              //       markerPositions.clear();
-              //       for (int popIndex = 0; popIndex < 2; popIndex++)
-              //       {
-              //         Navigator.pop(context);
-              //       }
-              //     }
-              //   },
-              // ),
               title: Text(
                 '${g_mbtiStringValue}',
                 style: FlutterFlowTheme.of(context).headlineMedium.override(
@@ -793,8 +637,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                           // 버튼 1
                                           GestureDetector(
                                             onTap: () {
-                                              setState(()
-                                              {
+                                              setState(() {
                                                 selectedButtonIndex = 1;
                                               });
                                             },
@@ -802,20 +645,24 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               margin: EdgeInsets.symmetric(horizontal: 5.0),
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
-                                                color: Colors.blue,
+                                                color: selectedButtonIndex == 1 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
                                                 borderRadius: BorderRadius.circular(10.0),
+                                                border: Border.all(
+                                                  color: selectedButtonIndex == 1 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
+                                                ),
                                               ),
                                               child: Text(
                                                 '추천 관광지', // 버튼 1 텍스트
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                  color: selectedButtonIndex == 1 ? Colors.white : Colors.grey, // 텍스트 색상 변경
+                                                ),
                                               ),
                                             ),
                                           ),
                                           // 버튼 2
                                           GestureDetector(
                                             onTap: () {
-                                              setState(()
-                                              {
+                                              setState(() {
                                                 selectedButtonIndex = 2;
                                               });
                                             },
@@ -823,20 +670,24 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               margin: EdgeInsets.symmetric(horizontal: 5.0),
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
-                                                color: Colors.blue,
+                                                color: selectedButtonIndex == 2 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
                                                 borderRadius: BorderRadius.circular(10.0),
+                                                border: Border.all(
+                                                  color: selectedButtonIndex == 2 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
+                                                ),
                                               ),
                                               child: Text(
                                                 '관광지', // 버튼 2 텍스트
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                  color: selectedButtonIndex == 2 ? Colors.white : Colors.grey, // 텍스트 색상 변경
+                                                ),
                                               ),
                                             ),
                                           ),
                                           // 버튼 3
                                           GestureDetector(
                                             onTap: () {
-                                              setState(()
-                                              {
+                                              setState(() {
                                                 selectedButtonIndex = 3;
                                               });
                                             },
@@ -844,20 +695,24 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               margin: EdgeInsets.symmetric(horizontal: 5.0),
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
-                                                color: Colors.blue,
+                                                color: selectedButtonIndex == 3 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
                                                 borderRadius: BorderRadius.circular(10.0),
+                                                border: Border.all(
+                                                  color: selectedButtonIndex == 3 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
+                                                ),
                                               ),
                                               child: Text(
                                                 '야외활동', // 버튼 3 텍스트
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                  color: selectedButtonIndex == 3 ? Colors.white : Colors.grey, // 텍스트 색상 변경
+                                                ),
                                               ),
                                             ),
                                           ),
                                           // 버튼 4
                                           GestureDetector(
                                             onTap: () {
-                                              setState(()
-                                              {
+                                              setState(() {
                                                 selectedButtonIndex = 4;
                                               });
                                             },
@@ -865,20 +720,24 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               margin: EdgeInsets.symmetric(horizontal: 5.0),
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
-                                                color: Colors.blue,
+                                                color: selectedButtonIndex == 4 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
                                                 borderRadius: BorderRadius.circular(10.0),
+                                                border: Border.all(
+                                                  color: selectedButtonIndex == 4 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
+                                                ),
                                               ),
                                               child: Text(
                                                 '음식/카페', // 버튼 4 텍스트
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                  color: selectedButtonIndex == 4 ? Colors.white : Colors.grey, // 텍스트 색상 변경
+                                                ),
                                               ),
                                             ),
                                           ),
                                           // 버튼 5
                                           GestureDetector(
                                             onTap: () {
-                                              setState(()
-                                              {
+                                              setState(() {
                                                 selectedButtonIndex = 5;
                                               });
                                             },
@@ -886,12 +745,17 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               margin: EdgeInsets.symmetric(horizontal: 5.0),
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
-                                                color: Colors.blue,
+                                                color: selectedButtonIndex == 5 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
                                                 borderRadius: BorderRadius.circular(10.0),
+                                                border: Border.all(
+                                                  color: selectedButtonIndex == 5 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
+                                                ),
                                               ),
                                               child: Text(
                                                 '숙박', // 버튼 5 텍스트
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                  color: selectedButtonIndex == 5 ? Colors.white : Colors.grey, // 텍스트 색상 변경
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -899,7 +763,6 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                       ),
                                     ),
                                   ),
-
 
                                   // 첫 번째 탭 (카드형 리스트)
                                   Expanded(
@@ -907,214 +770,31 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFEDEDED), // 여기 변경
                                       ),
-                                      child: ListView(
+                                      child: ListView.builder(
                                         controller: _model.listViewController,
                                         key: _listViewKey,
                                         padding: EdgeInsets.zero,
                                         scrollDirection: Axis.vertical,
-                                        children: [
-                                          /*==================0번 카드===================*/
-                                          Padding(
+                                        // selectedButtonIndex에 따라 아이템 개수 설정
+                                        itemCount: (selectedButtonIndex == 1)
+                                            ? markerPositions.length
+                                            : (selectedButtonIndex == 2)
+                                            ? Places.length
+                                            : (selectedButtonIndex == 3)
+                                            ? Activity.length
+                                            : (selectedButtonIndex == 4)
+                                            ? Food.length
+                                            : (selectedButtonIndex == 5)
+                                            ? Hostel.length
+                                            : 0,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
                                             padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
                                             child: InkWell(
                                               onTap: () {
                                                 if (_model.tabBarController != null) {
                                                   setState(() {
-                                                    _model.updatePageControllerWithNewIndex(0);
-                                                  });
-
-                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                    _model.tabBarController!.animateTo(1);
-                                                  });
-                                                }
-                                              },
-                                              child: Card(
-                                                margin: EdgeInsets.all(0),
-                                                elevation: 3.0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      // 썸네일 이미지
-                                                      Padding(
-                                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                                        child: Container(
-                                                          width: 77.0,
-                                                          height: 77.0,
-                                                          decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme.of(context).accent1,
-                                                            shape: BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: Colors.blue,
-                                                              width: 2.0,
-                                                            ),
-                                                          ),
-                                                          // length : 1
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(50.0),
-                                                            child: selectedButtonIndex == 1 && markerPositions.length > 0
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, 0)
-                                                                : selectedButtonIndex == 2 && Places.length > 0
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, 0)
-                                                                : selectedButtonIndex == 3 && Activity.length > 0
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, 0)
-                                                                : selectedButtonIndex == 4 && Food.length > 0
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, 0)
-                                                                : selectedButtonIndex == 5 && Hostel.length > 0
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, 0)
-                                                                : Container(),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 텍스트 및 설명 부분
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              // 장소 이름
-                                                              Text(
-                                                                selectedButtonIndex == 1 && markerPositions.length  > 0
-                                                                    ? formatText(markerPositions[0]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 2 && Places.length  > 0
-                                                                    ? formatText(Places[0]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 3 && Activity.length > 0
-                                                                    ? formatText(Activity[0]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 4 && Food.length > 0
-                                                                    ? formatText(Food[0]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 5 && Hostel.length > 0
-                                                                    ? formatText(Hostel[0]['name'] ?? '--')
-                                                                    : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
-                                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                  fontFamily: 'Outfit',
-                                                                  color: Colors.black,
-                                                                  fontSize: 16.0,
-                                                                  letterSpacing: 0.0,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ),
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow: TextOverflow.visible,
-                                                              ),
-                                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
-                                                                  crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                  children: [
-                                                                    // 장소 설명 버튼
-                                                                    ElevatedButton(
-                                                                      onPressed: () {
-                                                                        if (_model.tabBarController != null) {
-                                                                          setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(0);
-                                                                          });
-
-                                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                            _model.tabBarController!.animateTo(1);
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Text(
-                                                                        '장소 설명',
-                                                                        style: TextStyle(
-                                                                          fontFamily: 'Readex Pro',
-                                                                          fontSize: 16.0,
-                                                                          letterSpacing: 0.0,
-                                                                          color: Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.blue,
-                                                                        shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(12.0),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-
-                                                                    SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
-
-                                                                    // Flexible을 사용하여 공간 조정
-                                                                    Flexible(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
-                                                                          crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                          children: [
-                                                                            // 별 이미지
-                                                                            Image.asset(
-                                                                              'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                              width: 25.0,
-                                                                              height: 25.0,
-                                                                            ),
-                                                                            SizedBox(width: 4.0),
-                                                                            // 평점 텍스트
-                                                                            Text(
-                                                                              '${double.parse(markerPositions[0]['score'].toString()).toStringAsFixed(2)}',
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                fontSize: 18.0,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 오른쪽 이미지 버튼
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            if (_model.tabBarController != null) {
-                                                              _model.tabBarController!.animateTo(2);
-                                                            }
-                                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              markerPositions[0]['lat'],
-                                                              markerPositions[0]['lng'],
-                                                              3,
-                                                            );
-                                                          },
-                                                          child: Image.asset(
-                                                            'assets/images/number-1.png',
-                                                            width: 64.0,
-                                                            height: 64.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                          /*==================1번 카드===================*/
-                                          // 2일떄
-                                          Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_model.tabBarController != null) {
-                                                  setState(() {
-                                                    _model.updatePageControllerWithNewIndex(1);
+                                                    _model.updatePageControllerWithNewIndex(index);
                                                   });
 
                                                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1149,16 +829,16 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                           ),
                                                           child: ClipRRect(
                                                             borderRadius: BorderRadius.circular(50.0),
-                                                            child: selectedButtonIndex == 1 && markerPositions.length > 1
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, 1)
-                                                                : selectedButtonIndex == 2 && Places.length > 1
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, 1)
-                                                                : selectedButtonIndex == 3 && Activity.length > 1
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, 1)
-                                                                : selectedButtonIndex == 4 && Food.length > 1
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, 1)
-                                                                : selectedButtonIndex == 5 && Hostel.length > 1
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, 1)
+                                                            child: (selectedButtonIndex == 1)
+                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, index)
+                                                                : (selectedButtonIndex == 2)
+                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, index)
+                                                                : (selectedButtonIndex == 3)
+                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, index)
+                                                                : (selectedButtonIndex == 4)
+                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, index)
+                                                                : (selectedButtonIndex == 5)
+                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, index)
                                                                 : Container(),
                                                           ),
                                                         ),
@@ -1173,16 +853,16 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                             children: [
                                                               // 장소 이름
                                                               Text(
-                                                                selectedButtonIndex == 1 && markerPositions.length  > 1
-                                                                    ? formatText(markerPositions[1]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 2 && Places.length  > 1
-                                                                    ? formatText(Places[1]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 3 && Activity.length > 1
-                                                                    ? formatText(Activity[1]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 4 && Food.length > 1
-                                                                    ? formatText(Food[1]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 5 && Hostel.length > 1
-                                                                    ? formatText(Hostel[1]['name'] ?? '--')
+                                                                (selectedButtonIndex == 1 && markerPositions.isNotEmpty)
+                                                                    ? formatText(markerPositions[index]['name'] ?? '--')
+                                                                    : (selectedButtonIndex == 2 && Places.isNotEmpty)
+                                                                    ? formatText(Places[index]['name'] ?? '--')
+                                                                    : (selectedButtonIndex == 3 && Activity.isNotEmpty)
+                                                                    ? formatText(Activity[index]['name'] ?? '--')
+                                                                    : (selectedButtonIndex == 4 && Food.isNotEmpty)
+                                                                    ? formatText(Food[index]['name'] ?? '--')
+                                                                    : (selectedButtonIndex == 5 && Hostel.isNotEmpty)
+                                                                    ? formatText(Hostel[index]['name'] ?? '--')
                                                                     : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
                                                                 style: FlutterFlowTheme.of(context).displaySmall.override(
                                                                   fontFamily: 'Outfit',
@@ -1195,12 +875,11 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                 maxLines: 2,
                                                                 overflow: TextOverflow.visible,
                                                               ),
-
                                                               // 장소 설명 버튼과 평점/별 이미지 Row
                                                               Padding(
                                                                 padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                                                 child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
+                                                                  mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬
                                                                   crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                                   children: [
                                                                     // 장소 설명 버튼
@@ -1208,7 +887,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       onPressed: () {
                                                                         if (_model.tabBarController != null) {
                                                                           setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(1);
+                                                                            _model.updatePageControllerWithNewIndex(index);
                                                                           });
 
                                                                           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1233,32 +912,42 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                                       ),
                                                                     ),
 
-                                                                    SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
+                                                                    SizedBox(width: 10.0), // 버튼과 별 이미지 사이 간격
 
                                                                     // Flexible을 사용하여 공간 조정
                                                                     Flexible(
                                                                       child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
+                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0), // 위로 이동
                                                                         child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
+                                                                          mainAxisAlignment: MainAxisAlignment.center, // 가로 중앙 정렬
                                                                           crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
                                                                           children: [
                                                                             // 별 이미지
                                                                             Image.asset(
-                                                                              'assets/images/star-icon.png',  // 별 이미지 경로
+                                                                              'assets/images/star-icon.png', // 별 이미지 경로
                                                                               width: 25.0,
                                                                               height: 25.0,
                                                                             ),
                                                                             SizedBox(width: 4.0),
                                                                             // 평점 텍스트
                                                                             Text(
-                                                                              '${double.parse(markerPositions[1]['score'].toString()).toStringAsFixed(2)}',
+                                                                              (selectedButtonIndex == 1 && markerPositions.isNotEmpty)
+                                                                                  ? '${double.parse(markerPositions[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                  : (selectedButtonIndex == 2 && Places.isNotEmpty)
+                                                                                  ? '${double.parse(Places[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                  : (selectedButtonIndex == 3 && Activity.isNotEmpty)
+                                                                                  ? '${double.parse(Activity[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                  : (selectedButtonIndex == 4 && Food.isNotEmpty)
+                                                                                  ? '${double.parse(Food[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                  : (selectedButtonIndex == 5 && Hostel.isNotEmpty)
+                                                                                  ? '${double.parse(Hostel[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                  : '--',
                                                                               style: TextStyle(
                                                                                 fontFamily: 'Readex Pro',
                                                                                 fontSize: 18.0,
                                                                                 color: Colors.black,
                                                                               ),
-                                                                              overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
+                                                                              overflow: TextOverflow.ellipsis, // 텍스트가 길 경우 말줄임
                                                                             ),
                                                                           ],
                                                                         ),
@@ -1281,13 +970,29 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                               _model.tabBarController!.animateTo(2);
                                                             }
                                                             Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              markerPositions[1]['lat'],
-                                                              markerPositions[1]['lng'],
+                                                              (selectedButtonIndex == 1)
+                                                                  ? markerPositions[index]['lat']
+                                                                  : (selectedButtonIndex == 2)
+                                                                  ? Places[index]['lat']
+                                                                  : (selectedButtonIndex == 3)
+                                                                  ? Activity[index]['lat']
+                                                                  : (selectedButtonIndex == 4)
+                                                                  ? Food[index]['lat']
+                                                                  : Hostel[index]['lat'],
+                                                              (selectedButtonIndex == 1)
+                                                                  ? markerPositions[index]['lng']
+                                                                  : (selectedButtonIndex == 2)
+                                                                  ? Places[index]['lng']
+                                                                  : (selectedButtonIndex == 3)
+                                                                  ? Activity[index]['lng']
+                                                                  : (selectedButtonIndex == 4)
+                                                                  ? Food[index]['lng']
+                                                                  : Hostel[index]['lng'],
                                                               3,
                                                             );
                                                           },
                                                           child: Image.asset(
-                                                            'assets/images/number-2.png',
+                                                            'assets/images/number-${index + 1}.png',
                                                             width: 64.0,
                                                             height: 64.0,
                                                           ),
@@ -1298,972 +1003,12 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          // 3일떼
-                                          /*==================2번 카드===================*/
-                                          Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_model.tabBarController != null) {
-                                                  setState(() {
-                                                    _model.updatePageControllerWithNewIndex(2);
-                                                  });
-
-                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                    _model.tabBarController!.animateTo(1);
-                                                  });
-                                                }
-                                              },
-                                              child: Card(
-                                                margin: EdgeInsets.all(0),
-                                                elevation: 3.0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      // 썸네일 이미지
-                                                      Padding(
-                                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                                        child: Container(
-                                                          width: 77.0,
-                                                          height: 77.0,
-                                                          decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme.of(context).accent1,
-                                                            shape: BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: Colors.blue,
-                                                              width: 2.0,
-                                                            ),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(50.0),
-                                                            child: selectedButtonIndex == 1 && markerPositions.length > 2
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, 2)
-                                                                : selectedButtonIndex == 2 && Places.length > 2
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, 2)
-                                                                : selectedButtonIndex == 3 && Activity.length > 2
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, 2)
-                                                                : selectedButtonIndex == 4 && Food.length > 2
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, 2)
-                                                                : selectedButtonIndex == 5 && Hostel.length > 2
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, 2)
-                                                                : Container(),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 텍스트 및 설명 부분
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              // 장소 이름
-                                                              Text(
-                                                                selectedButtonIndex == 1 && markerPositions.length  > 2
-                                                                    ? formatText(markerPositions[2]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 2 && Places.length  > 2
-                                                                    ? formatText(Places[2]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 3 && Activity.length > 2
-                                                                    ? formatText(Activity[2]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 4 && Food.length > 2
-                                                                    ? formatText(Food[2]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 5 && Hostel.length > 2
-                                                                    ? formatText(Hostel[2]['name'] ?? '--')
-                                                                    : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
-                                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                  fontFamily: 'Outfit',
-                                                                  color: Colors.black,
-                                                                  fontSize: 16.0,
-                                                                  letterSpacing: 0.0,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ),
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow: TextOverflow.visible,
-                                                              ),
-
-                                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
-                                                                  crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                  children: [
-                                                                    // 장소 설명 버튼
-                                                                    ElevatedButton(
-                                                                      onPressed: () {
-                                                                        if (_model.tabBarController != null) {
-                                                                          setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(2);
-                                                                          });
-
-                                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                            _model.tabBarController!.animateTo(1);
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Text(
-                                                                        '장소 설명',
-                                                                        style: TextStyle(
-                                                                          fontFamily: 'Readex Pro',
-                                                                          fontSize: 16.0,
-                                                                          letterSpacing: 0.0,
-                                                                          color: Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.blue,
-                                                                        shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(12.0),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-
-                                                                    SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
-
-                                                                    // Flexible을 사용하여 공간 조정
-                                                                    Flexible(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
-                                                                          crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                          children: [
-                                                                            // 별 이미지
-                                                                            Image.asset(
-                                                                              'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                              width: 25.0,
-                                                                              height: 25.0,
-                                                                            ),
-                                                                            SizedBox(width: 4.0),
-                                                                            // 평점 텍스트
-                                                                            Text(
-                                                                              '${double.parse(markerPositions[2]['score'].toString()).toStringAsFixed(2)}',
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                fontSize: 18.0,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 오른쪽 이미지 버튼
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            if (_model.tabBarController != null) {
-                                                              _model.tabBarController!.animateTo(2);
-                                                            }
-                                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              markerPositions[2]['lat'],
-                                                              markerPositions[2]['lng'],
-                                                              3,
-                                                            );
-                                                          },
-                                                          child: Image.asset(
-                                                            'assets/images/number-3.png',
-                                                            width: 64.0,
-                                                            height: 64.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          /*==================3번 카드===================*/
-                                          Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_model.tabBarController != null) {
-                                                  setState(() {
-                                                    _model.updatePageControllerWithNewIndex(3);
-                                                  });
-
-                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                    _model.tabBarController!.animateTo(1);
-                                                  });
-                                                }
-                                              },
-                                              child: Card(
-                                                margin: EdgeInsets.all(0),
-                                                elevation: 3.0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      // 썸네일 이미지
-                                                      Padding(
-                                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                                        child: Container(
-                                                          width: 77.0,
-                                                          height: 77.0,
-                                                          decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme.of(context).accent1,
-                                                            shape: BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: Colors.blue,
-                                                              width: 2.0,
-                                                            ),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(50.0),
-                                                            child: selectedButtonIndex == 1 && markerPositions.length > 3
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, 3)
-                                                                : selectedButtonIndex == 2 && Places.length > 3
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, 3)
-                                                                : selectedButtonIndex == 3 && Activity.length > 3
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, 3)
-                                                                : selectedButtonIndex == 4 && Food.length > 3
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, 3)
-                                                                : selectedButtonIndex == 5 && Hostel.length > 3
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, 3)
-                                                                : Container(),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 텍스트 및 설명 부분
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              // 장소 이름
-                                                              Text(
-                                                                selectedButtonIndex == 1 && markerPositions.length  > 3
-                                                                    ? formatText(markerPositions[3]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 2 && Places.length  > 3
-                                                                    ? formatText(Places[3]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 3 && Activity.length > 3
-                                                                    ? formatText(Activity[3]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 4 && Food.length > 3
-                                                                    ? formatText(Food[3]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 5 && Hostel.length > 3
-                                                                    ? formatText(Hostel[3]['name'] ?? '--')
-                                                                    : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
-                                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                  fontFamily: 'Outfit',
-                                                                  color: Colors.black,
-                                                                  fontSize: 16.0,
-                                                                  letterSpacing: 0.0,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ),
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow: TextOverflow.visible,
-                                                              ),
-
-                                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
-                                                                  crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                  children: [
-                                                                    // 장소 설명 버튼
-                                                                    ElevatedButton(
-                                                                      onPressed: () {
-                                                                        if (_model.tabBarController != null) {
-                                                                          setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(3);
-                                                                          });
-
-                                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                            _model.tabBarController!.animateTo(1);
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Text(
-                                                                        '장소 설명',
-                                                                        style: TextStyle(
-                                                                          fontFamily: 'Readex Pro',
-                                                                          fontSize: 16.0,
-                                                                          letterSpacing: 0.0,
-                                                                          color: Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.blue,
-                                                                        shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(12.0),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-
-                                                                    SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
-
-                                                                    // Flexible을 사용하여 공간 조정
-                                                                    Flexible(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
-                                                                          crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                          children: [
-                                                                            // 별 이미지
-                                                                            Image.asset(
-                                                                              'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                              width: 25.0,
-                                                                              height: 25.0,
-                                                                            ),
-                                                                            SizedBox(width: 4.0),
-                                                                            // 평점 텍스트
-                                                                            Text(
-                                                                              '${double.parse(markerPositions[3]['score'].toString()).toStringAsFixed(2)}',
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                fontSize: 18.0,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 오른쪽 이미지 버튼
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            if (_model.tabBarController != null) {
-                                                              _model.tabBarController!.animateTo(2);
-                                                            }
-                                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              markerPositions[3]['lat'],
-                                                              markerPositions[3]['lng'],
-                                                              3,
-                                                            );
-                                                          },
-                                                          child: Image.asset(
-                                                            'assets/images/number-4.png',
-                                                            width: 64.0,
-                                                            height: 64.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          /*==================4번 카드===================*/
-                                          Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_model.tabBarController != null) {
-                                                  setState(() {
-                                                    _model.updatePageControllerWithNewIndex(4);
-                                                  });
-
-                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                    _model.tabBarController!.animateTo(1);
-                                                  });
-                                                }
-                                              },
-                                              child: Card(
-                                                margin: EdgeInsets.all(0),
-                                                elevation: 3.0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      // 썸네일 이미지
-                                                      Padding(
-                                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                                        child: Container(
-                                                          width: 77.0,
-                                                          height: 77.0,
-                                                          decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme.of(context).accent1,
-                                                            shape: BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: Colors.blue,
-                                                              width: 2.0,
-                                                            ),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(50.0),
-                                                            child: selectedButtonIndex == 1 && markerPositions.length > 4
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, 4)
-                                                                : selectedButtonIndex == 2 && Places.length > 4
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, 4)
-                                                                : selectedButtonIndex == 3 && Activity.length > 4
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, 4)
-                                                                : selectedButtonIndex == 4 && Food.length > 4
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, 4)
-                                                                : selectedButtonIndex == 5 && Hostel.length > 4
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, 4)
-                                                                : Container(),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 텍스트 및 설명 부분
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              // 장소 이름
-                                                              Text(
-                                                                selectedButtonIndex == 1 && markerPositions.length  > 4
-                                                                    ? formatText(markerPositions[4]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 2 && Places.length  > 4
-                                                                    ? formatText(Places[4]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 3 && Activity.length > 4
-                                                                    ? formatText(Activity[4]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 4 && Food.length > 4
-                                                                    ? formatText(Food[4]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 5 && Hostel.length > 4
-                                                                    ? formatText(Hostel[4]['name'] ?? '--')
-                                                                    : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
-                                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                  fontFamily: 'Outfit',
-                                                                  color: Colors.black,
-                                                                  fontSize: 16.0,
-                                                                  letterSpacing: 0.0,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ),
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow: TextOverflow.visible,
-                                                              ),
-
-                                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
-                                                                  crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                  children: [
-                                                                    // 장소 설명 버튼
-                                                                    ElevatedButton(
-                                                                      onPressed: () {
-                                                                        if (_model.tabBarController != null) {
-                                                                          setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(4);
-                                                                          });
-
-                                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                            _model.tabBarController!.animateTo(1);
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Text(
-                                                                        '장소 설명',
-                                                                        style: TextStyle(
-                                                                          fontFamily: 'Readex Pro',
-                                                                          fontSize: 16.0,
-                                                                          letterSpacing: 0.0,
-                                                                          color: Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.blue,
-                                                                        shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(12.0),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-
-                                                                    SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
-
-                                                                    // Flexible을 사용하여 공간 조정
-                                                                    Flexible(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
-                                                                          crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                          children: [
-                                                                            // 별 이미지
-                                                                            Image.asset(
-                                                                              'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                              width: 25.0,
-                                                                              height: 25.0,
-                                                                            ),
-                                                                            SizedBox(width: 4.0),
-                                                                            // 평점 텍스트
-                                                                            Text(
-                                                                              '${double.parse(markerPositions[4]['score'].toString()).toStringAsFixed(2)}',
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                fontSize: 18.0,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 오른쪽 이미지 버튼
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            if (_model.tabBarController != null) {
-                                                              _model.tabBarController!.animateTo(2);
-                                                            }
-                                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              markerPositions[4]['lat'],
-                                                              markerPositions[4]['lng'],
-                                                              3,
-                                                            );
-                                                          },
-                                                          child: Image.asset(
-                                                            'assets/images/number-5.png',
-                                                            width: 64.0,
-                                                            height: 64.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          /*==================5번 카드===================*/
-                                          Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_model.tabBarController != null) {
-                                                  setState(() {
-                                                    _model.updatePageControllerWithNewIndex(5);
-                                                  });
-
-                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                    _model.tabBarController!.animateTo(1);
-                                                  });
-                                                }
-                                              },
-                                              child: Card(
-                                                margin: EdgeInsets.all(0),
-                                                elevation: 3.0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      // 썸네일 이미지
-                                                      Padding(
-                                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                                        child: Container(
-                                                          width: 77.0,
-                                                          height: 77.0,
-                                                          decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme.of(context).accent1,
-                                                            shape: BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: Colors.blue,
-                                                              width: 2.0,
-                                                            ),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(50.0),
-                                                            child: selectedButtonIndex == 1 && markerPositions.length > 5
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, 5)
-                                                                : selectedButtonIndex == 2 && Places.length > 5
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, 5)
-                                                                : selectedButtonIndex == 3 && Activity.length > 5
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, 5)
-                                                                : selectedButtonIndex == 4 && Food.length > 5
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, 5)
-                                                                : selectedButtonIndex == 5 && Hostel.length > 5
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, 5)
-                                                                : Container(),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 텍스트 및 설명 부분
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              // 장소 이름
-                                                              Text(
-                                                                selectedButtonIndex == 1 && markerPositions.length  > 5
-                                                                    ? formatText(markerPositions[5]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 2 && Places.length  > 5
-                                                                    ? formatText(Places[5]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 3 && Activity.length > 5
-                                                                    ? formatText(Activity[5]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 4 && Food.length > 5
-                                                                    ? formatText(Food[5]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 5 && Hostel.length > 5
-                                                                    ? formatText(Hostel[5]['name'] ?? '--')
-                                                                    : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
-                                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                  fontFamily: 'Outfit',
-                                                                  color: Colors.black,
-                                                                  fontSize: 16.0,
-                                                                  letterSpacing: 0.0,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ),
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow: TextOverflow.visible,
-                                                              ),
-
-                                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
-                                                                  crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                  children: [
-                                                                    // 장소 설명 버튼
-                                                                    ElevatedButton(
-                                                                      onPressed: () {
-                                                                        if (_model.tabBarController != null) {
-                                                                          setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(5);
-                                                                          });
-
-                                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                            _model.tabBarController!.animateTo(1);
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Text(
-                                                                        '장소 설명',
-                                                                        style: TextStyle(
-                                                                          fontFamily: 'Readex Pro',
-                                                                          fontSize: 16.0,
-                                                                          letterSpacing: 0.0,
-                                                                          color: Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.blue,
-                                                                        shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(12.0),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-
-                                                                    SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
-
-                                                                    // Flexible을 사용하여 공간 조정
-                                                                    Flexible(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
-                                                                          crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                          children: [
-                                                                            // 별 이미지
-                                                                            Image.asset(
-                                                                              'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                              width: 25.0,
-                                                                              height: 25.0,
-                                                                            ),
-                                                                            SizedBox(width: 4.0),
-                                                                            // 평점 텍스트
-                                                                            Text(
-                                                                              '${double.parse(markerPositions[5]['score'].toString()).toStringAsFixed(2)}',
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                fontSize: 18.0,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 오른쪽 이미지 버튼
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            if (_model.tabBarController != null) {
-                                                              _model.tabBarController!.animateTo(2);
-                                                            }
-                                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              markerPositions[5]['lat'],
-                                                              markerPositions[5]['lng'],
-                                                              3,
-                                                            );
-                                                          },
-                                                          child: Image.asset(
-                                                            'assets/images/number-6.png',
-                                                            width: 64.0,
-                                                            height: 64.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          /*==================6번 카드===================*/
-                                          Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_model.tabBarController != null) {
-                                                  setState(() {
-                                                    _model.updatePageControllerWithNewIndex(6);
-                                                  });
-
-                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                    _model.tabBarController!.animateTo(1);
-                                                  });
-                                                }
-                                              },
-                                              child: Card(
-                                                margin: EdgeInsets.all(0),
-                                                elevation: 3.0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      // 썸네일 이미지
-                                                      Padding(
-                                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                                        child: Container(
-                                                          width: 77.0,
-                                                          height: 77.0,
-                                                          decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme.of(context).accent1,
-                                                            shape: BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: Colors.blue,
-                                                              width: 2.0,
-                                                            ),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(50.0),
-                                                            child: selectedButtonIndex == 1 && markerPositions.length > 6
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, 6)
-                                                                : selectedButtonIndex == 2 && Places.length > 6
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, 6)
-                                                                : selectedButtonIndex == 3 && Activity.length > 6
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, 6)
-                                                                : selectedButtonIndex == 4 && Food.length > 6
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, 6)
-                                                                : selectedButtonIndex == 5 && Hostel.length > 6
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, 6)
-                                                                : Container(),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 텍스트 및 설명 부분
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              // 장소 이름
-                                                              Text(
-                                                                selectedButtonIndex == 1 && markerPositions.length  > 6
-                                                                    ? formatText(markerPositions[6]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 2 && Places.length  > 6
-                                                                    ? formatText(Places[6]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 3 && Activity.length > 6
-                                                                    ? formatText(Activity[6]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 4 && Food.length > 6
-                                                                    ? formatText(Food[6]['name'] ?? '--')
-                                                                    : selectedButtonIndex == 5 && Hostel.length > 6
-                                                                    ? formatText(Hostel[6]['name'] ?? '--')
-                                                                    : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
-                                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                  fontFamily: 'Outfit',
-                                                                  color: Colors.black,
-                                                                  fontSize: 16.0,
-                                                                  letterSpacing: 0.0,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ),
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow: TextOverflow.visible,
-                                                              ),
-
-                                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,  // 중앙 정렬
-                                                                  crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                  children: [
-                                                                    // 장소 설명 버튼
-                                                                    ElevatedButton(
-                                                                      onPressed: () {
-                                                                        if (_model.tabBarController != null) {
-                                                                          setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(6);
-                                                                          });
-
-                                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                            _model.tabBarController!.animateTo(1);
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Text(
-                                                                        '장소 설명',
-                                                                        style: TextStyle(
-                                                                          fontFamily: 'Readex Pro',
-                                                                          fontSize: 16.0,
-                                                                          letterSpacing: 0.0,
-                                                                          color: Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.blue,
-                                                                        shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(12.0),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-
-                                                                    SizedBox(width: 10.0),  // 버튼과 별 이미지 사이 간격
-
-                                                                    // Flexible을 사용하여 공간 조정
-                                                                    Flexible(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),  // 위로 이동
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,  // 가로 중앙 정렬
-                                                                          crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                          children: [
-                                                                            // 별 이미지
-                                                                            Image.asset(
-                                                                              'assets/images/star-icon.png',  // 별 이미지 경로
-                                                                              width: 25.0,
-                                                                              height: 25.0,
-                                                                            ),
-                                                                            SizedBox(width: 4.0),
-                                                                            // 평점 텍스트
-                                                                            Text(
-                                                                              '${double.parse(markerPositions[6]['score'].toString()).toStringAsFixed(2)}',
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                fontSize: 18.0,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 오른쪽 이미지 버튼
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            if (_model.tabBarController != null) {
-                                                              _model.tabBarController!.animateTo(2);
-                                                            }
-                                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              markerPositions[6]['lat'],
-                                                              markerPositions[6]['lng'],
-                                                              3,
-                                                            );
-                                                          },
-                                                          child: Image.asset(
-                                                            'assets/images/number-7.png',
-                                                            width: 64.0,
-                                                            height: 64.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),
+
                                 ],
                               ),
                               // ========================================================인덱스 끝========================================================
@@ -2312,45 +1057,77 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                             });
                                           },
                                           // PageView.builder에서 각 카드 함수 호출
-                                          children: List.generate(markerPositions.length, (index) {
-                                            return Column(
-                                              children: [
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Builder(
-                                                      builder: (context) {
-                                                        switch (index) {
-                                                          case 0:
-                                                            return buildCard0(context, markerPositions[index]);
-                                                          case 1:
-                                                            return buildCard1(context, markerPositions[index]);
-                                                          case 2:
-                                                            return buildCard2(context, markerPositions[index]);
-                                                          case 3:
-                                                            return buildCard3(context, markerPositions[index]);
-                                                          case 4:
-                                                            return buildCard4(context, markerPositions[index]);
-                                                          case 5:
-                                                            return buildCard5(context, markerPositions[index]);
-                                                          case 6:
-                                                            return buildCard6(context, markerPositions[index]);
-                                                          default:
-                                                            throw Exception('Invalid index: $index');
-                                                        }
-                                                      },
+                                            children: List.generate(
+                                              (selectedButtonIndex == 1)
+                                                  ? markerPositions.length
+                                                  : (selectedButtonIndex == 2)
+                                                  ? Places.length
+                                                  : (selectedButtonIndex == 3)
+                                                  ? Activity.length
+                                                  : (selectedButtonIndex == 4)
+                                                  ? Food.length
+                                                  : Hostel.length,
+                                                  (index) {
+                                                // 선택된 리스트에 따라 데이터를 가져옴
+                                                var currentItem = (selectedButtonIndex == 1)
+                                                    ? markerPositions[index]
+                                                    : (selectedButtonIndex == 2)
+                                                    ? Places[index]
+                                                    : (selectedButtonIndex == 3)
+                                                    ? Activity[index]
+                                                    : (selectedButtonIndex == 4)
+                                                    ? Food[index]
+                                                    : Hostel[index];
+
+                                                return Column(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Container(
+                                                        child: Builder(
+                                                          builder: (context) {
+                                                            switch (index) {
+                                                              case 0:
+                                                                return buildCard0(context, currentItem);
+                                                              case 1:
+                                                                return buildCard1(context, currentItem);
+                                                              case 2:
+                                                                return buildCard2(context, currentItem);
+                                                              case 3:
+                                                                return buildCard3(context, currentItem);
+                                                              case 4:
+                                                                return buildCard4(context, currentItem);
+                                                              case 5:
+                                                                return buildCard5(context, currentItem);
+                                                              case 6:
+                                                                return buildCard6(context, currentItem);
+                                                              default:
+                                                                throw Exception('Invalid index: $index');
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                                // 각 카드 아래에 경계선 추가
-                                                if (index != markerPositions.length - 1) // 마지막 카드 제외
-                                                  Divider(
-                                                    color: Colors.white, // 선 색상 설정
-                                                    thickness: 3.0, // 선 두께 설정
-                                                    height: 3.0, // 선 높이 설정
-                                                  ),
-                                              ],
-                                            );
-                                          }),
+                                                    // 각 카드 아래에 경계선 추가
+                                                    if (index !=
+                                                        ((selectedButtonIndex == 1)
+                                                            ? markerPositions.length
+                                                            : (selectedButtonIndex == 2)
+                                                            ? Places.length
+                                                            : (selectedButtonIndex == 3)
+                                                            ? Activity.length
+                                                            : (selectedButtonIndex == 4)
+                                                            ? Food.length
+                                                            : Hostel.length) -
+                                                            1) // 마지막 카드 제외
+                                                      Divider(
+                                                        color: Colors.white, // 선 색상 설정
+                                                        thickness: 3.0, // 선 두께 설정
+                                                        height: 3.0, // 선 높이 설정
+                                                      ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
                                         )
                                     ),
                                   ),
@@ -3462,6 +2239,8 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition)
     ),
   );
 }
+
+
 
 
 

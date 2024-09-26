@@ -28,8 +28,7 @@ import 'package:mbtitravel/data_frame/data_frame.dart';
 import 'map_model.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 
-class LocationexplainCopyModel extends ChangeNotifier
-{
+class LocationexplainCopyModel extends ChangeNotifier {
   final unfocusNode = FocusNode();
   TabController? tabBarController;
   late PageController pageController;
@@ -41,15 +40,13 @@ class LocationexplainCopyModel extends ChangeNotifier
   FocusNode? textFieldFocusNode;
 
   // 초기화 시 초기 페이지 설정
-  LocationexplainCopyModel({this.currentIndex = 0})
-  {
+  LocationexplainCopyModel({this.currentIndex = 0}) {
     pageController = PageController(initialPage: currentIndex);
     listViewController = ScrollController();
   }
 
   // 새로운 PageController로 초기화
-  void updatePageControllerWithNewIndex(int newIndex)
-  {
+  void updatePageControllerWithNewIndex(int newIndex) {
     // 기존 PageController 해제
     pageController.dispose();
 
@@ -64,8 +61,7 @@ class LocationexplainCopyModel extends ChangeNotifier
     print("갱신완료!");
   }
 
-  void updateScrollControllerWithNewIndex(int newIndex)
-  {
+  void updateScrollControllerWithNewIndex(int newIndex) {
     // 각 아이템의 높이 (예시: 148.0)
     double itemHeight = 148.0;
 
@@ -75,14 +71,11 @@ class LocationexplainCopyModel extends ChangeNotifier
     // 기존 ScrollController 해제
     listViewController.dispose();
 
-    if(offset < 592.0)
-    {
+    if (offset < 592.0) {
       // 새로운 ScrollController로 초기화
       listViewController = ScrollController(initialScrollOffset: offset);
       print("업데이트");
-    }
-    else
-    {
+    } else {
       listViewController = ScrollController(initialScrollOffset: 444.0);
       print("444.0 업데이트");
     }
@@ -94,8 +87,6 @@ class LocationexplainCopyModel extends ChangeNotifier
     notifyListeners();
     print("리스트뷰 컨트롤러 갱신 완료! offset: $offset");
   }
-
-
 
   @override
   void dispose() {
@@ -126,8 +117,27 @@ class _KakaoMapState extends State<KakaoMap> {
     final mapModel = Provider.of<MapModel>(context);
     final kakaoViewSize = Provider.of<KakaoViewSize>(context);
 
-    // getter를 통해 리스트에 접근
-    final markerPositions = markerPositionsModel.markerPositions;
+    // selectedButtonIndex 값에 따라 리스트 선택
+    List<Map<String, dynamic>> currentList;
+    switch (selectedButtonIndex) {
+      case 1:
+        currentList = markerPositionsModel.markerPositions.cast<Map<String, dynamic>>();
+        break;
+      case 2:
+        currentList = markerPositionsModel.results_Places.cast<Map<String, dynamic>>();
+        break;
+      case 3:
+        currentList = markerPositionsModel.results_Activity.cast<Map<String, dynamic>>();
+        break;
+      case 4:
+        currentList = markerPositionsModel.results_Food.cast<Map<String, dynamic>>();
+        break;
+      case 5:
+        currentList = markerPositionsModel.results_Hostel.cast<Map<String, dynamic>>();
+        break;
+      default:
+        currentList = [];
+    }
 
     // MapModel에서 값을 가져옴
     double _lat = mapModel.lat;
@@ -152,7 +162,7 @@ class _KakaoMapState extends State<KakaoMap> {
             showZoomControl: true,
             draggableMarker: false,
             mapController: (controller) => _mapController = controller,
-            viewAddMakers: VIEW_MAKER_SCRIPT(markerPositions),
+            viewAddMakers: VIEW_MAKER_SCRIPT(currentList),
             customOverlayStyle: CUSTOM_OVERLAY_STYLE_SCRIPT(),
             OpenKakaoMap: true,
           ),

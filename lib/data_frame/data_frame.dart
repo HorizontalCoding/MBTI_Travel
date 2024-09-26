@@ -10,6 +10,9 @@ int g_currentPageIndex = 0;
 double g_kakaoMapStartLat = 0.0;
 double g_kakaoMapStartLng = 0.0;
 
+// selectedButtonIndex
+int selectedButtonIndex = 1;
+
 String g_locationName = '';
 String g_mbtiStringValue = '';
 
