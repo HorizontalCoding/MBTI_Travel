@@ -109,3 +109,23 @@ Future<void> openKakaoMapByLatLng(String name, double lat, double lng) async
     throw 'Could not launch $playStoreUrl';
   }
 }
+
+Future<void> openKakaoMapLookAtCoordinates(double lat, double lng) async {
+  const String kakaoMapPackageName = 'net.daum.android.map';
+
+  // Kakao Map URL 생성 (좌표 검색용)
+  final Uri url = Uri.parse('kakaomap://look?p=$lat,$lng');
+  final Uri playStoreUrl = Uri.parse('https://play.google.com/store/apps/details?id=$kakaoMapPackageName');
+
+  print("Kakao Map 호출 URL: $url");
+
+  // Kakao Map URL 열기
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+    print("(flutter 프레임워크 제한) -> 삼성 디바이스에서 카카오맵 앱으로 실행");
+  } else {
+    await launchUrl(playStoreUrl);
+    print("(flutter 프레임워크 제한) -> 카카오맵 앱이 없거나 URL 스키마가 허용되지 않으면, 웹 브라우저로 실행");
+    throw 'Could not launch $playStoreUrl';
+  }
+}

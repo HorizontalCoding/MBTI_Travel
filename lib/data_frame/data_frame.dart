@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_html/flutter_html.dart';
+import 'default_images.dart';
 
 // 전역 변수
 int? g_districtCode = 0;
@@ -29,6 +30,7 @@ class MarkerPositionsModel with ChangeNotifier {
   List<Map<String, dynamic>> _results_Activity = [];
   List<Map<String, dynamic>> _results_Food = [];
   List<Map<String, dynamic>> _results_Hostel = [];
+  List<Map<String, dynamic>> _results_Festival = []; // _results_Festival 추가
   List<Map<String, dynamic>> _detailedMarkerInfo = [];
   bool _isDataLoaded = false;
 
@@ -39,6 +41,7 @@ class MarkerPositionsModel with ChangeNotifier {
   List<Map<String, dynamic>> get results_Activity => _results_Activity;
   List<Map<String, dynamic>> get results_Food => _results_Food;
   List<Map<String, dynamic>> get results_Hostel => _results_Hostel;
+  List<Map<String, dynamic>> get results_Festival => _results_Festival; // getter 추가
   List<Map<String, dynamic>> get detailedMarkerInfo => _detailedMarkerInfo;
 
   // MarkerPositions 업데이트
@@ -114,7 +117,12 @@ class MarkerPositionsModel with ChangeNotifier {
 
   // Fetch and Update Data
   Future<void> fetchAndUpdateData(String apiKey) async {
-    final String searchEndpoint = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchKeyword';
+    if (_isDataLoaded) {
+      print("데이터가 이미 로드되었습니다.");
+      return; // 데이터가 이미 로드된 경우 함수 종료
+    }
+
+    final String searchEndpoint = 'http://apis.data.go.kr/B551011/KorService1/searchKeyword1';
     final String imageEndpoint = 'http://apis.data.go.kr/B551011/KorService1/detailImage1';
     final String overViewEndpoint = 'http://apis.data.go.kr/B551011/KorService1/detailCommon1';
 
@@ -123,6 +131,12 @@ class MarkerPositionsModel with ChangeNotifier {
     // MarkerPositions에 대한 데이터 가져오기
     for (int i = 0; i < _markerPositions.length; i++) {
       final String keyword = _markerPositions[i]['tourkey'] ?? 'null';
+
+      if (keyword == 'N/A') {
+        print('Skipping marker at index $i due to "N/A" value.');
+        continue;
+      }
+
       final Uri searchUri = _buildSearchUri(searchEndpoint, apiKey, keyword);
       fetchTasks.add(_retryFetch(() => _fetchDataAndImages(i, searchUri, imageEndpoint, overViewEndpoint, apiKey, "marker")));
     }
@@ -130,6 +144,12 @@ class MarkerPositionsModel with ChangeNotifier {
     // Places에 대한 데이터 가져오기
     for (int i = 0; i < _results_Places.length; i++) {
       final String keyword = _results_Places[i]['tourkey'] ?? 'null';
+
+      if (keyword == 'N/A') {
+        print('Skipping marker at index $i due to "N/A" value.');
+        continue;
+      }
+
       final Uri searchUri = _buildSearchUri(searchEndpoint, apiKey, keyword);
       fetchTasks.add(_retryFetch(() => _fetchDataAndImages(i, searchUri, imageEndpoint, overViewEndpoint, apiKey, "places")));
     }
@@ -137,6 +157,12 @@ class MarkerPositionsModel with ChangeNotifier {
     // Activity에 대한 데이터 가져오기
     for (int i = 0; i < _results_Activity.length; i++) {
       final String keyword = _results_Activity[i]['tourkey'] ?? 'null';
+
+      if (keyword == 'N/A') {
+        print('Skipping marker at index $i due to "N/A" value.');
+        continue;
+      }
+
       final Uri searchUri = _buildSearchUri(searchEndpoint, apiKey, keyword);
       fetchTasks.add(_retryFetch(() => _fetchDataAndImages(i, searchUri, imageEndpoint, overViewEndpoint, apiKey, "activity")));
     }
@@ -144,6 +170,12 @@ class MarkerPositionsModel with ChangeNotifier {
     // Food에 대한 데이터 가져오기
     for (int i = 0; i < _results_Food.length; i++) {
       final String keyword = _results_Food[i]['tourkey'] ?? 'null';
+
+      if (keyword == 'N/A') {
+        print('Skipping marker at index $i due to "N/A" value.');
+        continue;
+      }
+
       final Uri searchUri = _buildSearchUri(searchEndpoint, apiKey, keyword);
       fetchTasks.add(_retryFetch(() => _fetchDataAndImages(i, searchUri, imageEndpoint, overViewEndpoint, apiKey, "food")));
     }
@@ -151,13 +183,29 @@ class MarkerPositionsModel with ChangeNotifier {
     // Hostel에 대한 데이터 가져오기
     for (int i = 0; i < _results_Hostel.length; i++) {
       final String keyword = _results_Hostel[i]['tourkey'] ?? 'null';
+
+      if (keyword == 'N/A') {
+        print('Skipping marker at index $i due to "N/A" value.');
+        continue;
+      }
+
       final Uri searchUri = _buildSearchUri(searchEndpoint, apiKey, keyword);
       fetchTasks.add(_retryFetch(() => _fetchDataAndImages(i, searchUri, imageEndpoint, overViewEndpoint, apiKey, "hostel")));
     }
 
-    await Future.wait(fetchTasks);
-    _isDataLoaded = true;
-    notifyListeners();
+    // Festival 데이터 가져오기
+    fetchTasks.add(fetchAndUpdateFestivalData(apiKey, overViewEndpoint));
+
+    // 모든 fetch 작업이 끝날 때까지 기다린 후 _isDataLoaded를 true로 설정
+    try {
+      await Future.wait(fetchTasks);
+    } catch (e) {
+      print('Error during fetch tasks: $e');
+    } finally {
+      _isDataLoaded = true; // 모든 데이터 처리가 완료된 후에야 true로 설정
+      print("데이터 로드 완료");
+      notifyListeners();
+    }
   }
 
   Uri _buildSearchUri(String searchEndpoint, String apiKey, String keyword) {
@@ -199,7 +247,19 @@ class MarkerPositionsModel with ChangeNotifier {
 
       if (searchResponse.statusCode == 200) {
         final searchData = json.decode(utf8.decode(searchResponse.bodyBytes));
-        final items = searchData['response']['body']['items']['item'];
+        final bodyData = searchData['response']['body'];
+
+        if (bodyData == null || bodyData['items'] == "" || bodyData['totalCount'] == 0) {
+          print('Skipping index $index due to invalid bodyData or no results found.');
+          return;
+        }
+
+        final items = bodyData['items']['item'];
+
+        if (items == null || items == "" || (items is List && items.isEmpty)) {
+          print('Skipping contentId for index $index due to no valid data in body.');
+          return;
+        }
 
         if (items is List && items.isNotEmpty) {
           _detailedMarkerInfo[index] = _extractMarkerInfo(items[0]);
@@ -212,17 +272,20 @@ class MarkerPositionsModel with ChangeNotifier {
         }
 
         final String contentId = _detailedMarkerInfo[index]['contentid'] ?? 'N/A';
-        if (contentId != 'N/A') {
+
+        if (contentId != 'N/A' && contentId.isNotEmpty) {
           await Future.wait([
             _retryFetch(() => _fetchImages(contentId, index, imageEndpoint, apiKey, category)),
             _retryFetch(() => _fetchOverview(contentId, index, overViewEndpoint, apiKey, category)),
           ]);
+        } else {
+          print('Skipping image and overview fetch for index $index due to empty or invalid contentId.');
         }
       } else {
         print('Error: Search API received status code ${searchResponse.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('ErrorA for index $index: $e');
     }
   }
 
@@ -245,22 +308,47 @@ class MarkerPositionsModel with ChangeNotifier {
       final imageResponse = await http.get(imageUri);
 
       if (imageResponse.statusCode == 200) {
-        final imageData = json.decode(utf8.decode(imageResponse.bodyBytes));
-        final imageItems = imageData['response']['body']['items']['item'];
+        final body = json.decode(utf8.decode(imageResponse.bodyBytes));
+        final responseBody = body['response']['body'];
+
+        if (responseBody == null || responseBody['items'] == "" || responseBody['items']['item'] == null) {
+          print('Skipping contentId $contentId, index $index due to no valid image data in body');
+          return;
+        }
+
+        final dynamic imageItems = responseBody['items']['item'];
 
         if (imageItems is List && imageItems.isNotEmpty) {
           for (int j = 0; j < imageItems.length; j++) {
             final int imgIndex = j + 1;
-            _addImageToCategory(index, imageItems[j], imgIndex, category);
+            final dynamic imageItem = imageItems[j];
+
+            if (imageItem is Map<String, dynamic>) {
+              final smallImageUrl = imageItem['smallimageurl'];
+              final originImageUrl = imageItem['originimgurl'];
+
+              if (smallImageUrl is String && originImageUrl is String && smallImageUrl.isNotEmpty && originImageUrl.isNotEmpty) {
+                _addImageToCategory(index, imageItem, imgIndex, category);
+              } else {
+                print('Invalid image URLs at index $index, imgIndex $imgIndex: smallimageurl=$smallImageUrl, originimgurl=$originImageUrl');
+              }
+            }
           }
-        } else if (imageItems is Map) {
-          _addImageToCategory(index, (imageItems as Map<dynamic, dynamic>).cast<String, dynamic>(), 1, category);
+        } else if (imageItems is Map<String, dynamic>) {
+          final smallImageUrl = imageItems['smallimageurl'];
+          final originImageUrl = imageItems['originimgurl'];
+
+          if (smallImageUrl is String && originImageUrl is String && smallImageUrl.isNotEmpty && originImageUrl.isNotEmpty) {
+            _addImageToCategory(index, imageItems, 1, category);
+          } else {
+            print('Invalid image URLs at index $index, single item: smallimageurl=$smallImageUrl, originimgurl=$originImageUrl');
+          }
         }
       } else {
         print('Error: Image API received status code ${imageResponse.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('_fetchImages Error for contentId $contentId, index $index: $e');
     }
   }
 
@@ -298,6 +386,72 @@ class MarkerPositionsModel with ChangeNotifier {
     }
   }
 
+  // 축제 데이터를 가져와 _results_Festival에 추가하는 함수
+  Future<void> fetchAndUpdateFestivalData(String apiKey, String overViewEndpoint) async {
+    final String festivalEndpoint = 'http://apis.data.go.kr/B551011/KorService1/areaBasedList1';
+    final Map<String, String> festivalParams = {
+      'ServiceKey': apiKey,
+      'numOfRows': '100',
+      'pageNo': '1',
+      'MobileOS': 'ETC',
+      'MobileApp': 'MBTI',
+      'contentTypeId': '15', // 축제 contentTypeId는 15로 고정
+      'areaCode': '32',
+      'sigunguCode': g_districtCode?.toString() ?? '',
+      'ListYN': 'Y',
+      '_type': 'json',
+      'arrange': 'E',
+    };
+
+    final Uri festivalUri = Uri.parse(festivalEndpoint).replace(queryParameters: festivalParams);
+
+    try {
+      final response = await http.get(festivalUri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(utf8.decode(response.bodyBytes));
+        final items = data['response']['body']['items']['item'];
+
+        if (items is List && items.isNotEmpty) {
+          _results_Festival = items.asMap().entries.map((entry) {
+            int index = entry.key;
+            var item = entry.value;
+
+            final String firstImageUrl = (item['firstimage'] != null && item['firstimage'].isNotEmpty)
+                ? item['firstimage']
+                : (g_districtCode != null && defaultImages.containsKey(g_districtCode)
+                ? defaultImages[g_districtCode]!
+                : '');
+
+            return {
+              'id': index + 1,
+              'name': item['title'] ?? '',
+              'contentid': item['contentid'] ?? 'N/A',
+              'firstimage': firstImageUrl,
+              'firstimage2': item['firstimage2'] ?? '',
+              'lng': double.tryParse(item['mapx']?.toString() ?? '') ?? 0.0,
+              'lat': double.tryParse(item['mapy']?.toString() ?? '') ?? 0.0,
+              'overview': '아직 해당 축제에 대한 정보가 없어요.',
+            };
+          }).toList();
+
+          notifyListeners();
+
+          for (int i = 0; i < _results_Festival.length; i++) {
+            final String contentId = _results_Festival[i]['contentid'] ?? 'N/A';
+            if (contentId != 'N/A') {
+              await _retryFetch(() => _fetchOverview(contentId, i, overViewEndpoint, apiKey, "festival"));
+            }
+          }
+        }
+      } else {
+        print('Error: Festival API 응답 상태 코드 ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   void _addDataToCategory(int index, Map<String, dynamic> data, String category) {
     if (category == 'marker') {
       _markerPositions[index].addAll(data);
@@ -309,6 +463,8 @@ class MarkerPositionsModel with ChangeNotifier {
       _results_Food[index].addAll(data);
     } else if (category == 'hostel') {
       _results_Hostel[index].addAll(data);
+    } else if (category == 'festival') {
+      _results_Festival[index].addAll(data);
     }
   }
 
@@ -323,6 +479,8 @@ class MarkerPositionsModel with ChangeNotifier {
       _results_Food[index]['contentid'] = 'N/A';
     } else if (category == 'hostel') {
       _results_Hostel[index]['contentid'] = 'N/A';
+    } else if (category == 'festival') {
+      _results_Festival[index]['contentid'] = 'N/A';
     }
   }
 
@@ -352,6 +510,11 @@ class MarkerPositionsModel with ChangeNotifier {
         'smallimageurl$imgIndex': imageItem['smallimageurl'] ?? '',
         'originimgurl$imgIndex': imageItem['originimgurl'] ?? '',
       });
+    } else if (category == 'festival') {
+      _results_Festival[index].addAll({
+        'smallimageurl$imgIndex': imageItem['smallimageurl'] ?? '',
+        'originimgurl$imgIndex': imageItem['originimgurl'] ?? '',
+      });
     }
   }
 
@@ -367,6 +530,8 @@ class MarkerPositionsModel with ChangeNotifier {
       _results_Food[index]['overview'] = cleanedOverview;
     } else if (category == 'hostel') {
       _results_Hostel[index]['overview'] = cleanedOverview;
+    } else if (category == 'festival') {
+      _results_Festival[index]['overview'] = cleanedOverview;
     }
   }
 

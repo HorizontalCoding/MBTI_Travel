@@ -135,6 +135,9 @@ class _KakaoMapState extends State<KakaoMap> {
       case 5:
         currentList = markerPositionsModel.results_Hostel.cast<Map<String, dynamic>>();
         break;
+      case 6: // selectedButtonIndex가 6일 경우
+        currentList = markerPositionsModel.results_Festival.cast<Map<String, dynamic>>();
+        break;
       default:
         currentList = [];
     }

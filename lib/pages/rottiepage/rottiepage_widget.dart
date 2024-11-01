@@ -1,10 +1,8 @@
 import 'dart:async'; // 추가: StreamSubscription을 사용하기 위한 패키지 임포트
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-//import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-//import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -67,6 +65,16 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
     });
   }
 
+  Future<void> _initializeMarkersAndImages() async {
+    final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
+    try {
+      // TOUR API 키를 사용하여 데이터를 초기화 시점에서 받아옴
+      await markerPositionsModel.fetchAndUpdateData(tourApiKey);
+    } catch (error) {
+      print('데이터를 받아오는 중에 오류 발생: $error');
+    }
+  }
+
   // 네트워크 상태를 확인하고, 네트워크가 없으면 이전 화면으로 이동
   Future<void> checkNetworkAndNavigate() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -106,6 +114,7 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
     final selectedArea = Provider.of<LocationModel>(context, listen: false).selectedLocation;
     final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
 
+
     try {
       final response = await http.post(
         url,
@@ -123,13 +132,6 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
         final activities = jsonResponse['activities'];
         final food = jsonResponse['food'];
         final hostels = jsonResponse['hostels'];
-
-        // 원하는 대로 데이터를 처리하거나 UI에 반영
-        print('Recommended Places: $recommendedPlaces');
-        print('Places: $places');
-        print('Activities: $activities');
-        print('Food: $food');
-        print('Hostels: $hostels');
 
         // 예: 지도 마커 업데이트 (id 값을 1부터 증가)
         final markerPositions = List<Map<String, dynamic>>.from(
@@ -187,13 +189,15 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
           }),
         );
 
-
         // Provider를 통해 상태 업데이트
         markerPositionsModel.updateMarkerPositions(markerPositions);
         markerPositionsModel.updateResultsPlaces(results_Places);
         markerPositionsModel.updateResultsActivity(results_Activity);
         markerPositionsModel.updateResultsFood(results_Food);
         markerPositionsModel.updateResultsHostel(results_Hostel);
+
+        // 데이터를 모두 업데이트한 후 마커 및 이미지 초기화
+        await _initializeMarkersAndImages();
 
         // 화면 전환 중 플래그 설정
         setState(() {
@@ -206,11 +210,13 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
         // 화면 전환
         await context.pushNamed('locationexplainCopy');
 
-        // 화면 전환 완료 플래그 설정
-        setState(() {
-          _isLoading = false;
-          _isNavigating = false;
-          _hasNavigated = true;
+        // 화면 전환 완료 플래그 설정과 함께 post frame callback 추가
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            _isLoading = false;
+            _isNavigating = false;
+            _hasNavigated = true;
+          });
         });
 
       } else {
@@ -220,7 +226,6 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
       print('Error sending data to server: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -254,8 +259,6 @@ class _RottiepageWidgetState extends State<RottiepageWidget> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        //여기 통으로 뺌
-                        // 실제 Lottie 애니메이션을 담고 있는 컨테이너
                         Container(
                           width: 250.0, // Lottie 크기를 줄여서 그라데이션이 보이게 함
                           height: 250.0,

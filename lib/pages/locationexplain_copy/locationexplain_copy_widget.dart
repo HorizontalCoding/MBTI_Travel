@@ -25,6 +25,7 @@ import 'package:mbtitravel/data_frame/default_images.dart';
 import 'package:mbtitravel/data_frame/subscripts_images.dart';
 import 'map_model.dart'; // MapModel이 정의된 파일
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:math';
 
 class LocationexplainCopyWidget extends StatefulWidget
 {
@@ -426,17 +427,17 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
   // dataframe 이미지 로딩 비동기로 되어있음
   Future<void> _initializeMarkersAndImages() async
   {
-    final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
-    try
-    {
-      // TOUR API 키를 사용하여 데이터를 초기화 시점에서 받아옴
-      await markerPositionsModel.fetchAndUpdateData(tourApiKey);
-    }
-    catch (error)
-    {
-      print('데이터를 받아오는 중에 오류 발생: $error');
-    }
-  }
+     final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
+     try
+     {
+       // TOUR API 키를 사용하여 데이터를 초기화 시점에서 받아옴
+       await markerPositionsModel.fetchAndUpdateData(tourApiKey);
+     }
+     catch (error)
+     {
+       print('데이터를 받아오는 중에 오류 발생: $error');
+     }
+   }
 
   @override
   void dispose()
@@ -446,24 +447,35 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     super.dispose();
   }
 
-  String formatText(String text)
-  {
-    // 영어와 한글이 섞여있는지 확인하는 정규식
-    final RegExp mixedLang = RegExp(r'(?=.*[a-zA-Z])(?=.*[가-힣])');
+  String formatText(String text, TextStyle style, double maxWidth) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+    );
 
-    // 영어 단어에만 매칭되는 정규식
-    final RegExp englishWord = RegExp(r'^[a-zA-Z\s]+$');
+    // 한 글자씩 추가해보면서 줄바꿈을 추가할 위치를 찾아냅니다.
+    StringBuffer formattedText = StringBuffer();
+    String currentLine = '';
 
-    // 혼합된 경우 공백을 유지하고, 한글만 있는 경우 공백을 \n으로 대체
-    if (mixedLang.hasMatch(text)) {
-      return text; // 영어와 한글이 섞여있으면 그대로 반환
-    } else if (!englishWord.hasMatch(text)) {
-      return text.replaceAll(' ', '\n'); // 한글만 있으면 공백을 줄바꿈으로 대체
-    } else {
-      return text; // 영어만 있으면 그대로 반환
+    for (String word in text.split(' ')) {
+      final String tempLine = currentLine.isEmpty ? word : '$currentLine $word';
+      textPainter.text = TextSpan(text: tempLine, style: style);
+      textPainter.layout(maxWidth: maxWidth);
+
+      if (textPainter.didExceedMaxLines) {
+        // 줄바꿈을 추가합니다.
+        formattedText.write('$currentLine\n');
+        currentLine = word;
+      } else {
+        currentLine = tempLine;
+      }
     }
-  }
 
+    // 마지막 줄을 추가합니다.
+    formattedText.write(currentLine);
+
+    return formattedText.toString();
+  }
 
 
   @override
@@ -476,6 +488,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
     final Activity = markerPositionsModel.results_Activity;
     final Food = markerPositionsModel.results_Food;
     final Hostel = markerPositionsModel.results_Hostel;
+    final Festival = markerPositionsModel.results_Festival;
 
     final mapModel = Provider.of<MapModel>(context);
 
@@ -638,7 +651,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
                                         children: [
-                                          // 버튼 1
+                                          // 버튼 1: 추천 관광지
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -650,7 +663,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
                                                 color: selectedButtonIndex == 1 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
-                                                borderRadius: BorderRadius.circular(10.0),
+                                                borderRadius: BorderRadius.circular(15.0),
                                                 border: Border.all(
                                                   color: selectedButtonIndex == 1 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
                                                 ),
@@ -663,7 +676,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               ),
                                             ),
                                           ),
-                                          // 버튼 2
+                                          // 버튼 2: 관광지
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -675,7 +688,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
                                                 color: selectedButtonIndex == 2 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
-                                                borderRadius: BorderRadius.circular(10.0),
+                                                borderRadius: BorderRadius.circular(15.0),
                                                 border: Border.all(
                                                   color: selectedButtonIndex == 2 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
                                                 ),
@@ -688,7 +701,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               ),
                                             ),
                                           ),
-                                          // 버튼 3
+                                          // 버튼 3: 야외활동
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -700,7 +713,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
                                                 color: selectedButtonIndex == 3 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
-                                                borderRadius: BorderRadius.circular(10.0),
+                                                borderRadius: BorderRadius.circular(15.0),
                                                 border: Border.all(
                                                   color: selectedButtonIndex == 3 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
                                                 ),
@@ -713,7 +726,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               ),
                                             ),
                                           ),
-                                          // 버튼 4
+                                          // 버튼 4: 음식/카페
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -725,7 +738,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
                                                 color: selectedButtonIndex == 4 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
-                                                borderRadius: BorderRadius.circular(10.0),
+                                                borderRadius: BorderRadius.circular(15.0),
                                                 border: Border.all(
                                                   color: selectedButtonIndex == 4 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
                                                 ),
@@ -738,7 +751,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               ),
                                             ),
                                           ),
-                                          // 버튼 5
+                                          // 버튼 5: 숙박
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -750,7 +763,7 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                                               decoration: BoxDecoration(
                                                 color: selectedButtonIndex == 5 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
-                                                borderRadius: BorderRadius.circular(10.0),
+                                                borderRadius: BorderRadius.circular(15.0),
                                                 border: Border.all(
                                                   color: selectedButtonIndex == 5 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
                                                 ),
@@ -763,6 +776,31 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                               ),
                                             ),
                                           ),
+                                          // 버튼 6: 축제
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                selectedButtonIndex = 6;
+                                              });
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                                              decoration: BoxDecoration(
+                                                color: selectedButtonIndex == 6 ? Colors.blue : Colors.transparent, // 선택된 버튼만 색상 적용
+                                                borderRadius: BorderRadius.circular(10.0),
+                                                border: Border.all(
+                                                  color: selectedButtonIndex == 6 ? Colors.blue : Colors.grey, // 선택되지 않은 버튼은 테두리만
+                                                ),
+                                              ),
+                                              child: Text(
+                                                '축제', // 버튼 6 텍스트
+                                                style: TextStyle(
+                                                  color: selectedButtonIndex == 6 ? Colors.white : Colors.grey, // 텍스트 색상 변경
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -770,249 +808,344 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
 
                                   // 첫 번째 탭 (카드형 리스트)
                                   Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFEDEDED), // 여기 변경
-                                      ),
-                                      child: ListView.builder(
-                                        controller: _model.listViewController,
-                                        key: _listViewKey,
-                                        padding: EdgeInsets.zero,
-                                        scrollDirection: Axis.vertical,
-                                        // selectedButtonIndex에 따라 아이템 개수 설정
-                                        itemCount: (selectedButtonIndex == 1)
-                                            ? markerPositions.length
-                                            : (selectedButtonIndex == 2)
-                                            ? Places.length
-                                            : (selectedButtonIndex == 3)
-                                            ? Activity.length
-                                            : (selectedButtonIndex == 4)
-                                            ? Food.length
-                                            : (selectedButtonIndex == 5)
-                                            ? Hostel.length
-                                            : 0,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                if (_model.tabBarController != null) {
-                                                  setState(() {
-                                                    _model.updatePageControllerWithNewIndex(index);
-                                                  });
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        // 부모 위젯의 최대 너비를 가져옵니다.
+                                        final maxTextWidth = constraints.maxWidth;
 
-                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                    _model.tabBarController!.animateTo(1);
-                                                  });
-                                                }
-                                              },
-                                              child: Card(
-                                                margin: EdgeInsets.all(0),
-                                                elevation: 3.0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      // 썸네일 이미지
-                                                      Padding(
-                                                        padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                                        child: Container(
-                                                          width: 77.0,
-                                                          height: 77.0,
-                                                          decoration: BoxDecoration(
-                                                            color: FlutterFlowTheme.of(context).accent1,
-                                                            shape: BoxShape.circle,
-                                                            border: Border.all(
-                                                              color: Colors.blue,
-                                                              width: 2.0,
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFEDEDED),
+                                          ),
+                                          child: ListView.builder(
+                                            controller: _model.listViewController,
+                                            key: _listViewKey,
+                                            padding: EdgeInsets.zero,
+                                            scrollDirection: Axis.vertical,
+                                            itemCount: (selectedButtonIndex == 1)
+                                                ? min(markerPositions.length, 7)
+                                                : (selectedButtonIndex == 2)
+                                                ? min(Places.length, 7)
+                                                : (selectedButtonIndex == 3)
+                                                ? min(Activity.length, 7)
+                                                : (selectedButtonIndex == 4)
+                                                ? min(Food.length, 7)
+                                                : (selectedButtonIndex == 5)
+                                                ? min(Hostel.length, 7)
+                                                : (selectedButtonIndex == 6)
+                                                ? min(Festival.length, 7)
+                                                : 0,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 4.0),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    if (_model.tabBarController != null) {
+                                                      setState(() {
+                                                        _model.updatePageControllerWithNewIndex(index);
+                                                      });
+
+                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                        _model.tabBarController!.animateTo(1);
+                                                      });
+                                                    }
+                                                  },
+                                                  child: Card(
+                                                    margin: EdgeInsets.all(0),
+                                                    elevation: 3.0,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(12.0),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          // 썸네일 이미지
+                                                          Padding(
+                                                            padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                            child: Container(
+                                                              width: 77.0,
+                                                              height: 77.0,
+                                                              decoration: BoxDecoration(
+                                                                color: FlutterFlowTheme.of(context).accent1,
+                                                                shape: BoxShape.circle,
+                                                                border: Border.all(
+                                                                  color: Colors.blue,
+                                                                  width: 2.0,
+                                                                ),
+                                                              ),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(50.0),
+                                                                child: (selectedButtonIndex == 1)
+                                                                    ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, index)
+                                                                    : (selectedButtonIndex == 2)
+                                                                    ? buildThumbnailLoader(context, markerPositionsModel.results_Places, index)
+                                                                    : (selectedButtonIndex == 3)
+                                                                    ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, index)
+                                                                    : (selectedButtonIndex == 4)
+                                                                    ? buildThumbnailLoader(context, markerPositionsModel.results_Food, index)
+                                                                    : (selectedButtonIndex == 5)
+                                                                    ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, index)
+                                                                    : (selectedButtonIndex == 6)
+                                                                    ? buildThumbnailLoader(context, markerPositionsModel.results_Festival, index)
+                                                                    : Container(),
+                                                              ),
                                                             ),
                                                           ),
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(50.0),
-                                                            child: (selectedButtonIndex == 1)
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.markerPositions, index)
-                                                                : (selectedButtonIndex == 2)
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Places, index)
-                                                                : (selectedButtonIndex == 3)
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Activity, index)
-                                                                : (selectedButtonIndex == 4)
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Food, index)
-                                                                : (selectedButtonIndex == 5)
-                                                                ? buildThumbnailLoader(context, markerPositionsModel.results_Hostel, index)
-                                                                : Container(),
-                                                          ),
-                                                        ),
-                                                      ),
-
-                                                      // 텍스트 및 설명 부분
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              // 장소 이름
-                                                              Text(
-                                                                (selectedButtonIndex == 1 && markerPositions.isNotEmpty)
-                                                                    ? formatText(markerPositions[index]['name'] ?? '--')
-                                                                    : (selectedButtonIndex == 2 && Places.isNotEmpty)
-                                                                    ? formatText(Places[index]['name'] ?? '--')
-                                                                    : (selectedButtonIndex == 3 && Activity.isNotEmpty)
-                                                                    ? formatText(Activity[index]['name'] ?? '--')
-                                                                    : (selectedButtonIndex == 4 && Food.isNotEmpty)
-                                                                    ? formatText(Food[index]['name'] ?? '--')
-                                                                    : (selectedButtonIndex == 5 && Hostel.isNotEmpty)
-                                                                    ? formatText(Hostel[index]['name'] ?? '--')
-                                                                    : '--', // 값이 없거나 조건이 만족하지 않으면 기본 값으로 설정
-                                                                style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                  fontFamily: 'Outfit',
-                                                                  color: Colors.black,
-                                                                  fontSize: 16.0,
-                                                                  letterSpacing: 0.0,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ),
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow: TextOverflow.visible,
-                                                              ),
-                                                              // 장소 설명 버튼과 평점/별 이미지 Row
-                                                              Padding(
-                                                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬
-                                                                  crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                  children: [
-                                                                    // 장소 설명 버튼
-                                                                    ElevatedButton(
-                                                                      onPressed: () {
-                                                                        if (_model.tabBarController != null) {
-                                                                          setState(() {
-                                                                            _model.updatePageControllerWithNewIndex(index);
-                                                                          });
-
-                                                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                                            _model.tabBarController!.animateTo(1);
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Text(
-                                                                        '장소 설명',
-                                                                        style: TextStyle(
-                                                                          fontFamily: 'Readex Pro',
+                                                          // 텍스트 및 설명 부분
+                                                          Expanded(
+                                                            child: Padding(
+                                                              padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 8.0, 0.0),
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  // 장소 이름
+                                                                  Text(
+                                                                    (selectedButtonIndex == 1 && markerPositions.isNotEmpty)
+                                                                        ? formatText(markerPositions[index]['name'] ?? '--',
+                                                                        FlutterFlowTheme.of(context).displaySmall.override(
+                                                                          fontFamily: 'Outfit',
                                                                           fontSize: 16.0,
-                                                                          letterSpacing: 0.0,
-                                                                          color: Colors.white,
                                                                         ),
-                                                                      ),
-                                                                      style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.blue,
-                                                                        shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(12.0),
+                                                                        maxTextWidth)
+                                                                        : (selectedButtonIndex == 2 && Places.isNotEmpty)
+                                                                        ? formatText(Places[index]['name'] ?? '--',
+                                                                        FlutterFlowTheme.of(context).displaySmall.override(
+                                                                          fontFamily: 'Outfit',
+                                                                          fontSize: 16.0,
                                                                         ),
-                                                                      ),
+                                                                        maxTextWidth)
+                                                                        : (selectedButtonIndex == 3 && Activity.isNotEmpty)
+                                                                        ? formatText(Activity[index]['name'] ?? '--',
+                                                                        FlutterFlowTheme.of(context).displaySmall.override(
+                                                                          fontFamily: 'Outfit',
+                                                                          fontSize: 16.0,
+                                                                        ),
+                                                                        maxTextWidth)
+                                                                        : (selectedButtonIndex == 4 && Food.isNotEmpty)
+                                                                        ? formatText(Food[index]['name'] ?? '--',
+                                                                        FlutterFlowTheme.of(context).displaySmall.override(
+                                                                          fontFamily: 'Outfit',
+                                                                          fontSize: 16.0,
+                                                                        ),
+                                                                        maxTextWidth)
+                                                                        : (selectedButtonIndex == 5 && Hostel.isNotEmpty)
+                                                                        ? formatText(Hostel[index]['name'] ?? '--',
+                                                                        FlutterFlowTheme.of(context).displaySmall.override(
+                                                                          fontFamily: 'Outfit',
+                                                                          fontSize: 16.0,
+                                                                        ),
+                                                                        maxTextWidth)
+                                                                        : (selectedButtonIndex == 6 && Festival.isNotEmpty)
+                                                                        ? formatText(Festival[index]['name'] ?? '--',
+                                                                        FlutterFlowTheme.of(context).displaySmall.override(
+                                                                          fontFamily: 'Outfit',
+                                                                          fontSize: 16.0,
+                                                                        ),
+                                                                        maxTextWidth)
+                                                                        : '--', // 기본 값 설정
+                                                                    style: FlutterFlowTheme.of(context).displaySmall.override(
+                                                                      fontFamily: 'Outfit',
+                                                                      color: Colors.black,
+                                                                      fontSize: 16.0,
+                                                                      letterSpacing: 0.0,
+                                                                      fontWeight: FontWeight.w500,
                                                                     ),
+                                                                    softWrap: true,
+                                                                    maxLines: 2,
+                                                                    overflow: TextOverflow.visible,
+                                                                  ),
+                                                                  // 장소 설명 버튼과 평점/별 이미지 Row
+                                                                  Padding(
+                                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        // 장소 설명 버튼
+                                                                        ElevatedButton(
+                                                                          onPressed: () {
+                                                                            if (_model.tabBarController != null) {
+                                                                              setState(() {
+                                                                                _model.updatePageControllerWithNewIndex(index);
+                                                                              });
 
-                                                                    SizedBox(width: 10.0), // 버튼과 별 이미지 사이 간격
-
-                                                                    // Flexible을 사용하여 공간 조정
-                                                                    Flexible(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0), // 위로 이동
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center, // 가로 중앙 정렬
-                                                                          crossAxisAlignment: CrossAxisAlignment.center, // 세로 중앙 정렬
-                                                                          children: [
-                                                                            // 별 이미지
-                                                                            Image.asset(
-                                                                              'assets/images/star-icon.png', // 별 이미지 경로
-                                                                              width: 25.0,
-                                                                              height: 25.0,
+                                                                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                                _model.tabBarController!.animateTo(1);
+                                                                              });
+                                                                            }
+                                                                          },
+                                                                          child: Text(
+                                                                            '장소 설명',
+                                                                            style: TextStyle(
+                                                                              fontFamily: 'Readex Pro',
+                                                                              fontSize: 12.0,
+                                                                              letterSpacing: 0.0,
+                                                                              color: Colors.white,
                                                                             ),
-                                                                            SizedBox(width: 4.0),
-                                                                            // 평점 텍스트
-                                                                            Text(
-                                                                              (selectedButtonIndex == 1 && markerPositions.isNotEmpty)
-                                                                                  ? '${double.parse(markerPositions[index]['score'].toString()).toStringAsFixed(2)}'
-                                                                                  : (selectedButtonIndex == 2 && Places.isNotEmpty)
-                                                                                  ? '${double.parse(Places[index]['score'].toString()).toStringAsFixed(2)}'
-                                                                                  : (selectedButtonIndex == 3 && Activity.isNotEmpty)
-                                                                                  ? '${double.parse(Activity[index]['score'].toString()).toStringAsFixed(2)}'
-                                                                                  : (selectedButtonIndex == 4 && Food.isNotEmpty)
-                                                                                  ? '${double.parse(Food[index]['score'].toString()).toStringAsFixed(2)}'
-                                                                                  : (selectedButtonIndex == 5 && Hostel.isNotEmpty)
-                                                                                  ? '${double.parse(Hostel[index]['score'].toString()).toStringAsFixed(2)}'
-                                                                                  : '--',
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                fontSize: 18.0,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              overflow: TextOverflow.ellipsis, // 텍스트가 길 경우 말줄임
+                                                                          ),
+                                                                          style: ElevatedButton.styleFrom(
+                                                                            backgroundColor: Colors.lightBlue,
+                                                                            shape: RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(20.0),
                                                                             ),
-                                                                          ],
+                                                                          ),
                                                                         ),
-                                                                      ),
+                                                                        SizedBox(width: 20.0),
+                                                                        // 별 이미지 및 평점 텍스트
+                                                                        Flexible(
+                                                                          child: Padding(
+                                                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 30.0),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                                              children: [
+                                                                                if (selectedButtonIndex != 6) ...[
+                                                                                  Image.asset(
+                                                                                    'assets/images/star-icon.png',
+                                                                                    width: 25.0,
+                                                                                    height: 25.0,
+                                                                                  ),
+                                                                                  SizedBox(width: 4.0),
+                                                                                  Text(
+                                                                                    (selectedButtonIndex == 1 && markerPositions.isNotEmpty)
+                                                                                        ? '${double.parse(markerPositions[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                        : (selectedButtonIndex == 2 && Places.isNotEmpty)
+                                                                                        ? '${double.parse(Places[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                        : (selectedButtonIndex == 3 && Activity.isNotEmpty)
+                                                                                        ? '${double.parse(Activity[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                        : (selectedButtonIndex == 4 && Food.isNotEmpty)
+                                                                                        ? '${double.parse(Food[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                        : (selectedButtonIndex == 5 && Hostel.isNotEmpty)
+                                                                                        ? '${double.parse(Hostel[index]['score'].toString()).toStringAsFixed(2)}'
+                                                                                        : '--',
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'Readex Pro',
+                                                                                      fontSize: 18.0,
+                                                                                      color: Colors.black,
+                                                                                    ),
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                  ),
+                                                                                ],
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                  ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          // 오른쪽 이미지 버튼
+                                                          Column(
+                                                            children: [
+                                                              // 마커 이미지
+                                                              Align(
+                                                                alignment: Alignment.topCenter,
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2);
+                                                                    }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      (selectedButtonIndex == 1)
+                                                                          ? markerPositions[index]['lat']
+                                                                          : (selectedButtonIndex == 2)
+                                                                          ? Places[index]['lat']
+                                                                          : (selectedButtonIndex == 3)
+                                                                          ? Activity[index]['lat']
+                                                                          : (selectedButtonIndex == 4)
+                                                                          ? Food[index]['lat']
+                                                                          : (selectedButtonIndex == 5)
+                                                                          ? Hostel[index]['lat']
+                                                                          : Festival[index]['lat'],
+                                                                      (selectedButtonIndex == 1)
+                                                                          ? markerPositions[index]['lng']
+                                                                          : (selectedButtonIndex == 2)
+                                                                          ? Places[index]['lng']
+                                                                          : (selectedButtonIndex == 3)
+                                                                          ? Activity[index]['lng']
+                                                                          : (selectedButtonIndex == 4)
+                                                                          ? Food[index]['lng']
+                                                                          : (selectedButtonIndex == 5)
+                                                                          ? Hostel[index]['lng']
+                                                                          : Festival[index]['lng'],
+                                                                      3,
+                                                                    );
+                                                                  },
+                                                                  child: Image.asset(
+                                                                    'assets/images/number-${index + 1}.png',
+                                                                    width: 64.0,
+                                                                    height: 64.0,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(height: 3.0),
+                                                              SizedBox(
+                                                                width: 50.0,
+                                                                height: 30.0,
+                                                                child: ElevatedButton(
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: Colors.white,
+                                                                    foregroundColor: Colors.red,
+                                                                    padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 3.0),
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(20.0),
+                                                                    ),
+                                                                  ),
+                                                                  onPressed: () {
+                                                                    if (_model.tabBarController != null) {
+                                                                      _model.tabBarController!.animateTo(2);
+                                                                    }
+                                                                    Provider.of<MapModel>(context, listen: false).updateCoordinates(
+                                                                      (selectedButtonIndex == 1)
+                                                                          ? markerPositions[index]['lat']
+                                                                          : (selectedButtonIndex == 2)
+                                                                          ? Places[index]['lat']
+                                                                          : (selectedButtonIndex == 3)
+                                                                          ? Activity[index]['lat']
+                                                                          : (selectedButtonIndex == 4)
+                                                                          ? Food[index]['lat']
+                                                                          : (selectedButtonIndex == 5)
+                                                                          ? Hostel[index]['lat']
+                                                                          : Festival[index]['lat'],
+                                                                      (selectedButtonIndex == 1)
+                                                                          ? markerPositions[index]['lng']
+                                                                          : (selectedButtonIndex == 2)
+                                                                          ? Places[index]['lng']
+                                                                          : (selectedButtonIndex == 3)
+                                                                          ? Activity[index]['lng']
+                                                                          : (selectedButtonIndex == 4)
+                                                                          ? Food[index]['lng']
+                                                                          : (selectedButtonIndex == 5)
+                                                                          ? Hostel[index]['lng']
+                                                                          : Festival[index]['lng'],
+                                                                      3,
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    '지도 보기',
+                                                                    style: TextStyle(fontSize: 10.0),
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
                                                           ),
-                                                        ),
+                                                        ],
                                                       ),
-
-                                                      // 오른쪽 이미지 버튼
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            if (_model.tabBarController != null) {
-                                                              _model.tabBarController!.animateTo(2);
-                                                            }
-                                                            Provider.of<MapModel>(context, listen: false).updateCoordinates(
-                                                              (selectedButtonIndex == 1)
-                                                                  ? markerPositions[index]['lat']
-                                                                  : (selectedButtonIndex == 2)
-                                                                  ? Places[index]['lat']
-                                                                  : (selectedButtonIndex == 3)
-                                                                  ? Activity[index]['lat']
-                                                                  : (selectedButtonIndex == 4)
-                                                                  ? Food[index]['lat']
-                                                                  : Hostel[index]['lat'],
-                                                              (selectedButtonIndex == 1)
-                                                                  ? markerPositions[index]['lng']
-                                                                  : (selectedButtonIndex == 2)
-                                                                  ? Places[index]['lng']
-                                                                  : (selectedButtonIndex == 3)
-                                                                  ? Activity[index]['lng']
-                                                                  : (selectedButtonIndex == 4)
-                                                                  ? Food[index]['lng']
-                                                                  : Hostel[index]['lng'],
-                                                              3,
-                                                            );
-                                                          },
-                                                          child: Image.asset(
-                                                            'assets/images/number-${index + 1}.png',
-                                                            width: 64.0,
-                                                            height: 64.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
-
                                 ],
                               ),
                               // ========================================================인덱스 끝========================================================
@@ -1022,117 +1155,125 @@ class _LocationexplainCopyWidgetState extends State<LocationexplainCopyWidget>
                                 children: [
                                   Expanded(
                                     child: GestureDetector(
-                                        onVerticalDragUpdate: (details) {
-                                          if (details.delta.dy > 0 && _model.currentIndex == 0)
-                                          {
-                                            // 첫 번째 카드에서 아래로 스와이프 막기
-                                            // print("첫 번째 카드에서 더 이상 아래로 스와이프할 수 없습니다.");
+                                      onVerticalDragUpdate: (details) {
+                                        if (details.delta.dy > 0 && _model.currentIndex == 0) {
+                                          // 첫 번째 카드에서 아래로 스와이프 막기
+                                          // print("첫 번째 카드에서 더 이상 아래로 스와이프할 수 없습니다.");
+                                        } else if (details.delta.dy < 0 && _model.currentIndex == markerPositions.length - 1) {
+                                          // 마지막 카드에서 위로 스와이프 막기
+                                          // print("마지막 카드에서 더 이상 위로 스와이프할 수 없습니다.");
+                                        } else {
+                                          // 일반적인 스와이프 처리
+                                          if (details.delta.dy > 0) {
+                                            // 아래로 스와이프
+                                            _model.pageController.previousPage(
+                                              duration: Duration(milliseconds: 300),
+                                              curve: Curves.easeIn,
+                                            );
+                                          } else if (details.delta.dy < 0) {
+                                            // 위로 스와이프
+                                            _model.pageController.nextPage(
+                                              duration: Duration(milliseconds: 300),
+                                              curve: Curves.easeIn,
+                                            );
                                           }
-                                          else if (details.delta.dy < 0 && _model.currentIndex == markerPositions.length - 1)
-                                          {
-                                            // 마지막 카드에서 위로 스와이프 막기
-                                            // print("마지막 카드에서 더 이상 위로 스와이프할 수 없습니다.");
-                                          } else {
-                                            // 일반적인 스와이프 처리
-                                            if (details.delta.dy > 0) {
-                                              // 아래로 스와이프
-                                              _model.pageController.previousPage(
-                                                duration: Duration(milliseconds: 300),
-                                                curve: Curves.easeIn,
-                                              );
-                                            } else if (details.delta.dy < 0) {
-                                              // 위로 스와이프
-                                              _model.pageController.nextPage(
-                                                duration: Duration(milliseconds: 300),
-                                                curve: Curves.easeIn,
-                                              );
-                                            }
-                                          }
+                                        }
+                                      },
+                                      child: PageView(
+                                        controller: _model.pageController,
+                                        scrollDirection: Axis.vertical, // 스크롤 방향을 수직으로 변경
+                                        onPageChanged: (index) {
+                                          setState(() {
+                                            _model.updatePageControllerWithNewIndex(index);
+                                            // _model.updateScrollControllerWithNewIndex(index);
+                                            // print("index 값:${index}"); // 스크롤 컨트롤러도 업데이트
+                                          });
                                         },
-                                        child: PageView(
-                                          controller: _model.pageController,
-                                          scrollDirection: Axis.vertical, // 스크롤 방향을 수직으로 변경
-                                          onPageChanged: (index) {
-                                            setState(()
-                                            {
-                                              _model.updatePageControllerWithNewIndex(index);
-                                              // _model.updateScrollControllerWithNewIndex(index);
-                                              // print("index 값:${index}");// 스크롤 컨트롤러도 업데이트
-                                            });
-                                          },
-                                          // PageView.builder에서 각 카드 함수 호출
-                                            children: List.generate(
-                                              (selectedButtonIndex == 1)
-                                                  ? markerPositions.length
-                                                  : (selectedButtonIndex == 2)
-                                                  ? Places.length
-                                                  : (selectedButtonIndex == 3)
-                                                  ? Activity.length
-                                                  : (selectedButtonIndex == 4)
-                                                  ? Food.length
-                                                  : Hostel.length,
-                                                  (index) {
-                                                // 선택된 리스트에 따라 데이터를 가져옴
-                                                var currentItem = (selectedButtonIndex == 1)
-                                                    ? markerPositions[index]
-                                                    : (selectedButtonIndex == 2)
-                                                    ? Places[index]
-                                                    : (selectedButtonIndex == 3)
-                                                    ? Activity[index]
-                                                    : (selectedButtonIndex == 4)
-                                                    ? Food[index]
-                                                    : Hostel[index];
+                                        // PageView.builder에서 각 카드 함수 호출
+                                        children: List.generate(
+                                          min(
+                                            (selectedButtonIndex == 1)
+                                                ? markerPositions.length
+                                                : (selectedButtonIndex == 2)
+                                                ? Places.length
+                                                : (selectedButtonIndex == 3)
+                                                ? Activity.length
+                                                : (selectedButtonIndex == 4)
+                                                ? Food.length
+                                                : (selectedButtonIndex == 5)
+                                                ? Hostel.length
+                                                : Festival.length, // 6번째 케이스 추가
+                                            7, // 최대 7개의 항목만 생성
+                                          ),
+                                              (index) {
+                                            // 선택된 리스트에 따라 데이터를 가져옴
+                                            var currentItem = (selectedButtonIndex == 1)
+                                                ? markerPositions[index]
+                                                : (selectedButtonIndex == 2)
+                                                ? Places[index]
+                                                : (selectedButtonIndex == 3)
+                                                ? Activity[index]
+                                                : (selectedButtonIndex == 4)
+                                                ? Food[index]
+                                                : (selectedButtonIndex == 5)
+                                                ? Hostel[index]
+                                                : Festival[index]; // 6번째 케이스 추가
 
-                                                return Column(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Container(
-                                                        child: Builder(
-                                                          builder: (context) {
-                                                            switch (index) {
-                                                              case 0:
-                                                                return buildCard0(context, currentItem);
-                                                              case 1:
-                                                                return buildCard1(context, currentItem);
-                                                              case 2:
-                                                                return buildCard2(context, currentItem);
-                                                              case 3:
-                                                                return buildCard3(context, currentItem);
-                                                              case 4:
-                                                                return buildCard4(context, currentItem);
-                                                              case 5:
-                                                                return buildCard5(context, currentItem);
-                                                              case 6:
-                                                                return buildCard6(context, currentItem);
-                                                              default:
-                                                                throw Exception('Invalid index: $index');
-                                                            }
-                                                          },
-                                                        ),
-                                                      ),
+                                            return Column(
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    child: Builder(
+                                                      builder: (context) {
+                                                        switch (index) {
+                                                          case 0:
+                                                            return buildCard0(context, currentItem, selectedButtonIndex);
+                                                          case 1:
+                                                            return buildCard1(context, currentItem, selectedButtonIndex);
+                                                          case 2:
+                                                            return buildCard2(context, currentItem, selectedButtonIndex);
+                                                          case 3:
+                                                            return buildCard3(context, currentItem, selectedButtonIndex);
+                                                          case 4:
+                                                            return buildCard4(context, currentItem, selectedButtonIndex);
+                                                          case 5:
+                                                            return buildCard5(context, currentItem, selectedButtonIndex);
+                                                          case 6:
+                                                            return buildCard6(context, currentItem, selectedButtonIndex);
+                                                          default:
+                                                            throw Exception('Invalid index: $index');
+                                                        }
+                                                      },
                                                     ),
-                                                    // 각 카드 아래에 경계선 추가
-                                                    if (index !=
-                                                        ((selectedButtonIndex == 1)
-                                                            ? markerPositions.length
-                                                            : (selectedButtonIndex == 2)
-                                                            ? Places.length
-                                                            : (selectedButtonIndex == 3)
-                                                            ? Activity.length
-                                                            : (selectedButtonIndex == 4)
-                                                            ? Food.length
-                                                            : Hostel.length) -
-                                                            1) // 마지막 카드 제외
-                                                      Divider(
-                                                        color: Colors.white, // 선 색상 설정
-                                                        thickness: 3.0, // 선 두께 설정
-                                                        height: 3.0, // 선 높이 설정
-                                                      ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                        )
+                                                  ),
+                                                ),
+                                                // 각 카드 아래에 경계선 추가
+                                                if (index !=
+                                                    min(
+                                                      (selectedButtonIndex == 1)
+                                                          ? markerPositions.length
+                                                          : (selectedButtonIndex == 2)
+                                                          ? Places.length
+                                                          : (selectedButtonIndex == 3)
+                                                          ? Activity.length
+                                                          : (selectedButtonIndex == 4)
+                                                          ? Food.length
+                                                          : (selectedButtonIndex == 5)
+                                                          ? Hostel.length
+                                                          : Festival.length,
+                                                      7,
+                                                    ) -
+                                                        1) // 마지막 카드 제외
+                                                  Divider(
+                                                    color: Colors.white, // 선 색상 설정
+                                                    thickness: 3.0, // 선 두께 설정
+                                                    height: 3.0, // 선 높이 설정
+                                                  ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -1216,10 +1357,14 @@ String getImageUrl(List<Map<String, dynamic>> markerPositions, String? contentId
 }
 
 /// CachedNetworkImage 위젯을 생성하는 함수
-Widget buildImageLoader(List<Map<String, dynamic>> markerPositions, String contentId, int g_districtCode)
-{
-  final defaultImageUrl = subScriptsImages[g_districtCode] ?? 'https://picsum.photos/seed/872/600';
-  final imageUrl = getImageUrl(markerPositions, contentId, defaultImageUrl);
+Widget buildImageLoader(BuildContext context, List<Map<String, dynamic>> markerPositions, String contentId, int g_districtCode, int selectedButtonIndex, int festivalIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context, listen: false);
+  final FestivalImage = markerPositionsModel.results_Festival;
+
+  // selectedButtonIndex가 6이면 FestivalImage의 해당 인덱스 이미지를 사용
+  final imageUrl = selectedButtonIndex == 6
+      ? FestivalImage[festivalIndex]['firstimage']
+      : getImageUrl(markerPositions, contentId, subScriptsImages[g_districtCode] ?? 'https://picsum.photos/seed/872/600');
 
   return CachedNetworkImage(
     imageUrl: imageUrl,
@@ -1313,7 +1458,7 @@ Widget buildThumbnailLoader(BuildContext context, List<Map<String, dynamic>> dat
 {
   final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
 
-  if (!markerPositionsModel.isDataLoaded) {
+  /*if (!markerPositionsModel.isDataLoaded) {
     // 데이터가 로드되지 않았을 때 로딩 스피너 표시
     return Center(
       child: SizedBox(
@@ -1322,7 +1467,7 @@ Widget buildThumbnailLoader(BuildContext context, List<Map<String, dynamic>> dat
         child: CircularProgressIndicator(strokeWidth: 2.0),
       ),
     );
-  }
+  }*/
 
   if (dataList.isNotEmpty && dataList.length > index && dataList[index]['contentid'] != null) {
     return FutureBuilder<String>(
@@ -1359,23 +1504,25 @@ Widget buildThumbnailLoader(BuildContext context, List<Map<String, dynamic>> dat
 // ==========================썸네일 코드===================================
 
 // 각각의 카드 빌더 함수들 정의
-Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition, int selectedButtonIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+  final FestivalImage = markerPositionsModel.results_Festival;
   String overViewText = markerPosition['overview'] ?? "";
 
+  // selectedButtonIndex가 6이면 overViewText를 변경
+  if (selectedButtonIndex == 6) {
+    overViewText = markerPosition['overview'];
+  }
+
   // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
-  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
-      ? "카카오맵 정보 보기"
-      : "더보기";
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요." ? "카카오맵 정보 보기" : "더보기";
 
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0),
-
-        // 제목을 중앙에 배치
+        // 제목
         Align(
           alignment: Alignment.center,
           child: Text(
@@ -1385,40 +1532,40 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
               color: Colors.black,
               letterSpacing: 0.0,
             ),
-            maxLines: 1, // 한 줄로 제한
-            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 10.0), // 간격 조절
+        SizedBox(height: 10.0),
 
-        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
-        Padding(
-          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
-            children: [
-              Image.asset(
-                'assets/images/star-icon.png',  // 별 이미지 경로
-                width: 25.0,
-                height: 25.0,
-              ),
-              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
-              // 평점 텍스트
-              Text(
-                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 18.0,
-                  color: Colors.black,
+        // selectedButtonIndex가 6이 아닌 경우 별 이미지와 평점 표시
+        if (selectedButtonIndex != 6)
+          Padding(
+            padding: const EdgeInsets.only(right: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  'assets/images/star-icon.png',
+                  width: 25.0,
+                  height: 25.0,
                 ),
-                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-              ),
-            ],
+                SizedBox(width: 4.0),
+                Text(
+                  '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 20.0), // 간격 조절
+        SizedBox(height: 20.0),
 
         // 이미지
         Padding(
@@ -1427,45 +1574,57 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              // selectedButtonIndex가 6이면 FestivalImage 사용, 그 외에는 buildImageLoader 사용
+              child: selectedButtonIndex == 6
+                  ? Image.network(
+                FestivalImage[0]['firstimage'], // Festival 데이터 기반의 firstImage1 사용
+                fit: BoxFit.cover,
+              )
+                  : buildImageLoader(
+                context,
+                [markerPosition],
+                markerPosition['contentid'],
+                g_districtCode!,selectedButtonIndex,
+                  0,
+              ),
             ),
           ),
         ),
 
-        SizedBox(height: 50.0),
-
-        // 설명 텍스트 - Flexible로 확장 가능 영역 설정
+        // 설명 텍스트
         Flexible(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
             child: Html(
-              data: """
-                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                  $overViewText
-                </p>
-              """,
+              data: "<p style='font-family: Readex Pro; color: black;'>$overViewText</p>",
               style: {
                 "p": Style(
                   fontFamily: 'Readex Pro',
                   color: Colors.black,
-                  letterSpacing: 0.0,
-                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                  fontSize: FontSize.large,
                 ),
               },
             ),
           ),
         ),
+
         SizedBox(height: 20.0),
 
-        // 더보기 버튼 및 카카오 맵 정보 보기
+        // 더보기 버튼
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              // selectedButtonIndex가 6일 경우 openKakaoMapLookAtCoordinates 호출
+              if (selectedButtonIndex == 6)
+              {
+                openKakaoMapLookAtCoordinates(FestivalImage[0]['lat'], FestivalImage[0]['lng']);
+              } else {
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent, // 연파랑색
+              backgroundColor: Colors.lightBlueAccent,
               padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -1474,7 +1633,7 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
             child: Text(
               buttonText,
               style: TextStyle(
-                color: Colors.white, // 하얀색 텍스트
+                color: Colors.white,
                 fontSize: 16.0,
               ),
             ),
@@ -1486,25 +1645,25 @@ Widget buildCard0(BuildContext context, Map<String, dynamic> markerPosition)
 }
 
 
-
-
-Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition, int selectedButtonIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+  final FestivalImage = markerPositionsModel.results_Festival;
   String overViewText = markerPosition['overview'] ?? "";
 
+  // selectedButtonIndex가 6이면 overViewText를 변경
+  if (selectedButtonIndex == 6) {
+    overViewText = markerPosition['overview'];
+  }
+
   // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
-  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
-      ? "카카오맵 정보 보기"
-      : "더보기";
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요." ? "카카오맵 정보 보기" : "더보기";
 
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0),
-
-        // 제목을 중앙에 배치
+        // 제목
         Align(
           alignment: Alignment.center,
           child: Text(
@@ -1514,40 +1673,40 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
               color: Colors.black,
               letterSpacing: 0.0,
             ),
-            maxLines: 1, // 한 줄로 제한
-            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 10.0), // 간격 조절
+        SizedBox(height: 10.0),
 
-        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
-        Padding(
-          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
-            children: [
-              Image.asset(
-                'assets/images/star-icon.png',  // 별 이미지 경로
-                width: 25.0,
-                height: 25.0,
-              ),
-              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
-              // 평점 텍스트
-              Text(
-                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 18.0,
-                  color: Colors.black,
+        // selectedButtonIndex가 6이 아닌 경우 별 이미지와 평점 표시
+        if (selectedButtonIndex != 6)
+          Padding(
+            padding: const EdgeInsets.only(right: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  'assets/images/star-icon.png',
+                  width: 25.0,
+                  height: 25.0,
                 ),
-                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-              ),
-            ],
+                SizedBox(width: 4.0),
+                Text(
+                  '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 20.0), // 간격 조절
+        SizedBox(height: 20.0),
 
         // 이미지
         Padding(
@@ -1556,45 +1715,56 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              // selectedButtonIndex가 6이면 FestivalImage 사용, 그 외에는 buildImageLoader 사용
+              child: selectedButtonIndex == 6
+                  ? Image.network(
+                FestivalImage[1]['firstimage'], // Festival 데이터 기반의 firstImage1 사용 (buildCard1의 경우 index 1 사용)
+                fit: BoxFit.cover,
+              )
+                  : buildImageLoader(
+                context, [markerPosition],
+                markerPosition['contentid'],
+                g_districtCode!,selectedButtonIndex,
+                1
+              ),
             ),
           ),
         ),
 
-        SizedBox(height: 50.0),
-
-        // 설명 텍스트 - Flexible로 확장 가능 영역 설정
+        // 설명 텍스트
         Flexible(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
             child: Html(
-              data: """
-                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                  $overViewText
-                </p>
-              """,
+              data: "<p style='font-family: Readex Pro; color: black;'>$overViewText</p>",
               style: {
                 "p": Style(
                   fontFamily: 'Readex Pro',
                   color: Colors.black,
-                  letterSpacing: 0.0,
-                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                  fontSize: FontSize.large,
                 ),
               },
             ),
           ),
         ),
+
         SizedBox(height: 20.0),
 
-        // 더보기 버튼 및 카카오 맵 정보 보기
+        // 더보기 버튼
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              // selectedButtonIndex가 6일 경우 openKakaoMapLookAtCoordinates 호출
+              if (selectedButtonIndex == 6)
+              {
+                openKakaoMapLookAtCoordinates(FestivalImage[1]['lat'], FestivalImage[1]['lng']);
+              } else {
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent, // 연파랑색
+              backgroundColor: Colors.lightBlueAccent,
               padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -1603,7 +1773,7 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
             child: Text(
               buttonText,
               style: TextStyle(
-                color: Colors.white, // 하얀색 텍스트
+                color: Colors.white,
                 fontSize: 16.0,
               ),
             ),
@@ -1614,23 +1784,25 @@ Widget buildCard1(BuildContext context, Map<String, dynamic> markerPosition)
   );
 }
 
-Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition, int selectedButtonIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+  final FestivalImage = markerPositionsModel.results_Festival;
   String overViewText = markerPosition['overview'] ?? "";
 
+  // selectedButtonIndex가 6이면 overViewText를 변경
+  if (selectedButtonIndex == 6) {
+    overViewText = markerPosition['overview'];
+  }
+
   // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
-  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
-      ? "카카오맵 정보 보기"
-      : "더보기";
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요." ? "카카오맵 정보 보기" : "더보기";
 
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0),
-
-        // 제목을 중앙에 배치
+        // 제목
         Align(
           alignment: Alignment.center,
           child: Text(
@@ -1640,40 +1812,40 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition)
               color: Colors.black,
               letterSpacing: 0.0,
             ),
-            maxLines: 1, // 한 줄로 제한
-            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 10.0), // 간격 조절
+        SizedBox(height: 10.0),
 
-        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
-        Padding(
-          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
-            children: [
-              Image.asset(
-                'assets/images/star-icon.png',  // 별 이미지 경로
-                width: 25.0,
-                height: 25.0,
-              ),
-              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
-              // 평점 텍스트
-              Text(
-                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 18.0,
-                  color: Colors.black,
+        // selectedButtonIndex가 6이 아닌 경우 별 이미지와 평점 표시
+        if (selectedButtonIndex != 6)
+          Padding(
+            padding: const EdgeInsets.only(right: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  'assets/images/star-icon.png',
+                  width: 25.0,
+                  height: 25.0,
                 ),
-                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-              ),
-            ],
+                SizedBox(width: 4.0),
+                Text(
+                  '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 20.0), // 간격 조절
+        SizedBox(height: 20.0),
 
         // 이미지
         Padding(
@@ -1682,45 +1854,56 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition)
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              // selectedButtonIndex가 6이면 FestivalImage 사용, 그 외에는 buildImageLoader 사용
+              child: selectedButtonIndex == 6
+                  ? Image.network(
+                FestivalImage[2]['firstimage'], // Festival 데이터 기반의 firstImage1 사용 (buildCard2의 경우 index 2 사용)
+                fit: BoxFit.cover,
+              )
+                  : buildImageLoader(
+                context, [markerPosition],
+                markerPosition['contentid'],
+                g_districtCode!, selectedButtonIndex,
+                2
+              ),
             ),
           ),
         ),
 
-        SizedBox(height: 50.0),
-
-        // 설명 텍스트 - Flexible로 확장 가능 영역 설정
+        // 설명 텍스트
         Flexible(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
             child: Html(
-              data: """
-                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                  $overViewText
-                </p>
-              """,
+              data: "<p style='font-family: Readex Pro; color: black;'>$overViewText</p>",
               style: {
                 "p": Style(
                   fontFamily: 'Readex Pro',
                   color: Colors.black,
-                  letterSpacing: 0.0,
-                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                  fontSize: FontSize.large,
                 ),
               },
             ),
           ),
         ),
+
         SizedBox(height: 20.0),
 
-        // 더보기 버튼 및 카카오 맵 정보 보기
+        // 더보기 버튼
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              // selectedButtonIndex가 6일 경우 openKakaoMapLookAtCoordinates 호출
+              if (selectedButtonIndex == 6)
+              {
+                openKakaoMapLookAtCoordinates(FestivalImage[2]['lat'], FestivalImage[2]['lng']);
+              } else {
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent, // 연파랑색
+              backgroundColor: Colors.lightBlueAccent,
               padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -1729,7 +1912,7 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition)
             child: Text(
               buttonText,
               style: TextStyle(
-                color: Colors.white, // 하얀색 텍스트
+                color: Colors.white,
                 fontSize: 16.0,
               ),
             ),
@@ -1740,23 +1923,25 @@ Widget buildCard2(BuildContext context, Map<String, dynamic> markerPosition)
   );
 }
 
-Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition, int selectedButtonIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+  final FestivalImage = markerPositionsModel.results_Festival;
   String overViewText = markerPosition['overview'] ?? "";
 
+  // selectedButtonIndex가 6이면 overViewText를 변경
+  if (selectedButtonIndex == 6) {
+    overViewText = markerPosition['overview'];
+  }
+
   // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
-  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
-      ? "카카오맵 정보 보기"
-      : "더보기";
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요." ? "카카오맵 정보 보기" : "더보기";
 
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0),
-
-        // 제목을 중앙에 배치
+        // 제목
         Align(
           alignment: Alignment.center,
           child: Text(
@@ -1766,40 +1951,40 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition)
               color: Colors.black,
               letterSpacing: 0.0,
             ),
-            maxLines: 1, // 한 줄로 제한
-            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 10.0), // 간격 조절
+        SizedBox(height: 10.0),
 
-        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
-        Padding(
-          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
-            children: [
-              Image.asset(
-                'assets/images/star-icon.png',  // 별 이미지 경로
-                width: 25.0,
-                height: 25.0,
-              ),
-              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
-              // 평점 텍스트
-              Text(
-                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 18.0,
-                  color: Colors.black,
+        // selectedButtonIndex가 6이 아닌 경우 별 이미지와 평점 표시
+        if (selectedButtonIndex != 6)
+          Padding(
+            padding: const EdgeInsets.only(right: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  'assets/images/star-icon.png',
+                  width: 25.0,
+                  height: 25.0,
                 ),
-                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-              ),
-            ],
+                SizedBox(width: 4.0),
+                Text(
+                  '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 20.0), // 간격 조절
+        SizedBox(height: 20.0),
 
         // 이미지
         Padding(
@@ -1808,45 +1993,55 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition)
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              // selectedButtonIndex가 6이면 FestivalImage 사용, 그 외에는 buildImageLoader 사용
+              child: selectedButtonIndex == 6
+                  ? Image.network(
+                FestivalImage[3]['firstimage'], // Festival 데이터 기반의 firstImage1 사용 (buildCard3의 경우 index 3 사용)
+                fit: BoxFit.cover,
+              )
+                  : buildImageLoader(
+                context, [markerPosition],
+                markerPosition['contentid'],
+                g_districtCode!, selectedButtonIndex, 2
+              ),
             ),
           ),
         ),
 
-        SizedBox(height: 50.0),
-
-        // 설명 텍스트 - Flexible로 확장 가능 영역 설정
+        // 설명 텍스트
         Flexible(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
             child: Html(
-              data: """
-                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                  $overViewText
-                </p>
-              """,
+              data: "<p style='font-family: Readex Pro; color: black;'>$overViewText</p>",
               style: {
                 "p": Style(
                   fontFamily: 'Readex Pro',
                   color: Colors.black,
-                  letterSpacing: 0.0,
-                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                  fontSize: FontSize.large,
                 ),
               },
             ),
           ),
         ),
+
         SizedBox(height: 20.0),
 
-        // 더보기 버튼 및 카카오 맵 정보 보기
+        // 더보기 버튼
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              // selectedButtonIndex가 6일 경우 openKakaoMapLookAtCoordinates 호출
+              if (selectedButtonIndex == 6)
+              {
+                openKakaoMapLookAtCoordinates(FestivalImage[3]['lat'], FestivalImage[3]['lng']);
+              } else {
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent, // 연파랑색
+              backgroundColor: Colors.lightBlueAccent,
               padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -1855,7 +2050,7 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition)
             child: Text(
               buttonText,
               style: TextStyle(
-                color: Colors.white, // 하얀색 텍스트
+                color: Colors.white,
                 fontSize: 16.0,
               ),
             ),
@@ -1866,23 +2061,25 @@ Widget buildCard3(BuildContext context, Map<String, dynamic> markerPosition)
   );
 }
 
-Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition, int selectedButtonIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+  final FestivalImage = markerPositionsModel.results_Festival;
   String overViewText = markerPosition['overview'] ?? "";
 
+  // selectedButtonIndex가 6이면 overViewText를 변경
+  if (selectedButtonIndex == 6) {
+    overViewText = markerPosition['overview'];
+  }
+
   // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
-  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
-      ? "카카오맵 정보 보기"
-      : "더보기";
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요." ? "카카오맵 정보 보기" : "더보기";
 
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0),
-
-        // 제목을 중앙에 배치
+        // 제목
         Align(
           alignment: Alignment.center,
           child: Text(
@@ -1892,40 +2089,40 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition)
               color: Colors.black,
               letterSpacing: 0.0,
             ),
-            maxLines: 1, // 한 줄로 제한
-            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 10.0), // 간격 조절
+        SizedBox(height: 10.0),
 
-        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
-        Padding(
-          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
-            children: [
-              Image.asset(
-                'assets/images/star-icon.png',  // 별 이미지 경로
-                width: 25.0,
-                height: 25.0,
-              ),
-              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
-              // 평점 텍스트
-              Text(
-                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 18.0,
-                  color: Colors.black,
+        // selectedButtonIndex가 6이 아닌 경우 별 이미지와 평점 표시
+        if (selectedButtonIndex != 6)
+          Padding(
+            padding: const EdgeInsets.only(right: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  'assets/images/star-icon.png',
+                  width: 25.0,
+                  height: 25.0,
                 ),
-                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-              ),
-            ],
+                SizedBox(width: 4.0),
+                Text(
+                  '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 20.0), // 간격 조절
+        SizedBox(height: 20.0),
 
         // 이미지
         Padding(
@@ -1934,45 +2131,56 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition)
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              // selectedButtonIndex가 6이면 FestivalImage 사용, 그 외에는 buildImageLoader 사용
+              child: selectedButtonIndex == 6
+                  ? Image.network(
+                FestivalImage[4]['firstimage'], // Festival 데이터 기반의 firstImage 사용 (buildCard4의 경우 index 4 사용)
+                fit: BoxFit.cover,
+              )
+                  : buildImageLoader(
+                context,
+                [markerPosition],
+                markerPosition['contentid'],
+                g_districtCode!, selectedButtonIndex, 3,
+              ),
             ),
           ),
         ),
 
-        SizedBox(height: 50.0),
-
-        // 설명 텍스트 - Flexible로 확장 가능 영역 설정
+        // 설명 텍스트
         Flexible(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
             child: Html(
-              data: """
-                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                  $overViewText
-                </p>
-              """,
+              data: "<p style='font-family: Readex Pro; color: black;'>$overViewText</p>",
               style: {
                 "p": Style(
                   fontFamily: 'Readex Pro',
                   color: Colors.black,
-                  letterSpacing: 0.0,
-                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                  fontSize: FontSize.large,
                 ),
               },
             ),
           ),
         ),
+
         SizedBox(height: 20.0),
 
-        // 더보기 버튼 및 카카오 맵 정보 보기
+        // 더보기 버튼
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              // selectedButtonIndex가 6일 경우 openKakaoMapLookAtCoordinates 호출
+              if (selectedButtonIndex == 6)
+              {
+                openKakaoMapLookAtCoordinates(FestivalImage[4]['lat'], FestivalImage[4]['lng']);
+              } else {
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent, // 연파랑색
+              backgroundColor: Colors.lightBlueAccent,
               padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -1981,7 +2189,7 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition)
             child: Text(
               buttonText,
               style: TextStyle(
-                color: Colors.white, // 하얀색 텍스트
+                color: Colors.white,
                 fontSize: 16.0,
               ),
             ),
@@ -1992,23 +2200,25 @@ Widget buildCard4(BuildContext context, Map<String, dynamic> markerPosition)
   );
 }
 
-Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition, int selectedButtonIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+  final FestivalImage = markerPositionsModel.results_Festival;
   String overViewText = markerPosition['overview'] ?? "";
 
+  // selectedButtonIndex가 6이면 overViewText를 변경
+  if (selectedButtonIndex == 6) {
+    overViewText = markerPosition['overview'];
+  }
+
   // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
-  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
-      ? "카카오맵 정보 보기"
-      : "더보기";
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요." ? "카카오맵 정보 보기" : "더보기";
 
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0),
-
-        // 제목을 중앙에 배치
+        // 제목
         Align(
           alignment: Alignment.center,
           child: Text(
@@ -2018,40 +2228,40 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition)
               color: Colors.black,
               letterSpacing: 0.0,
             ),
-            maxLines: 1, // 한 줄로 제한
-            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 10.0), // 간격 조절
+        SizedBox(height: 10.0),
 
-        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
-        Padding(
-          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
-            children: [
-              Image.asset(
-                'assets/images/star-icon.png',  // 별 이미지 경로
-                width: 25.0,
-                height: 25.0,
-              ),
-              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
-              // 평점 텍스트
-              Text(
-                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 18.0,
-                  color: Colors.black,
+        // selectedButtonIndex가 6이 아닌 경우 별 이미지와 평점 표시
+        if (selectedButtonIndex != 6)
+          Padding(
+            padding: const EdgeInsets.only(right: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  'assets/images/star-icon.png',
+                  width: 25.0,
+                  height: 25.0,
                 ),
-                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-              ),
-            ],
+                SizedBox(width: 4.0),
+                Text(
+                  '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 20.0), // 간격 조절
+        SizedBox(height: 20.0),
 
         // 이미지
         Padding(
@@ -2060,45 +2270,57 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition)
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              // selectedButtonIndex가 6이면 FestivalImage 사용, 그 외에는 buildImageLoader 사용
+              child: selectedButtonIndex == 6
+                  ? Image.network(
+                FestivalImage[5]['firstimage'], // Festival 데이터 기반의 firstImage 사용 (buildCard5의 경우 index 5 사용)
+                fit: BoxFit.cover,
+              )
+                  : buildImageLoader(
+                context,
+                [markerPosition],
+                markerPosition['contentid'],
+                g_districtCode!, selectedButtonIndex,
+                  4,
+              ),
             ),
           ),
         ),
 
-        SizedBox(height: 50.0),
-
-        // 설명 텍스트 - Flexible로 확장 가능 영역 설정
+        // 설명 텍스트
         Flexible(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
             child: Html(
-              data: """
-                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                  $overViewText
-                </p>
-              """,
+              data: "<p style='font-family: Readex Pro; color: black;'>$overViewText</p>",
               style: {
                 "p": Style(
                   fontFamily: 'Readex Pro',
                   color: Colors.black,
-                  letterSpacing: 0.0,
-                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                  fontSize: FontSize.large,
                 ),
               },
             ),
           ),
         ),
+
         SizedBox(height: 20.0),
 
-        // 더보기 버튼 및 카카오 맵 정보 보기
+        // 더보기 버튼
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              // selectedButtonIndex가 6일 경우 openKakaoMapLookAtCoordinates 호출
+              if (selectedButtonIndex == 6)
+              {
+                openKakaoMapLookAtCoordinates(FestivalImage[5]['lat'], FestivalImage[5]['lng']);
+              } else {
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent, // 연파랑색
+              backgroundColor: Colors.lightBlueAccent,
               padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -2107,7 +2329,7 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition)
             child: Text(
               buttonText,
               style: TextStyle(
-                color: Colors.white, // 하얀색 텍스트
+                color: Colors.white,
                 fontSize: 16.0,
               ),
             ),
@@ -2118,23 +2340,25 @@ Widget buildCard5(BuildContext context, Map<String, dynamic> markerPosition)
   );
 }
 
-Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition)
-{
+Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition, int selectedButtonIndex) {
+  final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
+  final FestivalImage = markerPositionsModel.results_Festival;
   String overViewText = markerPosition['overview'] ?? "";
 
+  // selectedButtonIndex가 6이면 overViewText를 변경
+  if (selectedButtonIndex == 6) {
+    overViewText = markerPosition['overview'];
+  }
+
   // overViewText의 String 내용을 보고, 버튼 텍스트 변경(삼항 연산자)
-  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요."
-      ? "카카오맵 정보 보기"
-      : "더보기";
+  String buttonText = overViewText == "아직 해당 관광지에 대한 정보가 없어요." ? "카카오맵 정보 보기" : "더보기";
 
   return Padding(
     padding: const EdgeInsets.all(12.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0),
-
-        // 제목을 중앙에 배치
+        // 제목
         Align(
           alignment: Alignment.center,
           child: Text(
@@ -2144,40 +2368,40 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition)
               color: Colors.black,
               letterSpacing: 0.0,
             ),
-            maxLines: 1, // 한 줄로 제한
-            overflow: TextOverflow.ellipsis, // 텍스트가 넘치면 '...'으로 표시
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 10.0), // 간격 조절
+        SizedBox(height: 10.0),
 
-        // 별 이미지와 평점 텍스트를 오른쪽에 배치하되, 살짝 왼쪽으로 밀기 위해 패딩 적용
-        Padding(
-          padding: const EdgeInsets.only(right: 35.0, bottom: 0.0), // 오른쪽에서 16픽셀만큼 떨어뜨림
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,  // 오른쪽 정렬
-            children: [
-              Image.asset(
-                'assets/images/star-icon.png',  // 별 이미지 경로
-                width: 25.0,
-                height: 25.0,
-              ),
-              SizedBox(width: 4.0),  // 이미지와 텍스트 사이 간격
-              // 평점 텍스트
-              Text(
-                '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',  // 평점 출력
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 18.0,
-                  color: Colors.black,
+        // selectedButtonIndex가 6이 아닌 경우 별 이미지와 평점 표시
+        if (selectedButtonIndex != 6)
+          Padding(
+            padding: const EdgeInsets.only(right: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  'assets/images/star-icon.png',
+                  width: 25.0,
+                  height: 25.0,
                 ),
-                overflow: TextOverflow.ellipsis,  // 텍스트가 길 경우 말줄임
-              ),
-            ],
+                SizedBox(width: 4.0),
+                Text(
+                  '${double.parse(markerPosition['score'].toString()).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-        ),
 
-        SizedBox(height: 20.0), // 간격 조절
+        SizedBox(height: 20.0),
 
         // 이미지
         Padding(
@@ -2186,45 +2410,56 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition)
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: buildImageLoader([markerPosition], markerPosition['contentid'], g_districtCode!),
+              // selectedButtonIndex가 6이면 FestivalImage 사용, 그 외에는 buildImageLoader 사용
+              child: selectedButtonIndex == 6
+                  ? Image.network(
+                FestivalImage[6]['firstimage'], // Festival 데이터 기반의 firstImage 사용 (buildCard6의 경우 index 6 사용)
+                fit: BoxFit.cover,
+              )
+                  : buildImageLoader(
+                context,
+                [markerPosition],
+                markerPosition['contentid'],
+                g_districtCode!, selectedButtonIndex, 6,
+              ),
             ),
           ),
         ),
 
-        SizedBox(height: 50.0),
-
-        // 설명 텍스트 - Flexible로 확장 가능 영역 설정
+        // 설명 텍스트
         Flexible(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
             child: Html(
-              data: """
-                <p style="font-family: 'Readex Pro', sans-serif; color: white; letter-spacing: 0px;">
-                  $overViewText
-                </p>
-              """,
+              data: "<p style='font-family: Readex Pro; color: black;'>$overViewText</p>",
               style: {
                 "p": Style(
                   fontFamily: 'Readex Pro',
                   color: Colors.black,
-                  letterSpacing: 0.0,
-                  fontSize: FontSize.large, // labelLarge에 맞는 크기로 설정
+                  fontSize: FontSize.large,
                 ),
               },
             ),
           ),
         ),
+
         SizedBox(height: 20.0),
 
-        // 더보기 버튼 및 카카오 맵 정보 보기
+        // 더보기 버튼
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              // selectedButtonIndex가 6일 경우 openKakaoMapLookAtCoordinates 호출
+              if (selectedButtonIndex == 6)
+              {
+                openKakaoMapLookAtCoordinates(FestivalImage[6]['lat'], FestivalImage[6]['lng']);
+              } else {
+                openKakaoMapByLatLng(markerPosition['name'], markerPosition['lat'], markerPosition['lng']);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent, // 연파랑색
+              backgroundColor: Colors.lightBlueAccent,
               padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -2233,7 +2468,7 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition)
             child: Text(
               buttonText,
               style: TextStyle(
-                color: Colors.white, // 하얀색 텍스트
+                color: Colors.white,
                 fontSize: 16.0,
               ),
             ),
@@ -2243,9 +2478,3 @@ Widget buildCard6(BuildContext context, Map<String, dynamic> markerPosition)
     ),
   );
 }
-
-
-
-
-
-

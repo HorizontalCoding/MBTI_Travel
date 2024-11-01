@@ -152,62 +152,57 @@ class KakaoMapView extends StatelessWidget {
     final markerPositionsModel = Provider.of<MarkerPositionsModel>(context);
 
     Set<JavascriptChannel>? channels = {};
-    if (OpenKakaoMap != false)
-    {
+    if (OpenKakaoMap != false) {
       channels.add(JavascriptChannel(
-          name: 'OpenKakaoMap', onMessageReceived: (JavascriptMessage message) async
-          {
-            List<Map<String, dynamic>> markerPositions = markerPositionsModel.markerPositions;
-            if (message.message == 'OpenKakaoMapApp001')
-            {
-              await openKakaoMap(markerPositions, 1);
-            }
+        name: 'OpenKakaoMap',
+        onMessageReceived: (JavascriptMessage message) async {
+          List<Map<String, dynamic>> markerPositions = markerPositionsModel.markerPositions;
+          List<Map<String, dynamic>> Place = markerPositionsModel.results_Places;
+          List<Map<String, dynamic>> Activity = markerPositionsModel.results_Activity;
+          List<Map<String, dynamic>> Food = markerPositionsModel.results_Food;
+          List<Map<String, dynamic>> Hostel = markerPositionsModel.results_Hostel;
+          List<Map<String, dynamic>> Festival = markerPositionsModel.results_Festival;
 
-            if (message.message == 'OpenKakaoMapApp002')
-            {
-              await openKakaoMap(markerPositions, 2);
-            }
+          // message.message에 따라 targetId를 결정
+          int targetId = int.parse(message.message.replaceAll(RegExp(r'[^0-9]'), ''));
 
-            if (message.message == 'OpenKakaoMapApp003')
-            {
-              await openKakaoMap(markerPositions, 3);
-            }
+          // selectedButtonIndex에 따라 리스트 교체
+          List<Map<String, dynamic>> targetList;
+          switch (selectedButtonIndex) {
+            case 1:
+              targetList = markerPositions; // 1번은 markerPositions
+              break;
+            case 2:
+              targetList = Place; // 2번은 Place
+              break;
+            case 3:
+              targetList = Activity; // 3번은 Activity
+              break;
+            case 4:
+              targetList = Food; // 4번은 Food
+              break;
+            case 5:
+              targetList = Hostel; // 5번은 Hostel
+              break;
+            case 6:
+              targetList = Festival; // 6번은 Festival
+              break;
+            default:
+              targetList = markerPositions; // 기본값은 markerPositions
+          }
 
-            if (message.message == 'OpenKakaoMapApp004')
-            {
-              await openKakaoMap(markerPositions, 4);
-            }
-
-            if (message.message == 'OpenKakaoMapApp005')
-            {
-              await openKakaoMap(markerPositions, 5);
-            }
-
-            if (message.message == 'OpenKakaoMapApp006')
-            {
-              await openKakaoMap(markerPositions, 6);
-            }
-
-            if (message.message == 'OpenKakaoMapApp007')
-            {
-              await openKakaoMap(markerPositions, 7);
-            }
-
-            if (message.message == 'OpenKakaoMapApp008')
-            {
-              await openKakaoMap(markerPositions, 8);
-            }
-
-            if (message.message == 'OpenKakaoMapApp009')
-            {
-              await openKakaoMap(markerPositions, 9);
-            }
-
-            if (message.message == 'OpenKakaoMapApp010')
-            {
-              await openKakaoMap(markerPositions, 10);
+          // selectedButtonIndex가 6인 경우에는 openKakaoMapLookAtCoordinates 사용
+          if (selectedButtonIndex == 6 && targetId - 1 < Festival.length) {
+            await openKakaoMapLookAtCoordinates(Festival[targetId - 1]['lat'], Festival[targetId - 1]['lng']);
+          } else {
+            // 그 외의 경우에는 openKakaoMap 호출
+            if (targetId - 1 < targetList.length) {
+              await openKakaoMap(targetList, targetId);
+            } else {
+              print('유효하지 않은 targetId: $targetId');
             }
           }
+        },
       ));
     }
 
