@@ -21,5 +21,6 @@
     <td>20190800</td>
   </tr>
 </table>
+
 # MBTI TRAVEL 앱 기능구성도
 ![MBTITRAVEL_기능구성도](https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Git_Images/Function_Flow.png)
