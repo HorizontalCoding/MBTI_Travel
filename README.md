@@ -1,5 +1,6 @@
+# MBTI TRAVEL
+
 <table>
- <caption><strong>개발 인원</strong></caption>
   <tr>
     <td>
       <img src="https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Git_Images/MainPicture.jpg" alt="MBTITRAVEL_타이틀_이미지" width="200">
@@ -11,16 +12,16 @@
           <th>학번</th>
         </tr>
         <tr>
-          <td>--</td> 
-          <td>--</td> 
+          <td>정형준</td> 
+          <td>20191937</td> 
         </tr>
         <tr>
-          <td>--</td> 
-          <td>--</td> 
+          <td>주혁</td> 
+          <td>20191358</td> 
         </tr>
         <tr>
-          <td>--</td> 
-          <td>--</td> 
+          <td>김상진</td> 
+          <td>20190800</td> 
         </tr>
       </table>
     </td>
