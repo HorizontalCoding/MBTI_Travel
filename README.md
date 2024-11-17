@@ -1,4 +1,5 @@
 <table>
+ <caption><strong>개발 인원</strong></caption>
   <tr>
     <td>
       <img src="https://mbti-travel-prod-bucket.s3.ap-northeast-2.amazonaws.com/Git_Images/MainPicture.jpg" alt="MBTITRAVEL_타이틀_이미지" width="200">
